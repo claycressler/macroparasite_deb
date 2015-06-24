@@ -1,0 +1,180 @@
+\documentclass[11pt,reqno,final,pdftex]{amsart}
+%% DO NOT DELETE OR CHANGE THE FOLLOWING TWO LINES!
+%% $Revision$
+%% $Date$
+\usepackage[round,sort,elide]{natbib}
+\usepackage{graphicx}
+\usepackage{times}
+\usepackage{rotating}
+\usepackage{subfig}
+\usepackage{color}
+\newcommand{\aak}[1]{\textcolor{cyan}{#1}}
+\newcommand{\mab}[1]{\textcolor{red}{#1}}
+\newcommand{\cec}[1]{\textcolor{blue}{#1}}
+
+\setlength{\textwidth}{6.25in}
+\setlength{\textheight}{8.75in}
+\setlength{\evensidemargin}{0in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\topmargin}{-.35in}
+\setlength{\parskip}{.1in}
+\setlength{\parindent}{0.3in}
+
+%% cleveref must be last loaded package
+\usepackage[sort&compress]{cleveref}
+\crefname{figure}{Fig.}{Figs.}
+\Crefname{figure}{Fig.}{Figs.}
+\crefname{table}{Table}{Tables}
+\Crefname{table}{Tab.}{Tables}
+\crefname{equation}{Eq.}{Eqs.}
+\Crefname{equation}{Eq.}{Eqs.}
+\crefname{appendix}{Appendix}{Appendices}
+\Crefname{appendix}{Appendix}{Appendices}
+\creflabelformat{equation}{#2#1#3}
+\newcommand{\crefrangeconjunction}{--}
+\newcommand{\creflastconjunction}{, and~}
+
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}
+\newtheorem{corol}[thm]{Corollary}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{lemma}[thm]{Lemma}
+\newtheorem{defn}[thm]{Definition}
+\newtheorem{hyp}[thm]{Hypothesis}
+\newtheorem{example}[thm]{Example}
+\newtheorem{conj}[thm]{Conjecture}
+\newtheorem{algorithm}[thm]{Algorithm}
+\newtheorem{remark}{Remark}
+\renewcommand\thethm{\arabic{thm}}
+\renewcommand{\theremark}{}
+
+\numberwithin{equation}{part}
+\renewcommand\theequation{\arabic{equation}}
+\renewcommand\thesection{\arabic{section}}
+\renewcommand\thesubsection{\thesection.\arabic{subsection}}
+\renewcommand\thefigure{\arabic{figure}}
+\renewcommand\thetable{\arabic{table}}
+\renewcommand\thefootnote{\arabic{footnote}}
+
+\newcommand\scinot[2]{$#1 \times 10^{#2}$}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\pkg}[1]{\textsf{#1}}
+\newcommand{\dlta}[1]{{\Delta}{#1}}
+\newcommand{\Prob}[1]{\mathbb{P}\left[#1\right]}
+\newcommand{\Expect}[1]{\mathbb{E}\left[#1\right]}
+\newcommand{\Var}[1]{\mathrm{Var}\left[#1\right]}
+\newcommand{\dd}[1]{\mathrm{d}{#1}}
+\newcommand{\citetpos}[1]{\citeauthor{#1}'s \citeyearpar{#1}}
+
+\begin{document}
+
+<<setup,include=FALSE,cache=FALSE>>=
+require(knitr)
+opts_chunk$set(
+               progress=TRUE,prompt=FALSE,tidy=FALSE,highlight=TRUE,
+               warning=FALSE,message=FALSE,error=FALSE,
+               results='hide',echo=FALSE,cache=TRUE,
+               size='scriptsize',
+               fig.path='figure/',fig.lp="fig:",
+               fig.align='left',
+               fig.show='asis',
+               fig.height=4,fig.width=6.83,
+               out.width="\\linewidth",
+               dpi=150,
+               dev=c('png','tiff'),
+               dev.args=list(
+                 png=list(bg='transparent'),
+                 tiff=list(compression='lzw')
+                 )
+               )
+
+scinot <- function (x, digits = 2, type = c("expression","latex")) {
+  type <- match.arg(type)
+  x <- signif(x,digits=digits)
+  ch <- floor(log10(abs(x)))
+  mn <- x/10^ch
+  switch(type,
+         expression={
+           bquote(.(mn)%*%10^.(ch))
+         },
+         latex={
+           paste0("\\scinot{",mn,"}{",ch,"}")
+         }
+         )
+}
+
+require(xtable)
+
+options(scipen=-1)
+
+options(
+        xtable.caption.placement="top",
+        xtable.include.rownames=FALSE
+        )
+
+@
+
+Okay, beginning to work on a macroparasite version of the energy budget model I proposed in the Ecol. Lett. paper.
+The goal is to develop a general model for macroparasitic infection (with an eye towards helminthic parasites).
+The hope would be to develop a model that could be extended to consider whipworm infections, so I will take up that problem at the end, by interpreting some early experimental returns in light of the general model.
+
+The basic model structure is shown in Fig. \ref{fig:DEB_diagram}.
+\begin{figure}
+\includegraphics[\textwidth]{Macroparasite_DEB.png}
+\caption{``Bins and flows'' model of host and parasite energetics. ``Bins'' are represented by the boxes in the diagram: biologically, these are places where energy is stored; mathematically, they are state variables of the model. Text without boxes represent ``flows'' of energy through (and out of) the host. See the text for a fuller description of the model.}
+\label{fig:DEB_diagram}
+\end{figure}
+
+The host is assumed to ingest resources/energy at a rate $E_{ingest}$.
+ fraction of this resource is assimilated $E_{assim}$ and is utilized by the host to fuel all metabolic processes; the remainder is lost as waste.
+Out of the assimilated energy, maintenance (including the cost of constitutive immune defense) is paid first (making this a net production model of host energetics).
+The remainder is allocated towards structure or fat reserves (which may be considered the reproduction buffer).
+By structure, we mean investment in things like the skeleton that cannot be ``reclaimed'' during periods of starvation.
+This is why fat reserves do not make up part of structure.
+Reproduction is paid using the energy in the fat reserves, but so is the induced immune response.
+The fact that the induced immune response depends on fat reserves has been shown empirically, as fat stores are known to provide places for lymphocytes to get organized, and leptin (a hormone produced in adipose tissue) helps regulate the induced immune response.
+Parasites (represented by $P_i$ in the diagram) may tap into this energy budget in different places depending on the parasite.
+Some ($P_1$) may steal energy before it has been assimilated into metabolizable energy by the host; tapeworms may be a good example of this kind of parasite.
+Others ($P_2$) may use energy that is going to be excreted as waste; whipworms might be a good example here.
+Interestingly, this would suggest that a good strategy for such a parasite is to reduce assimilation efficiency, which whipworms actually do.
+A third category of parasites ($P_3$) take energy after maintenance has been paid, but before the energy has been allocated to growth and reproduction: this strategy has a benefit for the parasite of being less likely to induce starvation in the host (where starvation is defined as a situation where energy input is insufficient to meet maintenance demands).
+I am not aware of any parasites that could be considered to be part of this class, but no doubt they exist.
+Still other parasites ($P_4$) may use components of structure themselves as a resource.
+For example, parasites that feed on tissue or blood could be considered parasites of structure.
+Finally, some parasites ($P_5$) may use fat reserves as a resource.
+Of course, some parasites might be considered to fall into more than one class.
+Perhaps an example of this would be the trematode parasites of some snails that actually physically destroy the gonads.
+Although those might more profitably be considered parasites of structure in this framework - they consume the gonads (a component of structure, in my opinion) which causes reproduction itself to stop.
+Thus more energy is allocated to structure and/or fat reserves, which the parasites then utilize as a resource.
+
+This basic stucture can be tweaked as necessary, for example, to consider multiple arms of the immune response (e.g., Th1/Th2) or to consider both growth and reproduction of parasites (which might require a more complicated model to track both parasite density and parasite size-structure within the host).
+
+\subsection{Other possible energy budget structures}
+Here we have made some fairly strong assumptions about the priority given to different host physiological processes.
+It is worth considering how other energy budget-style approaches have modeled energy uptake and allocation.
+The two models of which I am the most aware are either based on the metabolic theory of ecology \citep[MTE,][]{Hou2008} or dynamic energy budget theory \citep{Kooijman2010}.
+Both make the same assumption that we do, that some ingested energy is lost as waste.
+
+However, they differ in their structure, to a large extent.
+In particular, it is tempting to look at Fig. 1 in \citet{Hou2008} as a model of bins and flows, but that is incorrect.
+For example, Fig. 1 seems to give first priority to energy storage, but that is illusory as energy stored is defined as the combustion energy of biomass, so the rate of change of energy storage depends on the rate of new biomass synthesis, which occurs further ``downstream'' in the flow diagram.
+That is, it is possible to write the rate of biomass synthesis, $B_{synth}$ as
+\begin{equation}
+B_{synth} = A - S - B_{act} - B_{maint},
+\end{equation}
+where $A$ is assimilation, $S$ is storage, $B_{act}$ is the rate of energy usage for activity, and $B_{maint}$ is the rate of energy usage for maintenance.
+However, $B_{synth} = E_m dm/dt$ and $S = E_c dm/dt$, so the rate of biomass gain $dm/dt$ depends on energy assimilation minus activity and maintenance costs.
+On further consideration, I am pretty confident that Fig. 1 is simply an accounting scheme that gives no priority for one process over another.
+
+The DEB model, on the other hand, gives priority to energy storage (``reserves'') over maintenance, growth, or reproduction.
+It is, of course, possible to write the dynamics of reserves so that they depend on the rate of structural growth \citep[e.g., in][]{Hall2009}.
+It is more appropriate to think of energy being assimilated, stored in reserves, and then mobilized out of the reserves at a rate that depends both on the amount of reserves and the size of the individual.
+DEB models also often include a ``reproduction buffer'' which might be considered as analogous (in some ways) to the bin for fat reserves in our model.
+DEB theory assumes that some of the energy allocated to structure is used to pay somatic maintenance costs, and some of the nergy allocated to reproduction (or, more generally, ``maturity'') is used to pay ``maturity maintenane,'' which includes the cost of the immune system.
+Our model is thus fairly similar to a DEB model, with some modifications that are worth keeping in mind as we move forward.
+
+\bibliographystyle{ecology.bst}
+\bibliography{library.bib}
+
+
+\end{document}
