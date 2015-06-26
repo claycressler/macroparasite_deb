@@ -1,0 +1,745 @@
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[         0,          0]
+NotebookDataLength[     26382,        744]
+NotebookOptionsPosition[     25931,        722]
+NotebookOutlinePosition[     26286,        738]
+CellTagsIndexPosition[     26243,        735]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[TextData[{
+ "This notebook will record the derivation of the parasite DEB model and my \
+attempts at nondimensionalizing and analyzing it.\n\nThe basic model defines \
+four individual host state variables: ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"S", "(", "t", ")"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ", the structural biomass; ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"R", "(", "t", ")"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ", the reserve biomass; ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SubscriptBox["I", "c"], "(", "t", ")"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ", the biomass of the constitutive immune system; ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SubscriptBox["I", "i"], "(", "t", ")"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ", the biomass of the induced immune system; and the parasite biomass, ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"P", "(", "t", ")"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ". Note that ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SubscriptBox["I", "c"], "(", "t", ")"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " is the total biomass of all of the immune cells present in a host prior to \
+parasite invasion, regardless of whether these cells are part of the innate \
+immune system (e.g., eosinophils, macrophages) or the adaptive immune system \
+(e.g., lymphocytes). Similar, ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SubscriptBox["I", "i"], "(", "t", ")"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " is the total biomass of all the immune cells produced in response to \
+parasite invasion, regardless of their specific type.\n\nWe make the \
+assumption that we are modeling the biology of animals with determinant \
+growth, so we move away from the standard DEB model assumptions. In \
+particular, we make some very strong assumptions about the growth of \
+structural biomass and constitutive immune biomass.\n\nModel assumptions:\n- \
+individuals have a genetically predetermined growth pattern in structural \
+biomass that is independent of how much they are eating; \n- individuals have \
+a genetically predetermined constitutive immune system that depends only on \
+the total weight ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"(", 
+    RowBox[{
+     RowBox[{"S", "(", "t", ")"}], "+", 
+     RowBox[{"R", "(", "t", ")"}]}], ")"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " of the organism, not on how much they are eating;\n- total maintenance \
+costs depend on the total weight and the biomasses of the constitutive and \
+induced immune systems;\n- all assimilated biomass that is not used for \
+maintenance or structural growth is stored in reserves;\n- the induced immune \
+response is \[OpenCurlyDoubleQuote]paid\[CloseCurlyDoubleQuote] using reserve \
+biomass.\n\n",
+ StyleBox["Reserve dynamics",
+  FontWeight->"Bold"],
+ "\nThe key equation for host dynamics is the equation for reserve dynamics, \
+which is\n",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    FractionBox["dR", "dt"], "=", 
+    RowBox[{
+     RowBox[{
+      SubscriptBox["\[Epsilon]", "R"], "[", 
+      RowBox[{
+       RowBox[{
+        SubscriptBox["\[Epsilon]", "A"], " ", "I"}], "-", "M", "-", 
+       SubscriptBox["C", "G"]}], "]"}], "-", 
+     RowBox[{"b", " ", "R", " ", "P"}]}]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ",\nwhere:\n- ",
+ StyleBox["A",
+  FontSlant->"Italic"],
+ " is the ingestion rate (which depends on the abundance of food, as well as \
+on both ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"S", "(", "t", ")"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " and ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"R", "(", "t", ")"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ", and may depend on ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"P", "(", "t", ")"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " for parasites that manipulate host foraging behavior); \n- ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["\[Epsilon]", "A"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " is assimilation efficiency (which may depend on the abundance of food and ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"R", "(", "t", ")"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " for hosts that increase assimilation efficiency when food is scarce or \
+condition is poor, and may depend on ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"P", "(", "t", ")"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " for parasites that manipulate the amount of ingesta going to waste, like \
+whipworms);\n- ",
+ StyleBox["M ",
+  FontSlant->"Italic"],
+ "is the total maintenance rate;\n- ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["C", "G"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " is the cost of growth in structural biomass;\n- ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["\[Epsilon]", "R"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " is the cost of converting assimilated resource into reserve biomass;\n- ",
+ StyleBox["b R P",
+  FontSlant->"Italic"],
+ " is the allocation of reserve to fuel an induced immune response. Note that \
+this makes the induced response independent of the number of induced (or \
+constitutive) immune cells. This kind of model has been studied by other \
+authors, including Bonhoeffer and Nowak (1994), Alizon and van Baalen (2005, \
+2008), Fenton (2006), and Hamilton et al. (2008), and reflects the fact that \
+the immune-parasite interaction is not really a predator-prey interaction in \
+the sense that the immune response is not stimulated by direction contact \
+between immune cells and parasites.\n\n",
+ StyleBox["Ingestion\n",
+  FontWeight->"Bold"],
+ "It has been suggested that ingestion scales with surface area, so that \
+ingestion should depend on ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox[
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"S", "(", "t", ")"}], "+", 
+      RowBox[{"R", "(", "t", ")"}]}], ")"}], 
+    RowBox[{"2", "/", "3"}]], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ". Since we are considering ad lib feeding right now, we can ignore any \
+potential nonlinearities in feeding, as food abundance is always saturating.\n\
+In this case,\n",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"I", "=", 
+    SuperscriptBox[
+     RowBox[{
+      SubscriptBox["I", "max"], "(", 
+      RowBox[{"S", "+", "R"}], ")"}], 
+     RowBox[{"2", "/", "3"}]]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ",\nwhere:\n- ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["I", "max"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " is the maximum surface-area-specific ingestion rate.\n\n",
+ StyleBox["Maintenance\n",
+  FontWeight->"Bold"],
+ "An organism must pay the metabolic cost of all of its cells, which means \
+that a model of maintenance might be\n",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"M", "=", 
+    RowBox[{
+     RowBox[{"m", "(", 
+      RowBox[{"S", "+", "R"}], ")"}], "+", 
+     RowBox[{
+      SubscriptBox["m", "c"], 
+      SubscriptBox["I", "c"]}], "+", 
+     RowBox[{
+      SubscriptBox["m", "i"], 
+      SubscriptBox["I", "i"]}]}]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ",\nwhere:\n- ",
+ StyleBox["m",
+  FontSlant->"Italic"],
+ " is the maintenance rate for weight, which is assumed to be the same for \
+structure and reserves;\n- ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["m", "c"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " is the maintenance rate for constitutive immune biomass;\n- ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["m", "i"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " is the maintenance rate for induced immune biomass.\nIt may be reasonable \
+to question whether there should be separate maintenance rates for structure ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"S", "(", "t", ")"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " versus reserves ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"R", "(", "t", ")"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ", but this is probably reasonable for the moment. I discuss the separate \
+maintenance costs for constitutive versus induced immune biomass below.\n\n",
+ StyleBox["Constitutive immune defense\n",
+  FontWeight->"Bold"],
+ "Rather than considering a dynamic constitutive immune defense, we instead \
+assume that organisms maintain a constitutive immune biomass that is \
+proportional to total biomass. To some extent, this makes biological sense: \
+hosts should want to maintain a relatively constant level of surveillance, \
+regardless of how much tissue they have. Therefore, we assume that the total \
+biomass of constitutive defense is:\n",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SubscriptBox["I", "c"], "=", 
+    RowBox[{"k", "(", 
+     RowBox[{"S", "+", "R"}], ")"}]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ",\nwhere:\n- ",
+ StyleBox["k",
+  FontSlant->"Italic"],
+ " is the biomass of the constitutive immune system relative to the total \
+biomass in weight (",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"k", 
+    RowBox[{"<<", "1"}]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ").\nNote that we do not consider the cost of building these cells, or, more \
+precisely, we assume that the building cost and the maintenance cost are \
+identical. This is quite different from our assumptions for the induced \
+immune response (discussed below).\n\n",
+ StyleBox["Induced immune response",
+  FontWeight->"Bold"],
+ "\nThe derivation of the reserve dynamics equation implies a model for the \
+induced immune response of\n",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    FractionBox[
+     SubscriptBox["dI", "i"], "dt"], "=", 
+    RowBox[{
+     RowBox[{
+      SubscriptBox["\[Epsilon]", "i"], "b", " ", "R", " ", "P"}], "-", 
+     RowBox[{
+      SubscriptBox["\[Mu]", "I"], 
+      SubscriptBox["I", "i"]}]}]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ",\nwhere:\n- ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["\[Epsilon]", "i"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " is the cost of converting reserve biomass into ",
+ StyleBox["effective ",
+  FontSlant->"Italic"],
+ "induced immune biomass (see below);\n- ",
+ StyleBox["b",
+  FontSlant->"Italic"],
+ " is the rate reserve biomass is allocated to the immune system per unit of \
+parasite biomass;\n- ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["\[Mu]", "I"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " is the background rate that immune cells are lost.\nWith this model \
+formulation, if an infection is cleared, the induced immune response returns \
+to 0; we may, at some point in the future, want to consider the fact that \
+some of the cells of the induced immune response become part of the \
+constitutive immune system after infection (e.g., memory cells).\n\nWe can \
+also make some assumptions about parameter values. The induced immune \
+response is very costly to develop because it is wasteful: lymphocytes go \
+through a process of differentiation followed by somatic selection, whereas \
+maintaining the effective cells is relatively cheap. Most likely, what this \
+would imply is that the parameter ",
+ StyleBox["b",
+  FontSlant->"Italic"],
+ " should be relatively large - lots of energy is invested in the induced \
+immune response - but ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["\[Epsilon]", "I"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " should be relatively small - most of that energy is spent building immune \
+cells that won\[CloseCurlyQuote]t actually be effective. On the other hand, \
+the cost of maintaining the effective induced immune cells ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"(", 
+    SubscriptBox["m", "i"]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ") should be different from either ",
+ StyleBox["b ",
+  FontSlant->"Italic"],
+ "or ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["\[Epsilon]", "i"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ".\n\n",
+ StyleBox["Cost of growth",
+  FontWeight->"Bold"],
+ "\nThis one turns out be slightly more complicated. Let\[CloseCurlyQuote]s \
+start with the equation for structural biomass.\n\nIf you assume that \
+structural biomass ",
+ StyleBox["S ",
+  FontSlant->"Italic"],
+ "scales with structural length ",
+ StyleBox["L ",
+  FontSlant->"Italic"],
+ "as ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"S", " ", "=", 
+    RowBox[{"\[Epsilon]", " ", 
+     SuperscriptBox["L", "3"]}]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ", and assume that structural length follows a von Bertalanffy equation, \
+then \n",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    FractionBox["dS", "dt"], "=", 
+    RowBox[{
+     FractionBox[
+      RowBox[{
+       StyleBox["d",
+        FontSlant->"Plain"], "(", 
+       RowBox[{"\[Epsilon]", " ", 
+        SuperscriptBox["L", "3"]}], ")"}], "dt"], "=", 
+     RowBox[{
+      RowBox[{"3", "\[Epsilon]", " ", 
+       SuperscriptBox["L", "2"], " ", 
+       FractionBox["dL", "dt"]}], "=", 
+      RowBox[{
+       RowBox[{"3", " ", "\[Epsilon]", " ", 
+        SuperscriptBox["L", "2"], " ", 
+        RowBox[{"(", 
+         RowBox[{"\[Gamma]", " ", 
+          RowBox[{"(", 
+           RowBox[{
+            SubscriptBox["L", "\[Infinity]"], "-", "L"}], ")"}]}], ")"}]}], 
+       "=", 
+       RowBox[{
+        RowBox[{"3", " ", "\[Gamma]", " ", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"\[Epsilon]", " ", 
+            SuperscriptBox["L", "2"], 
+            SubscriptBox["L", "\[Infinity]"]}], "-", 
+           RowBox[{"\[Epsilon]", " ", 
+            SuperscriptBox["L", "3"]}]}], ")"}]}], "=", 
+        RowBox[{"3", " ", "\[Gamma]", " ", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"\[Epsilon]", " ", 
+            SuperscriptBox["L", "2"], 
+            SubscriptBox["L", "\[Infinity]"]}], "-", "S"}], ")"}]}]}]}]}]}]}],
+    TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " \nNote that ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SuperscriptBox["S", 
+     RowBox[{"2", "/", "3"}]], "=", 
+    RowBox[{
+     SuperscriptBox["\[Epsilon]", 
+      RowBox[{"2", "/", "3"}]], 
+     SuperscriptBox["L", "2"]}]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ", or ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SuperscriptBox["L", "2"], "=", 
+    RowBox[{
+     SuperscriptBox["S", 
+      RowBox[{"2", "/", "3"}]], "/", 
+     SuperscriptBox["\[Epsilon]", 
+      RowBox[{"2", "/", "3"}]]}]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ", so\n",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    FractionBox["dS", "dt"], "=", 
+    RowBox[{
+     RowBox[{"3", " ", "\[Gamma]", " ", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"\[Epsilon]", " ", 
+         SuperscriptBox["L", "2"], 
+         SubscriptBox["L", "\[Infinity]"]}], "-", "S"}], ")"}]}], "=", 
+     RowBox[{
+      RowBox[{"3", " ", "\[Gamma]", " ", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"\[Epsilon]", " ", 
+          FractionBox[
+           SuperscriptBox["S", 
+            RowBox[{"2", "/", "3"}]], 
+           SuperscriptBox["\[Epsilon]", 
+            RowBox[{"2", "/", "3"}]]], 
+          SubscriptBox["L", "\[Infinity]"]}], "-", "S"}], ")"}]}], "=", 
+      RowBox[{"3", "\[Gamma]", " ", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{
+          SuperscriptBox["\[Epsilon]", 
+           RowBox[{"1", "/", "3"}]], 
+          SubscriptBox["L", "\[Infinity]"], 
+          SuperscriptBox["S", 
+           RowBox[{"2", "/", "3"}]]}], "-", "S"}], ")"}]}]}]}]}], 
+   TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ".\n\nIf a unit of structural biomass increase is ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["\[Epsilon]", "G"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ", then the total cost for structural growth is \n",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SubscriptBox["\[Epsilon]", "G"], " ", "3", "\[Gamma]", " ", 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{
+       SuperscriptBox["\[Epsilon]", 
+        RowBox[{"1", "/", "3"}]], 
+       SubscriptBox["L", "\[Infinity]"], 
+       SuperscriptBox["S", 
+        RowBox[{"2", "/", "3"}]]}], "-", "S"}], ")"}]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ". This agrees with Anieke\[CloseCurlyQuote]s derivation. Most of these \
+parameters have probably already been estimated (for mice, anyway; see the \
+back of Kooijman\[CloseCurlyQuote]s book), including the shape parameter \
+\[Epsilon], the maximum structural length ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["L", "\[Infinity]"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ", and the growth rate in structure \[Gamma].\n\nNow, of course, it is \
+possible to directly solve the von Bertalanffy growth equation, so we could \
+eliminate one equation from the model by simply solving for the size of the \
+animal at any age. In particular, because \n",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{
+     FractionBox["dL", "dt"], "=", 
+     RowBox[{"\[Gamma]", " ", 
+      RowBox[{"(", 
+       RowBox[{
+        SubscriptBox["L", "\[Infinity]"], "-", "L"}], ")"}]}]}], ",", " ", 
+    RowBox[{
+     RowBox[{"with", " ", 
+      RowBox[{"L", "(", "0", ")"}]}], "=", 
+     SubscriptBox["L", "b"]}]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ", you can solve this to get ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{"L", "(", "t", ")"}], "=", 
+    RowBox[{
+     SubscriptBox["L", "\[Infinity]"], "+", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{
+        SubscriptBox["L", "b"], "-", 
+        SubscriptBox["L", "\[Infinity]"]}], ")"}], 
+      SuperscriptBox["e", 
+       RowBox[{
+        RowBox[{"-", "\[Gamma]"}], " ", "t"}]]}]}]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ", so the structural biomass ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{"S", "(", "t", ")"}], "=", 
+    RowBox[{"\[Epsilon]", " ", 
+     SuperscriptBox[
+      RowBox[{"L", "(", "t", ")"}], "3"]}]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ".\n\nThis will be especially useful to us when the parasite utilizes \
+anything but structure as a resource. Of course, if the parasite utilizes \
+structure as a resource, the structural growth equation has to be modified to \
+include parasitism, and we will no longer be able to solve the equation. In \
+particular, the structural biomass equation will become\n",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    FractionBox["dS", "dt"], "=", 
+    RowBox[{
+     RowBox[{"3", "\[Gamma]", " ", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{
+         SuperscriptBox["\[Epsilon]", 
+          RowBox[{"1", "/", "3"}]], 
+         SubscriptBox["L", "\[Infinity]"], 
+         SuperscriptBox["S", 
+          RowBox[{"2", "/", "3"}]]}], "-", "S"}], ")"}]}], "-", 
+     FractionBox[
+      RowBox[{"k", " ", "S", " ", "P"}], 
+      RowBox[{"h", "+", "S"}]]}]}], TraditionalForm]]],
+ "\nHowever, we can still make use of the analytical solution: when the \
+parasite is using up structural biomass as resource, the amount allocated to \
+growth should increase in proportion to how far the host is from it\
+\[CloseCurlyQuote]s target structural biomass. That is, define ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{
+     SubscriptBox["S", "target"], "(", "t", ")"}], "=", 
+    RowBox[{"\[Epsilon]", " ", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           SubscriptBox["L", "b"], "-", 
+           SubscriptBox["L", "\[Infinity]"]}], ")"}], " ", 
+         SuperscriptBox["e", 
+          RowBox[{
+           RowBox[{"-", "\[Gamma]"}], " ", "t"}]]}], "+", 
+        SubscriptBox["L", "\[Infinity]"]}], ")"}], "3"]}]}], 
+   TraditionalForm]]],
+ ", and let the solution of the differential equation for ",
+ Cell[BoxData[
+  FormBox[
+   FractionBox["dS", "dt"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " give the actual weight.\nIt seems to make sense to me, at this point, to \
+imagine that what happens when an organism is below its target structural \
+biomass is to increase the amount of energy allocated to growth to attempt to \
+accelerate the growth rate (e.g., \[OpenCurlyDoubleQuote]catch-up\
+\[CloseCurlyDoubleQuote] growth). That is, the parameter \[Gamma] could \
+become a function of the difference between the target structural biomass and \
+the actual structural biomass. For example,\nif you let ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"\[Gamma]", "=", 
+    RowBox[{
+     SubscriptBox["\[Gamma]", "min"], "+", 
+     RowBox[{
+      SubscriptBox["\[Gamma]", "catchup"], "(", 
+      RowBox[{
+       FractionBox[
+        RowBox[{
+         SubscriptBox["S", "target"], "(", "t", ")"}], 
+        RowBox[{"S", "(", "t", ")"}]], "-", "1"}], ")"}]}]}], 
+   TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ", then whenever ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{"S", "(", "t", ")"}], "<", 
+    RowBox[{
+     SubscriptBox["S", "target"], "(", "t", ")"}]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ", then \[Gamma] increases, increasing the allocation of energy towards \
+growth and enabling the ",
+ StyleBox["possibility",
+  FontSlant->"Italic"],
+ " of catch-up growth. Of course, if there is a parasite that is also sucking \
+up biomass, the host may or may not actually be able to catch up. If the \
+parasite is cleared, the host will have an increased growth rate until ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{"S", "(", "t", ")"}], "=", 
+    RowBox[{
+     SubscriptBox["S", "target"], "(", "t", ")"}]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ", and then the growth rate will fall back to normal.\n\nThus, we have \
+equations for the rate of structural biomass increase, the growth rate, and \
+cost of growth:\n",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    FractionBox["dS", "dt"], "=", 
+    RowBox[{
+     RowBox[{"3", "\[Gamma]", " ", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{
+         SuperscriptBox["\[Epsilon]", 
+          RowBox[{"1", "/", "3"}]], 
+         SubscriptBox["L", "\[Infinity]"], 
+         SuperscriptBox[
+          RowBox[{"S", "(", "t", ")"}], 
+          RowBox[{"2", "/", "3"}]]}], "-", 
+        RowBox[{"S", "(", "t", ")"}]}], ")"}]}], "-", 
+     FractionBox[
+      RowBox[{"k", " ", 
+       RowBox[{"S", "(", "t", ")"}], " ", 
+       RowBox[{"P", "(", "t", ")"}]}], 
+      RowBox[{"h", "+", 
+       RowBox[{"S", "(", "t", ")"}]}]]}]}], TraditionalForm]]],
+ "   (rate of increase in structural biomass; eq. 1)\n",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{
+     SubscriptBox["C", "G"], "(", "t", ")"}], "=", 
+    RowBox[{
+     SubscriptBox["\[Epsilon]", "G"], " ", "3", "\[Gamma]", " ", 
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{
+        SuperscriptBox["\[Epsilon]", 
+         RowBox[{"1", "/", "3"}]], 
+        SubscriptBox["L", "\[Infinity]"], 
+        SuperscriptBox[
+         RowBox[{"S", "(", "t", ")"}], 
+         RowBox[{"2", "/", "3"}]]}], "-", 
+       RowBox[{"S", "(", "t", ")"}]}], ")"}]}]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ "           (cost of growth; eq. 2)\n",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"\[Gamma]", "=", 
+    RowBox[{
+     SubscriptBox["\[Gamma]", "min"], "+", 
+     RowBox[{
+      SubscriptBox["\[Gamma]", "catchup"], "(", 
+      RowBox[{
+       FractionBox[
+        RowBox[{
+         SubscriptBox["S", "target"], "(", "t", ")"}], 
+        RowBox[{"S", "(", "t", ")"}]], "-", "1"}], ")"}]}]}], 
+   TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ "                   (growth rate; eq. 3)\n",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{
+     SubscriptBox["S", "target"], "(", "t", ")"}], "=", 
+    RowBox[{"\[Epsilon]", " ", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           SubscriptBox["L", "b"], "-", 
+           SubscriptBox["L", "\[Infinity]"]}], ")"}], " ", 
+         SuperscriptBox["e", 
+          RowBox[{
+           RowBox[{"-", "\[Gamma]"}], " ", "t"}]]}], "+", 
+        SubscriptBox["L", "\[Infinity]"]}], ")"}], "3"]}]}], 
+   TraditionalForm]]],
+ "             (target structural biomass, eq. 4)\n\nFor non-parasitized \
+hosts, or hosts parasitized by parasites targeting other sources of biomass, \
+then ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{"S", "(", "t", ")"}], "=", 
+    RowBox[{
+     SubscriptBox["S", "target"], "(", "t", ")"}]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ", and you only need equations 2 and 4."
+}], "Text",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmViYGAQB2IQLaBT8/2H2mvHih2a/0D0iSPTJH8C6cj4J9IgWrpf
+aiuIluCxBtNKkg8VfwHpQ9ET1UC0oxuLAYiO+dhqBaI/rGB1BtFr3B67g+gv
+0m6JIPqZwe8UEC1/o6MYRNdP/d0Hot+1HQv7DaTZ1oRMBdHftD03g+hFKnFg
++l81/04QrZMsvgdE109TPgGiY9ZknAPRn1onXgar81zzFkSHnPzL8wdIt3x8
+6A6iuc5s8gfRVyJap4DoBO2/a0D0J4Xlh0B0fFD4KRAtdPvsUxB9QuXASxAd
+7ngJTFd4yn0C0a2dM7+A6EN2p/6B6LbThhZ/gXQW199AEL1sy+50EF3y+Fcj
+iBZQaDkKovuYjl0A0TZOizn+AWkAJVjKGg==
+  "],
+ FontSize->14],
+
+Cell["", "Text",
+ CellChangeTimes->{{3.644312037621306*^9, 3.644312205311913*^9}, {
+   3.644312259258745*^9, 3.644312612770564*^9}, {3.6443126606404448`*^9, 
+   3.6443126685325193`*^9}, {3.64431276105492*^9, 3.644312825062662*^9}, {
+   3.644312856243004*^9, 3.644313012525548*^9}, {3.64431304439113*^9, 
+   3.6443131275703382`*^9}, {3.6443133859349403`*^9, 
+   3.6443135186990557`*^9}, {3.644313557998026*^9, 3.6443136077966423`*^9}, {
+   3.6443136624043293`*^9, 3.644313717513682*^9}, {3.644313785001629*^9, 
+   3.6443138122876673`*^9}, {3.644313848684204*^9, 3.644313858423497*^9}, 
+   3.644313892535203*^9}]
+},
+WindowSize->{914, 705},
+WindowMargins->{{4, Automatic}, {Automatic, 4}},
+FrontEndVersion->"8.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (February 23, \
+2011)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[400, 13, 24914, 696, 3116, "Text"],
+Cell[25317, 711, 610, 9, 32, "Text"]
+}
+]
+*)
+

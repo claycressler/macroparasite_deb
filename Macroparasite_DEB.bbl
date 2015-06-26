@@ -1,33 +1,26 @@
-\begin{thebibliography}{5}
+\begin{thebibliography}{4}
 
-\bibitem[Hall et~al.(2009)Hall, Simonis, Nisbet, Tessier, and
-  C\'{a}ceres]{Hall2009}
-Hall, S.~R., J.~L. Simonis, R.~M. Nisbet, A.~J. Tessier, and C.~E. C\'{a}ceres,
-  2009.
-\newblock {Resource Ecology of Virulence in a Planktonic Host-Parasite System :
-  An Explanation Using Dynamic Energy Budgets}.
-\newblock \emph{Am. Nat.} \textbf{174}:149--162.
+\bibitem[Alizon and van Baalen(2005)]{Alizon2005}
+Alizon, S. and M.~van Baalen, 2005.
+\newblock {Emergence of a convex trade-off between transmission and virulence.}
+\newblock \emph{Am. Nat.} \textbf{165}:E155--E167.
 
-\bibitem[Hou et~al.(2008)Hou, Zuo, Moses, Woodruff, Brown, and West]{Hou2008}
-Hou, C., W.~Zuo, M.~E. Moses, W.~H. Woodruff, J.~H. Brown, and G.~B. West,
-  2008.
-\newblock {Energy uptake and allocation during ontogeny}.
-\newblock \emph{Science (80-. ).} \textbf{322}:736--739.
+\bibitem[Bonhoeffer and Nowak(1994)]{Bonhoeffer1994}
+Bonhoeffer, S. and M.~A. Nowak, 1994.
+\newblock {Intra-host versus inter-host selection: viral strategies of immune
+  function impairment.}
+\newblock \emph{Proc. Nat. Acad. Sci. USA} \textbf{91}:8062--8066.
 
-\bibitem[Kooijman(2009)]{Kooijman2009}
-Kooijman, S. A. L.~M., 2009.
-\newblock {Dynamic Energy Budget Theory for Metabolic Organisation}.
-\newblock Cambridge University Press.
+\bibitem[Fenton et~al.(2006)Fenton, Lello, and Bonsall]{Fenton2006}
+Fenton, a., J.~Lello, and M.~B. Bonsall, 2006.
+\newblock {Pathogen responses to host immunity: the impact of time delays and
+  memory on the evolution of virulence.}
+\newblock \emph{Proc. Biol. Sci.} \textbf{273}:2083--2090.
 
-\bibitem[Nunn et~al.(2003)Nunn, Gittleman, and Antonovics]{Nunn2003}
-Nunn, C.~L., J.~L. Gittleman, and J.~Antonovics, 2003.
-\newblock {A comparative study of white blood cell counts and disease risk in
-  carnivores.}
-\newblock \emph{Proc. Biol. Sci.} \textbf{270}:347--356.
-
-\bibitem[Wiegel and Perelson(2004)]{Wiegel2004}
-Wiegel, F.~W. and A.~S. Perelson, 2004.
-\newblock {Some scaling principles for the immune system}.
-\newblock \emph{Immunol. Cell Biol.} \textbf{82}:127--131.
+\bibitem[Hamilton et~al.(2008)Hamilton, Siva-Jothy, and Boots]{Hamilton2008}
+Hamilton, R., M.~Siva-Jothy, and M.~Boots, 2008.
+\newblock {Two arms are better than one: parasite variation leads to combined
+  inducible and constitutive innate immune responses.}
+\newblock \emph{Proc. Biol. Sci.} \textbf{275}:937--45.
 
 \end{thebibliography}
