@@ -119,13 +119,18 @@
 
 
 
-This notebook will record the derivation of the parasite DEB model and my attempts at nondimensionalizing and analyzing it.\\
+\begin{figure}
+\includegraphics[width=\textwidth]{Macroparasite_DEB.png}
+\caption{The basic model structure showing the state variables for the host (in boxes) and parasite (in circles). See the text for full details.}
+\label{fig:model}
+\end{figure}
 
-The basic model defines four individual host state variables: $S(t)$, the structural biomass; $R(t)$, the reserve biomass; $I_c(t)$, the biomass
-of the constitutive immune system; $I_i(t)$, the biomass of the induced immune system; and the parasite biomass, $P(t)$. Note that $I_c(t)$
-is the total biomass of all of the immune cells present in a host prior to parasite invasion, regardless of whether these cells are part of the innate
-immune system (e.g., eosinophils, macrophages) or the adaptive immune system (e.g., lymphocytes). Similar, $I_i(t)$ is the total biomass of all
-the immune cells produced in response to parasite invasion, regardless of their specific type.
+The basic model (shown in Fig. \ref{fig:model}) defines three individual host state variables: $S(t)$, the structural biomass; $R(t)$, the reserve biomass; and $I_i(t)$, the biomass of the induced immune system.
+We also need to consider the biomass of the constitutive immune system, $I_c(t)$, but as we discuss below, this has a very simple dependence on the other state variables.
+There is also one state variable for the parasite biomass, $P(t)$.
+
+Note that $I_c(t)$ is the total biomass of all of the immune cells present in a host prior to parasite invasion, regardless of whether these cells are part of the innate immune system (e.g., eosinophils, macrophages) or the adaptive immune system (e.g., lymphocytes).
+Similarly, $I_i(t)$ is the total biomass of all the immune cells produced in response to parasite invasion, regardless of their specific type.
 
 We make the assumption that we are modeling the biology of animals with determinant growth, so we move away from the standard DEB model assumptions.
 In particular, we make some very strong assumptions about the growth of structural biomass and constitutive immune biomass.
@@ -233,7 +238,7 @@ Note that $S^{2/3}=\epsilon ^{2/3}L^2$, or $L^2=S^{2/3}/\epsilon ^{2/3}$, so
 \begin{equation}
 \frac{dS}{dt}=3\gamma  \left(\epsilon ^{1/3}L_{\infty }S^{2/3}-S\right).
 \end{equation}
-If a unit of structural biomass increase is $\epsilon _G$, then the total cost for structural growth is
+If a unit of structural biomass increase costs $\epsilon _G$, then the total cost for structural growth is
 \begin{equation}
 C_G = \epsilon _G 3\gamma  \left(\epsilon ^{1/3}L_{\infty }S^{2/3}-S\right).
 \end{equation}
@@ -251,8 +256,8 @@ In particular, the structural biomass equation will become
 However, we can still make use of the analytical solution: when the parasite is using up structural biomass as resource, the amount allocated to growth (i.e., $C_G$)should increase in proportion to how far the host is from it's target structural biomass.
 That is, define
 \begin{equation}
-S_{\text{target}}(t)=\epsilon \left(\left(L_b-L_{\infty }\right) e^{-\gamma  t}+L_{\infty }\right){}^3
-\end{equation}, and let the solution of the differential equation for $\frac{dS}{dt}$ give the actual weight.
+S_{\text{target}}(t)=\epsilon \left(\left(L_b-L_{\infty }\right) e^{-\gamma  t}+L_{\infty }\right)^3,
+\end{equation} and let the solution of the differential equation for $\frac{dS}{dt}$ give the actual weight.
 
 It seems to make sense to me, at this point, to imagine that what happens when an organism is below its target structural biomass is to increase the amount of energy allocated to growth to attempt to accelerate the growth rate (e.g., ``catch-up'' growth).
 That is, the parameter $\gamma$ should become a function of the difference between the target structural biomass and the actual structural biomass.
@@ -272,6 +277,27 @@ C_G(t)&=\epsilon _G 3\gamma  \left(\epsilon ^{1/3}L_{\infty }S(t)^{2/3}-S(t)\rig
 S_{\text{target}}(t) &=\epsilon  \left(\left(L_b-L_{\infty }\right) e^{-\gamma  t}+L_{\infty }\right)^3
 \end{align}
 For non-parasitized hosts, or hosts parasitized by parasites targeting other sources of biomass, then $S(t)=S_{\text{target}}(t)$, and you only need two of the above equations.
+
+\section*{Model equations, including parasitism}
+As seen in Fig. \ref{fig:model}, we consider 4 kinds of parasite: $P_1$ are parasites of ingestion; $P_2$ are parasites of waste; $P_3$ are parasites of structure; and $P_4$ are parasites of reserves.
+One of the main differences between these parasites, from a modeling perspective, that we need to deal with is that $P_1$ and $P_2$ are parasitizing a \emph{flow} of biomass, whereas $P_3$ and $P_4$ are parasitizing \emph{stored} biomass.
+This makes the models different for each.
+For example, it makes sense to imagine that $P_{1,2}$ capture some \emph{proportion} of the flow, whereas $P_{3,4}$ have a functional response.
+In particular, for $P_1$ and $P_2$:
+\begin{align}
+\frac{dP_1}{dt} &= \epsilon_P \sigma P_1 I - \mu_P P_1 - \mu_c P_1 I_c - \mu_i P_1 I_i,\\
+\frac{dP_2}{dt} &= \epsilon_P \sigma P_2 (1-\epsilon_A) I - \mu_P P_2  \mu_c P_2 I_c - \mu_i P_2 I_i,
+\end{align}
+where $\sigma P_1$ is the fraction of the flow captured by the parasite, $\epsilon_P$ is the cost of converting between biomasses, $\mu_P$ is the background rate of biomass loss, and $\mu_{c,i}$ are the loss rates due to the constitutive and induced immune responses, respectively.
+
+For $P_3$ and $P_4$:
+\begin{align}
+\frac{dP_3}{dt} &= \epsilon_P \frac{k_S S P}{h_S + S} - \mu_P P_3 - \mu_c P_3 I_c - \mu_i P_3 I_i,\\
+\frac{dP_4}{dt} &= \epsilon_P \frac{k_R R P}{h_R + R} - \mu_P P_4 - \mu_c P_4 I_c - \mu_i P_4 I_i,
+\end{align}
+where $k_{S,R}$ is the parasite's ``attack rate'' and $h_{S,R}$ is a half-saturation constant for the parasite.
+
+I dislike that $P_{1,2}$ and $P_{3,4}$ have very different per-capita growth rate expressions.
 
 \bibliographystyle{ecology.bst}
 \bibliography{Biblio.bib}
