@@ -1,4 +1,4 @@
-\begin{thebibliography}{4}
+\begin{thebibliography}{8}
 
 \bibitem[Alizon and van Baalen(2005)]{Alizon2005}
 Alizon, S. and M.~van Baalen, 2005.
@@ -11,8 +11,13 @@ Bonhoeffer, S. and M.~A. Nowak, 1994.
   function impairment.}
 \newblock \emph{Proc. Nat. Acad. Sci. USA} \textbf{91}:8062--8066.
 
+\bibitem[de~Roos and Persson(2013)]{deRoos2013}
+de~Roos, A.~M. and L.~Persson, 2013.
+\newblock {Population and Community Ecology of Ontogenetic Development}.
+\newblock Princeton University Press.
+
 \bibitem[Fenton et~al.(2006)Fenton, Lello, and Bonsall]{Fenton2006}
-Fenton, a., J.~Lello, and M.~B. Bonsall, 2006.
+Fenton, A., J.~Lello, and M.~B. Bonsall, 2006.
 \newblock {Pathogen responses to host immunity: the impact of time delays and
   memory on the evolution of virulence.}
 \newblock \emph{Proc. Biol. Sci.} \textbf{273}:2083--2090.
@@ -22,5 +27,22 @@ Hamilton, R., M.~Siva-Jothy, and M.~Boots, 2008.
 \newblock {Two arms are better than one: parasite variation leads to combined
   inducible and constitutive innate immune responses.}
 \newblock \emph{Proc. Biol. Sci.} \textbf{275}:937--45.
+
+\bibitem[Kooijman(2009)]{Kooijman2009}
+Kooijman, S. A. L.~M., 2009.
+\newblock {Dynamic Energy Budget Theory for Metabolic Organisation}.
+\newblock Cambridge University Press.
+
+\bibitem[van Leeuwen et~al.(2002)van Leeuwen, Kelpin, and
+  Kooijman]{vanLeeuwen2002}
+van Leeuwen, I. M.~M., F.~D.~L. Kelpin, and S.~A. L.~M. Kooijman, 2002.
+\newblock {A mathematical model that accounts for the effects of caloric
+  restriction on body weight and longevity.}
+\newblock \emph{Biogerontology} \textbf{3}:373--381.
+
+\bibitem[Wiegel and Perelson(2004)]{Wiegel2004}
+Wiegel, F.~W. and A.~S. Perelson, 2004.
+\newblock {Some scaling principles for the immune system}.
+\newblock \emph{Immunol. Cell Biol.} \textbf{82}:127--131.
 
 \end{thebibliography}

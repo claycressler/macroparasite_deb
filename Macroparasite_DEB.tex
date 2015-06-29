@@ -125,12 +125,20 @@
 \label{fig:model}
 \end{figure}
 
-The basic model (shown in Fig. \ref{fig:model}) defines three individual host state variables: $S(t)$, the structural biomass; $R(t)$, the reserve biomass; and $I_i(t)$, the biomass of the induced immune system.
+The basic model (shown in Fig. \ref{fig:model}) defines five individual host state variables: $G(t)$, the biomass of ingested food in the ``gut''; $C(t)$, the biomass of unassimilated food in the ``colon''; $S(t)$, the structural biomass; $R(t)$, the reserve biomass; and $I_i(t)$, the biomass of the induced immune system.
 We also need to consider the biomass of the constitutive immune system, $I_c(t)$, but as we discuss below, this has a very simple dependence on the other state variables.
-There is also one state variable for the parasite biomass, $P(t)$.
+There is also one state variable for the parasite biomass, $P(t)$, and we consider four possible ways that the parasite's can access host biomass.
 
-Note that $I_c(t)$ is the total biomass of all of the immune cells present in a host prior to parasite invasion, regardless of whether these cells are part of the innate immune system (e.g., eosinophils, macrophages) or the adaptive immune system (e.g., lymphocytes).
+A couple of notes.
+$G(t)$ can be thought of as all of the ingested food that is still being processed by the host (it has neither been assimilated or lost as waste).
+$C(t)$ is all of the unassimilated food - it is still in the gut (biologically), but is no longer available to the host.
+$I_c(t)$ is the total biomass of all of the immune cells present in a host prior to parasite invasion, regardless of whether these cells are part of the innate immune system (e.g., eosinophils, macrophages) or the adaptive immune system (e.g., lymphocytes).
 Similarly, $I_i(t)$ is the total biomass of all the immune cells produced in response to parasite invasion, regardless of their specific type.
+
+The reason for including $G(t)$ and $C(t)$ is that it allows different parasites to have equivalent dynamical equations (as we will see below).
+Previous versions of the model had the $P_1$ parasitizing the \emph{flow} of biomass through ingestion and $P_2$ parasitizing the \emph{flow} of biomass to waste, whereas $P_3$ and $P_4$ parasitize \emph{stored} biomass.
+Thus, the parameters of different parasite growth equations had different units and were not totally comparable (at least in my head).
+By considering biomass stored in the ``gut'' and ``colon,'' however, all of the parasites have equivalent parameters.
 
 We make the assumption that we are modeling the biology of animals with determinant growth, so we move away from the standard DEB model assumptions.
 In particular, we make some very strong assumptions about the growth of structural biomass and constitutive immune biomass.
@@ -144,80 +152,101 @@ In particular, we make some very strong assumptions about the growth of structur
 \item the induced immune response ``paid'' using reserve biomass.
 \end{itemize}
 
+\subsection*{Ingestion}
+We can consider a couple of different models of ingestion.
+Since we are considering \emph{ad lib} feeding right now, we can ignore the fact that ingestion rate should be nonlinearly related to food abundance (e.g., by a Type II functional response), as food abundance is always saturating.
+Then the simplest model would assume that ingestion is completely independent of anything related to individual state.
+\citet{vanLeeuwen2002}, looking at data from mice, suggest that mice raised under \emph{ad lib} feeding conditions have an ingestion rate that is independent of age, size, or condition.
+That would suggest that a reasonable model of ingestion rate $\iota$ is simply:
+\begin{equation}
+\iota = \iota_{\max},
+\end{equation}
+where $\iota_{\max}$ is the maximum ingestion rate.
+
+On the other, standard DEB assumptions are that ingestion should scale with the surface area of structure, that is, with $S(t)^{2/3}$.
+In this case, ingestion rate is
+\begin{equation}
+\iota=\iota_{\max }S^{2/3},
+\end{equation}
+where $\iota_{\max}$ is now the \emph{surface-area-specific} maximum ingestion rate (so it does not have the same units as $\iota_{\max}$ in the previous model.
+
+However, \citet{deRoos2013} suggest that for demand-driven systems (where ingestion is adjusted to meet the individual's demands for resources), ingestion rate should depend on both size and body condition, as measured by the ratio of structure to reserves.
+For animals feeding on super-abundant food, their model for ingestion rate is
+\begin{equation}
+\iota = \frac{2M_c/H_c}{1 + \exp\left(\eta(R/S-\theta)\right)}S^{2/3},
+\end{equation}
+where $\theta$ is the ``target'' body condition (ratio of reserve to structure); $\eta$ is a parameter that determines how quickly ingestion rate accelerates when $R/S$ drops below $\theta$; $M_c$ is the scaling constant of maximum ingestion rate with $S^{2/3}$; and $H_c$ is the half-saturation resource density.
+For simplicity, we will combine $2M_c/H_c$ into a single parameter $\iota_{\max}$, so the model is then
+\begin{equation}
+\iota = \frac{\iota_{\max}S^{2/3}}{1 + \exp\left(\eta(R/S-\theta)\right)}.
+\end{equation}
+
+
+\subsection*{Dynamics of food biomass in the gut}
+Ingested food biomass is temporarily stored in the gut, where it is processed.
+Biomass that leaves the gut is either assimilated or excreted as waste (stopping temporarily in $C(t)$).
+Thus,
+\begin{equation}
+\frac{dG}{dt} = \iota - \rho G,
+\end{equation}
+where $\rho$ is the rate food biomass leaves the gut ($1/\rho$ is therefore the mean gut transit time).
+We assume that a fraction of this biomass is assimilated, and the remainder move onto $C$.
+
+\subsection*{Dynamics of food biomass in the ``colon''}
+Let $\rho (1-\epsilon_A) G$ be the rate that undigested food enters the ``colon''.
+In reality, there is likely some relationship between $\epsilon_A$ and $\rho$: assimilation efficiency should increase as gut transit time slows down.
+Moreover, many parasites will influence $\epsilon_A$; in fact, if an organism doesn't reduce $\epsilon_A$, it isn't really a parasite at all.
+Since we have defined $\rho$ to be the gut transit time, and in reality we are still in the gut, undigested biomass should leave this compartment at the same rate as it enters.
+This makes the model,
+\begin{equation}
+\frac{dC}{dt} = \rho (1-\epsilon_A)G - \rho C.
+\end{equation}
+
 \subsection*{Reserve dynamics}
 The key equation for host dynamics is the equation for reserve dynamics, which is
 \begin{equation}
-\frac{dR}{dt}=\epsilon _R\left[\epsilon _A I-M-C_G\right]-b R P,
+\frac{dR}{dt}=\epsilon _R\left(\rho \epsilon_A G-M-C_G\right)-b R P,
 \end{equation}
-where:
-\begin{itemize}
-\item $A$ is the ingestion rate (which depends on the abundance of food, as well as on both $S(t)$ and $R(t)$, and may depend on $P(t)$ for parasites that manipulate host foraging behavior);
-\item $\epsilon _A$ is assimilation efficiency (which may depend on the abundance of food and $R(t)$ for hosts that increase assimilation efficiency when food is scarce or condition is poor, and may depend on $P(t)$ for parasites that manipulate the amount of ingesta going to waste, like whipworms);
-\item $M$ is the total maintenance rate;
-\item $C_G$ is the cost of growth in structural biomass;
-\item $\epsilon _R$ is the cost of converting assimilated resource into reserve biomass;
-\item $bRP$ is the allocation of reserve to fuel an induced immune response. Note that this makes the induced response independent of the number of induced (or constitutive) immune cells. This kind of model has been studied by other authors \citep{Bonhoeffer1994,Alizon2005,Fenton2006,Hamilton2008}, and reflects the fact that the immune-parasite interaction is not really a predator-prey interaction in the sense that the immune response is not stimulated by direction contact between immune cells and parasites.
-\end{itemize}
-
-\subsection*{Ingestion}
-It has been suggested that ingestion scales with surface area, so that ingestion should depend on $(S(t)+R(t))^{2/3}$. Since we are considering
-ad lib feeding right now, we can ignore any potential nonlinearities in feeding, as food abundance is always saturating.
-In this case,
-\begin{equation}
-I=I_{\max }(S+R){}^{2/3},
-\end{equation}
-where:
-\begin{itemize}
-\item $I_{\max }$ is the maximum surface-area-specific ingestion rate.
-\end{itemize}
+where $M$ is the total maintenance rate, $C_G$ is the cost of growth in structural biomass, $\epsilon _R$ is the cost of converting assimilated biomass into reserve biomass, and $bRP$ is the allocation of reserve to fuel an induced immune response.
+Note that this last assumption makes the induced response independent of the number of induced (or constitutive) immune cells.
+This kind of model has been studied by other authors \citep{Bonhoeffer1994,Alizon2005,Fenton2006,Hamilton2008}, and reflects the fact that the immune-parasite interaction is not really a predator-prey interaction in the sense that the immune response is not stimulated by direction contact between immune cells and parasites.
 
 \subsection*{Maintenance}
-An organism must pay the metabolic cost of all of its cells, which means that a model of maintenance might be
+An organism must pay the metabolic cost of all of its cells, which means that a reasonable model of maintenance is
 \begin{equation}
 M=m(S+R)+m_cI_c+m_iI_i,
 \end{equation}
-where:
-\begin{itemize}
-\item $m$ is the maintenance rate for weight, which is assumed to be the same for structure and reserves;
-\item $m_c$ is the maintenance rate for constitutive immune biomass;
-\item $m_i$ is the maintenance rate for induced immune biomass.
-\end{itemize}
+where $m$ is the maintenance rate for weight, which is assumed to be the same for structure and reserves, $m_c$ is the maintenance rate for constitutive immune biomass, and $m_i$ is the maintenance rate for induced immune biomass.
 
-
-It may be reasonable to question whether there should be separate maintenance rates for structure $S(t)$ versus reserves $R(t)$, but this is
-probably reasonable for the moment. I discuss the separate maintenance costs for constitutive versus induced immune biomass below.
+It may be worth questioning whether there should be separate maintenance rates for structure $S(t)$ versus reserves $R(t)$, but this is probably reasonable for the moment.
+I discuss the separate maintenance costs for constitutive versus induced immune biomass below.
 
 \subsection*{Constitutive immune defense}
-Rather than considering a dynamic constitutive immune defense, we instead assume that organisms maintain a constitutive immune biomass that is proportional to total biomass. To some extent, this makes biological sense: hosts should want to maintain a relatively constant level of surveillance, regardless of how much tissue they have. Therefore, we assume that the total biomass of constitutive defense is:
+Rather than considering a dynamic constitutive immune defense, we instead assume that organisms maintain a constitutive immune biomass that is proportional to total biomass.
+To some extent, this makes biological sense: hosts should want to maintain a relatively constant level of surveillance, regardless of how much tissue they have.
+At least some theoretical evidence supports this assumption \citep{Wiegel2004}.
+Therefore, we assume that the total biomass of constitutive defense is:
 \begin{equation}
 I_c=k(S+R),
 \end{equation}
-where:
-\begin{itemize}
-\item $k$ is the biomass of the constitutive immune system relative to the total biomass in weight ($k<<1$).
-\end{itemize}
+where $k$ is the biomass of the constitutive immune system relative to the total biomass in weight ($k<<1$).
 
-
-Note that we do not consider the cost of building these cells, or, more precisely, we assume that the building cost and the maintenance cost are identical. This is quite different from our assumptions for the induced immune response (discussed below).
+Note that we do not consider the cost of building these cells, or, more precisely, we assume that the building cost and the maintenance cost are identical.
+This is quite different from our assumptions for the induced immune response (discussed below).
 
 \subsection*{ Induced immune response}
 The derivation of the reserve dynamics equation implies a model for the induced immune response of
 \begin{equation}
 \frac{dI_i}{dt}=\epsilon _ib R P-\mu _II_i,
 \end{equation}
-where:
-\begin{itemize}
-\item $\epsilon _i$ is the cost of converting reserve biomass into \textit{ effective }induced immune biomass (see below);
-\item $b$ is the rate reserve biomass is allocated to the immune system per unit of parasite biomass;
-\item $\mu _I$ is the background rate that immune cells are lost.
-\end{itemize}
+where $\epsilon _i$ is the cost of converting reserve biomass into \textit{effective} induced immune biomass (see below), $b$ is the rate reserve biomass is allocated to the immune system per unit of parasite biomass, and $\mu _I$ is the background rate that immune cells are lost.
 
 With this model formulation, if an infection is cleared, the induced immune response returns to 0; we may, at some point in the future, want to consider the fact that some of the cells of the induced immune response become part of the constitutive immune system after infection (e.g., memory cells).
 
 We can also make some assumptions about parameter values.
 The induced immune response is very costly to develop because it is wasteful: lymphocytes go through a process of differentiation followed by somatic selection that culls most of these newly produced cells.
 Maintaining the effective cells should be comparatively cheap.
-Most likely, what this would imply is that the parameter $b$ should be relatively large - lots of energy is invested in the induced immune response - but $\epsilon _I$ should be relatively small - most of that energy is spent building immune cells that will not actually be effective.
+Most likely, what this would imply is that the parameter $b$ should be relatively large - lots of energy is invested in the induced immune response - but $\epsilon_I$ should be relatively small - most of that energy is spent building immune cells that will not actually be effective.
 On the other hand, the cost of maintaining the effective induced immune cells $m_i$ should be different from either $b$ or $\epsilon_i$, different from the case of constitutive immune biomass.
 
 \subsection*{Cost of growth}
@@ -227,77 +256,228 @@ Let's start with the equation for structural biomass.
 If you assume that structural biomass $S$ scales with structural length $L$ as $S =\epsilon L^3$, and you assume that structural length
 follows a von Bertalanffy equation, then
 \begin{align}
-\frac{dS}{dt} &=\frac{d\left(\epsilon  L^3\right)}{\text{dt}} \\
-& =3\epsilon  L^2 \frac{dL}{dt} \\
-& =3 \epsilon  L^2 \left(\gamma \left(L_{\infty}-L\right)\right) \\
-& =3 \gamma \left(\epsilon  L^2 L_{\infty}-\epsilon  L^3\right) \\
-& =3 \gamma \left(\epsilon  L^2L_{\infty }-S\right).
+\frac{dS}{dt} &=\frac{d\left(\alpha L^3\right)}{\text{dt}} \\
+& =3\alpha  L^2 \frac{dL}{dt} \\
+& =3 \alpha  L^2 \left(\gamma \left(L_{\infty}-L\right)\right) \\
+& =3 \gamma \left(\alpha  L^2 L_{\infty}-\epsilon  L^3\right) \\
+& =3 \gamma \left(\alpha  L^2L_{\infty }-S\right).
 \end{align}
 
-Note that $S^{2/3}=\epsilon ^{2/3}L^2$, or $L^2=S^{2/3}/\epsilon ^{2/3}$, so
+Note that $S^{2/3}=\alpha^{2/3}L^2$, or $L^2=S^{2/3}/\alpha^{2/3}$, so
 \begin{equation}
-\frac{dS}{dt}=3\gamma  \left(\epsilon ^{1/3}L_{\infty }S^{2/3}-S\right).
+\frac{dS}{dt}=3\gamma  \left(\alpha^{1/3}L_{\infty }S^{2/3}-S\right).
 \end{equation}
-If a unit of structural biomass increase costs $\epsilon _G$, then the total cost for structural growth is
+If a unit of structural biomass increase costs $\epsilon_G$, then the total cost for structural growth is
 \begin{equation}
-C_G = \epsilon _G 3\gamma  \left(\epsilon ^{1/3}L_{\infty }S^{2/3}-S\right).
+C_G = \epsilon _G 3\gamma  \left(\alpha ^{1/3}L_{\infty }S^{2/3}-S\right).
 \end{equation}
 This agrees with Anieke's derivation.
-Most of these parameters have probably already been estimated (for mice, anyway; see the back of Kooijman's book), including the shape parameter $\epsilon$, the maximum structural length $L_{\infty }$, and the growth rate in structure $\gamma$.
+Most of these parameters have probably already been estimated (for mice, anyway; see the back of Kooijman's book), including the shape parameter $\alpha$, the maximum structural length $L_{\infty }$, and the growth rate in structure $\gamma$.
 
 Of course, it is possible to directly solve the von Bertalanffy growth equation, so we could eliminate one equation from the model by simply solving for the size of the animal at any age.
-In particular, $\frac{dL}{dt}=\gamma \left(L_{\infty }-L\right), \text{with} L(0)=L_b$, has the solution $L(t)=L_{\infty }+\left(L_b-L_{\infty}\right)e^{-\gamma t}$, and the structural biomass $S(t)=\epsilon  L(t)^3$.
+In particular, $\frac{dL}{dt}=\gamma \left(L_{\infty }-L\right), \text{with} L(0)=L_b$, has the solution $L(t)=L_{\infty }+\left(L_b-L_{\infty}\right)e^{-\gamma t}$, and the structural biomass $S(t)=\alpha L(t)^3$.
 
 However, if the parasite utilizes structure as a resource, the structural growth equation has to be modified to include parasitism, and we will no longer be able to solve the equation.
 In particular, the structural biomass equation will become
 \begin{equation}
-\frac{dS}{dt}=3\gamma  \left(\epsilon ^{1/3}L_{\infty }S^{2/3}-S\right)-\frac{k S P}{h+S}.
+\frac{dS}{dt}=3\gamma  \left(\alpha^{1/3}L_{\infty }S^{2/3}-S\right)-\frac{\sigma_S S P_3}{H_S+S}.
 \end{equation}
 However, we can still make use of the analytical solution: when the parasite is using up structural biomass as resource, the amount allocated to growth (i.e., $C_G$)should increase in proportion to how far the host is from it's target structural biomass.
 That is, define
 \begin{equation}
-S_{\text{target}}(t)=\epsilon \left(\left(L_b-L_{\infty }\right) e^{-\gamma  t}+L_{\infty }\right)^3,
+S_{\text{target}}(t)=\alpha \left(\left(L_b-L_{\infty }\right) e^{-\gamma  t}+L_{\infty }\right)^3,
 \end{equation} and let the solution of the differential equation for $\frac{dS}{dt}$ give the actual weight.
 
-It seems to make sense to me, at this point, to imagine that what happens when an organism is below its target structural biomass is to increase the amount of energy allocated to growth to attempt to accelerate the growth rate (e.g., ``catch-up'' growth).
-That is, the parameter $\gamma$ should become a function of the difference between the target structural biomass and the actual structural biomass.
+It makes sense to me, at this point, to imagine that what happens when an organism is below its target structural biomass is that it increases the amount of energy allocated to growth to accelerate its growth rate (e.g., engage in ``catch-up'' growth).
+Mathematically, that could be accomplished by making the parameter $\gamma$ a function of the difference between the target structural biomass and the actual structural biomass.
 For example, if you let
 \begin{equation}
 \gamma =\gamma _{\min }+\gamma _{\text{catchup}}\left(\frac{S_{\text{target}}(t)}{S(t)}-1\right),
 \end{equation}
-then whenever $S(t)<S_{\text{target}}(t)$, then $\gamma$ increases, increasing the allocation of energy towards growth and enabling the \textit{possibility} of catch-up growth.
+then whenever $S(t)<S_{\text{target}}(t)$, $\gamma$ increases, increasing the allocation of energy towards growth and enabling the \textit{possibility} of catch-up growth.
 Of course, if there is a parasite that is also sucking up biomass, the host may or may not actually be able to catch up.
 If the parasite is cleared, the host will have an increased growth rate until $S(t)=S_{\text{target}}(t)$, and then the growth rate will fall back to normal.
 
 Thus, we have equations for the rate of structural biomass increase, the growth rate, and cost of growth:
 \begin{align}
-\frac{dS}{dt} &= 3\gamma  \left(\epsilon ^{1/3}L_{\infty }S(t)^{2/3}-S(t)\right)-\frac{k S(t) P(t)}{h+S(t)} \\
-C_G(t)&=\epsilon _G 3\gamma  \left(\epsilon ^{1/3}L_{\infty }S(t)^{2/3}-S(t)\right) \\
-\gamma &=\gamma _{\min }+\gamma _{\text{catchup}}\left(\frac{S_{\text{target}}(t)}{S(t)}-1\right) \\
-S_{\text{target}}(t) &=\epsilon  \left(\left(L_b-L_{\infty }\right) e^{-\gamma  t}+L_{\infty }\right)^3
+\frac{dS}{dt} &= 3\gamma  \left(\alpha^{1/3}L_{\infty }S(t)^{2/3}-S(t)\right)-\frac{k S(t) P(t)}{h+S(t)} \\
+C_G(t)&=\epsilon_G 3\gamma \left(\alpha^{1/3}L_{\infty }S(t)^{2/3}-S(t)\right) \\
+\gamma(S) &=\gamma_{\min}+\gamma_{\text{catchup}}\left(\frac{S_{\text{target}}(t)}{S(t)}-1\right) \\
+S_{\text{target}}(t) &=\alpha \left(\left(L_b-L_{\infty }\right) e^{-\gamma  t}+L_{\infty }\right)^3
 \end{align}
 For non-parasitized hosts, or hosts parasitized by parasites targeting other sources of biomass, then $S(t)=S_{\text{target}}(t)$, and you only need two of the above equations.
 
+\subsection*{Host mortality}
+The last consideration is of host mortality rate.
+DEB theory has been used extensively to consider how metabolic activity relates to mortality risk \citep[by keeping track of things like oxidative damage, e.g.,][]{vanLeeuwen2002,Kooijman2009}, but that might be more complicated than we wish to deal with at the moment.
+A simpler solution is to imagine that, given its structural volume, an organism has a ``target'' amount of reserves that it seeks to maintain.
+This is known, in the dynamic energy budget literature, as the ``weak homeostasis assumption.''
+It can be modelled as:
+\begin{equation}
+\frac{d\mu}{dt} = \mu_{\min} + \mu_{accel}\max\left(\theta \frac{S}{R} - 1, 0\right),
+\end{equation}
+where $\mu_{\min}$ is the baseline mortality rate of a healthy host (which we assume for simplicity is independent of age), $\mu_{accel}$ is the rate that mortality accelerates with decreasing body condition, and $\theta$ is the target ratio of reserves $R$ to structure $S$ (as above in the resource ingestion rate equation).
+With this formulation, as $R$ approaches zero, mortality rate accelerates dramatically.
+The parameter $\theta$ allows mortality rate to accelerate well before $R$ actually gets close to zero, which is likely quite biologically reasonable.
+A slightly simplified version of this would be
+\begin{equation}
+\frac{d\mu}{dt} = \mu_{\min} + \mu_{R}\left(\theta \frac{S}{R} - 1\right),
+\end{equation}
+which allows mortality rate to \emph{fall} when $R$ is large relative to $S$.
+This may not be particularly biologically reasonable, given the negative health consequences of obesity, but does make the system a bit more analytically tractable.
+
 \section*{Model equations, including parasitism}
 As seen in Fig. \ref{fig:model}, we consider 4 kinds of parasite: $P_1$ are parasites of ingestion; $P_2$ are parasites of waste; $P_3$ are parasites of structure; and $P_4$ are parasites of reserves.
-One of the main differences between these parasites, from a modeling perspective, that we need to deal with is that $P_1$ and $P_2$ are parasitizing a \emph{flow} of biomass, whereas $P_3$ and $P_4$ are parasitizing \emph{stored} biomass.
-This makes the models different for each.
-For example, it makes sense to imagine that $P_{1,2}$ capture some \emph{proportion} of the flow, whereas $P_{3,4}$ have a functional response.
-In particular, for $P_1$ and $P_2$:
-\begin{align}
-\frac{dP_1}{dt} &= \epsilon_P \sigma P_1 I - \mu_P P_1 - \mu_c P_1 I_c - \mu_i P_1 I_i,\\
-\frac{dP_2}{dt} &= \epsilon_P \sigma P_2 (1-\epsilon_A) I - \mu_P P_2  \mu_c P_2 I_c - \mu_i P_2 I_i,
-\end{align}
-where $\sigma P_1$ is the fraction of the flow captured by the parasite, $\epsilon_P$ is the cost of converting between biomasses, $\mu_P$ is the background rate of biomass loss, and $\mu_{c,i}$ are the loss rates due to the constitutive and induced immune responses, respectively.
+By allowing the existence of a gut and colon, all four of these parasites can bemodelled with an equivalent mathematical formulation:
+\begin{equation}
+\frac{dP_j}{dt} = \epsilon_P \frac{\sigma P_j E_j}{H_j+E_j}  - \mu_P P_j - \mu_c P_j I_c - \mu_i P_j I_i,
+\end{equation}
+where $j$ refers the parasite class and $E_j$ is the parasite's source of energy: either $G(t)$ (for $j=1$), $C(t)$ (for $j=2$), $S(t)$ (for $j=3$), or $R(t)$ (for $j=4$).
+The parameters are: $\epsilon_P$ is the cost of converting a gram of stolen host biomass into a gram of parasite biomass, which likely varies with parasite type; $\sigma$ is the parasite's rate of biomass consumption; $\mu_P$ is the parasite's background rate of biomass loss; $\mu_c$ and $\mu_i$ are the biomass loss rates due to interaction with the constitutive and induced immune responses, respectively.
 
-For $P_3$ and $P_4$:
+The full model (assuming the demand-driven ingestion rate function):
 \begin{align}
-\frac{dP_3}{dt} &= \epsilon_P \frac{k_S S P}{h_S + S} - \mu_P P_3 - \mu_c P_3 I_c - \mu_i P_3 I_i,\\
-\frac{dP_4}{dt} &= \epsilon_P \frac{k_R R P}{h_R + R} - \mu_P P_4 - \mu_c P_4 I_c - \mu_i P_4 I_i,
+\frac{dG}{dt} &= \frac{\iota_{\max}S^{2/3}}{1 + \exp\left(\eta(R/S-\theta)\right)} - \rho G - \frac{\sigma_G P_1 G}{H_G + G}, \\
+\frac{dC}{dt} &= \rho (1-\epsilon_A)G - \rho C - \frac{\sigma_C P_2 C}{H_C + C}, \\
+\frac{dS}{dt} &= 3\gamma(S) \left(\alpha^{1/3}L_{\infty }S^{2/3}-S\right) - \frac{\sigma_S P_3 S}{H_S + S}, \\
+\frac{dR}{dt} &= \epsilon_R\left(\rho \epsilon_A G-M(S,R,I_i)-C_G(S)\right)-b R (P_1+P_2+P_3+P_4) - \frac{\sigma_R P_4 R}{H_R + R}, \\
+\frac{dI_i}{dt} &= \epsilon_ib R P-\mu_II_i, \\
+\frac{d\mu}{dt} &= \mu_{\min} + \mu_{accel}\max\left(\theta \frac{S}{R} - 1, 0\right), \\
+\frac{dP_1}{dt} &= \epsilon_P \frac{\sigma_G P_1 G}{H_G + G} - \mu_P P_1 - \mu_c I_c P_1 - \mu_i I_i P_1, \\
+\frac{dP_2}{dt} &= \epsilon_P \frac{\sigma_C P_2 C}{H_C + C} - \mu_P P_2 - \mu_c I_c P_2 - \mu_i I_i P_2, \\
+\frac{dP_3}{dt} &= \epsilon_P \frac{\sigma_S P_3 S}{H_S + S} - \mu_P P_3 - \mu_c I_c P_3 - \mu_i I_i P_3, \\
+\frac{dP_4}{dt} &= \epsilon_P \frac{\sigma_R P_4 R}{H_R + R} - \mu_P P_4 - \mu_c I_c P_4 - \mu_i I_i P_4.
 \end{align}
-where $k_{S,R}$ is the parasite's ``attack rate'' and $h_{S,R}$ is a half-saturation constant for the parasite.
 
-I dislike that $P_{1,2}$ and $P_{3,4}$ have very different per-capita growth rate expressions.
+The functions for maintenance rate, constitutive immune response, cost of growth, and structural growth rate are:
+\begin{align}
+M &= m(S+R)+m_cI_c+m_iI_i, \\
+I_c &= k(S + R), \\
+C_G(t)&=\epsilon_G 3\gamma(R) \left(\alpha^{1/3}L_{\infty }S(t)^{2/3}-S(t)\right), \\
+\gamma(S) &=\gamma _{\min}+\gamma_{\text{catchup}}\left(\frac{S_{\text{target}}(t)}{S(t)}-1\right), \\
+S_{\text{target}}(t) &= \alpha \left(\left(L_b-L_{\infty }\right) e^{-\gamma  t}+L_{\infty }\right)^3.
+\end{align}
+
+
+
+
+\section*{Interesting mathematical experiments}
+\begin{itemize}
+\item How much does a $P_2$ parasite have to reduce digestion efficiency before it becomes worthwhile to attack it rather than ignore it? Mounting an immune response to a parasite engenders a cost to the host by reducing $R$ (which accelerates mortality rate). Is it worthwhile to attack \emph{any} parasite that invades, or is it better to ignore some? This amounts to an argument about tolerance.
+\end{itemize}
+
+To model this, we need to consider how parasite biomass affects assimilation efficiency.
+It is clear that we cannot simply assume that the presence of a parasite causes a \emph{fixed} decrease in assimilation efficiency, as there would be no point in fighting such a parasite because unless the parasite can be cleared, no advantage is gained by wasting energy fighting it.
+It makes the most sense to imagine that parasite abundance has a saturating effect on digestion efficiency:
+\begin{equation}
+\epsilon_A(P_2) = \epsilon_A\left(1 - \frac{\epsilon_{A_{\min}} P_2}{H_\epsilon + P_2}\right).
+\end{equation}
+In the absence of parasites, assimilation efficiency is $\epsilon_A$, as above.
+As parasite biomass increases, digestive efficiency falls; $\epsilon_{A_{\min}}$ gives the maximum possible reduction in digestive efficiency (bounded between 0 and 1, and more likely some value less than one).
+For simplicity, I am also going to assume a constant, biomass independent, ingestion rate to avoid the complexity of condition dependent ingestion.
+
+The model simplifies to:
+\begin{align}
+\frac{dG}{dt} &= \iota_{\max} - \rho G, \\
+\frac{dC}{dt} &= \rho (1-\epsilon_A(P_2))G - \rho C - \frac{\sigma_C P_2 C}{H_C + C}, \\
+\frac{dS}{dt} &= 3\gamma_{\min} \left(\alpha^{1/3}L_{\infty }S^{2/3}-S\right) - \frac{\sigma_S P_3 S}{H_S + S}, \\
+\frac{dR}{dt} &= \epsilon_R\left(\rho \epsilon_A(P_2) G-M(S,R,I_i)-C_G(S)\right)-b R P_2, \\
+\frac{dI_i}{dt} &= \epsilon_ib R P-\mu_II_i, \\
+\frac{d\mu}{dt} &= \mu_{\min} + \mu_{accel}\max\left(\theta \frac{S}{R} - 1, 0\right), \\
+\frac{dP_2}{dt} &= \epsilon_P \frac{\sigma_C P_2 C}{H_C + C} - \mu_P P_2 - \mu_c I_c P_2 - \mu_i I_i P_2,
+\end{align}
+where
+\begin{align}
+M &= m(S+R)+m_cI_c+m_iI_i, \\
+I_c &= k(S + R), \\
+C_G(t)&=\epsilon_G 3 \gamma_{min}\left(\alpha^{1/3}L_{\infty }S(t)^{2/3}-S(t)\right), \\
+\epsilon_A(P_2) &= \epsilon_A\left(1 - \frac{\epsilon_{A_{\min}} P_2}{H_\epsilon + P_2}\right).
+\end{align}
+
+
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{require}(deSolve)
+\hlcom{## Mouse parameters}
+\hlcom{##------------------}
+\hlcom{## imax for balb/c = 7.86 g food/g mouse; black6 = 6.54 g food/g mouse}
+\hlcom{## rho = 1 day}
+\hlcom{## balb/c theta = 3.93 g lean/g fat; black6 = 3.5 g lean/g fat}
+\hlcom{## uI = 20 days (for CD4 cell)}
+\hlcom{## mC = 11 hours (half-life for neutrophils, 60-70% of standing immune defense; 60 day lifespan for lymphocytes, 40% of standing immune defense)}
+pars <- \hlkwd{c}(imax=, theta=, rho=,
+          epsA=, epsG=, epsR=, epsI=,
+          Linf=34, alpha=1, gmin=25,
+          m=, mc=, mi=,
+          k=, b=, uI=,
+          umin=, uacc=,
+          epsP=, sigmaC= hC=,
+          uP=, uC=, uI=,
+          epsAmin=, heps=)
+
+\hlcom{## This model is slightly modified to focus on P_2 parasites whose biomass causes}
+P2_deb <- \hlkwd{function}(t, y, p) \{
+\hlcom{    ## HOST PARAMETERS}
+\hlcom{    ## max. SA-specific ingest rate [food g^(-2/3) day^(-1)]}
+    imax <- \hlkwd{unname}(p[\hlstr{"imax"}])
+\hlcom{    ## target body condition [dimensionless ratio]}
+    theta <- \hlkwd{unname}(p[\hlstr{"theta"}])
+\hlcom{    # gut transit time [day^(-1)]}
+    rho <- \hlkwd{unname}(p[\hlstr{"rho"}])
+\hlcom{    ## biomass conversion efficiencies [dim.]}
+    epsA <- \hlkwd{unname}(p[\hlstr{"epsA"}]) # ingestion to assimilation
+    epsG <- \hlkwd{unname}(p[\hlstr{"epsG"}]) # assimilate to growth
+    epsR <- \hlkwd{unname}(p[\hlstr{"epsR"}]) # assimilate to reserve
+    epsI <- \hlkwd{unname}(p[\hlstr{"epsI"}]) # reserve to immune
+\hlcom{    ## max structural length [mm]}
+    Linf <- \hlkwd{unname}(p[\hlstr{"Linf"}])
+\hlcom{    ## shape parameter (converts mm to g) [g mm^(-1)]}
+    alpha <- \hlkwd{unname}(p[\hlstr{"alpha"}])
+\hlcom{    ## growth rate for host in good condition [day^(-1)]}
+    gmin <- \hlkwd{unname}(p[\hlstr{"gmin"}])
+\hlcom{    ## maintenance rates for different tissues [day^(-1)]}
+    m <- \hlkwd{unname}(p[\hlstr{"m"}])
+    mc <- \hlkwd{unname}(p[\hlstr{"mc"}])
+    mi <- \hlkwd{unname}(p[\hlstr{"mi"}])
+\hlcom{    ## constitutive immune biomass per total weight [dim.]}
+    k <- \hlkwd{unname}(p[\hlstr{"k"}])
+\hlcom{    ## induced immune response rate [g^(-1) day^(-1)]}
+    b <- \hlkwd{unname}(p[\hlstr{"b"}])
+\hlcom{    ## biomass loss rate of induced immune response [day^(-1)]}
+    uI <- \hlkwd{unname}(p[\hlstr{"uI"}])
+\hlcom{    ## host background mortality rate [day^(-1)]}
+    umin <- \hlkwd{unname}(p[\hlstr{"umin"}])
+\hlcom{    ## starvation mortality [day^(-1)]}
+    uacc <- \hlkwd{unname}(p[\hlstr{"uacc"}])
+    epsAmin <- \hlkwd{unname}(p[\hlstr{"epsAmin"}])
+    heps <- \hlkwd{unname}(p[\hlstr{"heps"}])
+
+\hlcom{    ## PARASITE PARAMETERS}
+\hlcom{    ## biomass conversion efficiency}
+    epsP <- \hlkwd{unname}(p[\hlstr{"epsA"}])
+\hlcom{    ## parasite attack rates [g parasite^(-1) day^(-1)]}
+    sigmaC <- \hlkwd{unname}(p[\hlstr{"sigmaC"}])
+\hlcom{    ## parasite handling times [g]}
+    hC <- \hlkwd{unname}(p[\hlstr{"hC"}])
+\hlcom{    ## background biomass loss rate [day^(-1)]}
+    uP <- \hlkwd{unname}(p[\hlstr{"uP"}])
+\hlcom{    ## biomass loss due to constitutive immune defense [day^(-1) g^(-1)]}
+    uC <- \hlkwd{unname}(p[\hlstr{"uC"}])
+\hlcom{    ## biomass loss due to induced immune defense [day^(-1) g^(-1)]}
+    uI <- \hlkwd{unname}(p[\hlstr{"uI"}])
+
+\hlcom{    ## State variables}
+    G <- y[1]; C <- y[2];
+
+
+
+
+\}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
 
 \bibliographystyle{ecology.bst}
 \bibliography{Biblio.bib}
