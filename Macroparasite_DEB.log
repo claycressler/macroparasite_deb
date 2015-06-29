@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.6.30)  29 JUN 2015 13:18
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.6.30)  29 JUN 2015 17:26
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -427,71 +427,84 @@ File: Macroparasite_DEB.png Graphic file (type png)
 <use Macroparasite_DEB.png>
 Package pdftex.def Info: Macroparasite_DEB.png used on input line 123.
 (pdftex.def)             Requested size: 451.6875pt x 350.37404pt.
+
+Underfull \vbox (badness 4168) has occurred while \output is active []
+
  [1{/usr/local/texlive/2012/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./Ma
 croparasite_DEB.png>]
-LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10.95> not available
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 147.
- [2] [3] [4] [5]
-Underfull \vbox (badness 10000) has occurred while \output is active []
+ [2] [3] [4] [5] [6] [7]
+Overfull \hbox (3.52663pt too wide) in paragraph at lines 378--381
+[]\OT1/ptm/m/n/12 Initially, for sim-plic-ity, I wanted to as-sume that in-ges-
+tion de-pends lin-early on struc-tural biomass,
+ []
 
- [6]
-[7]
-Package color Info: Redefining color shadecolor on input line 399.
-LaTeX Font Info:    Try loading font information for OT1+pcr on input line 400.
+[8]
+Package color Info: Redefining color shadecolor on input line 410.
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 411.
 
  (/usr/local/texlive/2012/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
-LaTeX Font Info:    Font shape `OT1/pcr/bx/n' in size <8> not available
-(Font)              Font shape `OT1/pcr/b/n' tried instead on input line 401.
-LaTeX Font Info:    Font shape `OT1/pcr/m/it' in size <8> not available
-(Font)              Font shape `OT1/pcr/m/sl' tried instead on input line 402.
+LaTeX Font Info:    Font shape `OT1/pcr/bx/n' in size <9> not available
+(Font)              Font shape `OT1/pcr/b/n' tried instead on input line 412.
+LaTeX Font Info:    Font shape `OT1/pcr/m/it' in size <9> not available
+(Font)              Font shape `OT1/pcr/m/sl' tried instead on input line 413.
+LaTeX Font Info:    Try loading font information for TS1+pcr on input line 441.
 
-Overfull \hbox (239.51294pt too wide) in paragraph at lines 408--408
-[][]\OT1/pcr/m/sl/8 ## mC = 11 hours (half-life for neutrophils, 60-70% of stan
-ding immune defense; 60 day lifespan for lymphocytes, 40% of standing immune de
-fense)[][] 
- []
 
-LaTeX Font Info:    Try loading font information for OMS+pcr on input line 420.
-
-(/usr/local/texlive/2012/texmf-dist/tex/latex/psnfss/omspcr.fd
-File: omspcr.fd 
+(/usr/local/texlive/2012/texmf-dist/tex/latex/psnfss/ts1pcr.fd
+File: ts1pcr.fd 2001/06/04 font definitions for TS1/pcr.
 )
-LaTeX Font Info:    Font shape `OMS/pcr/m/n' in size <8> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 420.
+LaTeX Font Info:    Font shape `TS1/pcr/m/it' in size <9> not available
+(Font)              Font shape `TS1/pcr/m/sl' tried instead on input line 441.
 
-Overfull \vbox (1.42528pt too high) detected at line 478
+Overfull \hbox (34.31195pt too wide) in paragraph at lines 455--455
+[][]\OT1/pcr/b/n/9 plot[][]\OT1/pcr/m/n/9 (out[,[][]"time"[][]], out[,[][]"S"[]
+[]],[] []type[][]=[][]\TS1/pcr/m/n/9 '\OT1/pcr/m/n/9 l\TS1/pcr/m/n/9 '[][]\OT1/
+pcr/m/n/9 ,[] []lwd[][]=[][]1.5[][],[] []col[][]=[][]1[][],[] []xlab[][]=[][]"A
+ge (d)"[][],[] []ylab[][]=[][]"Weight (g)"[][])[][] 
  []
 
-[8] (./Macroparasite_DEB.bbl [9]) [10] (./Macroparasite_DEB.aux) ) 
+[9] <figure/unnamed-chunk-2-1.png, id=48, 602.25pt x 602.25pt>
+File: figure/unnamed-chunk-2-1.png Graphic file (type png)
+
+<use figure/unnamed-chunk-2-1.png>
+Package pdftex.def Info: figure/unnamed-chunk-2-1.png used on input line 460.
+(pdftex.def)             Requested size: 451.6875pt x 451.70476pt.
+ (./Macroparasite_DEB.bbl) [10] [11 <./figure/unnamed-chunk-2-1.png>] (./Macrop
+arasite_DEB.aux)
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
- 6530 strings out of 493488
- 105486 string characters out of 3141326
- 227086 words of memory out of 3000000
- 9574 multiletter control sequences out of 15000+200000
- 21343 words of font info for 59 fonts, out of 3000000 for 9000
+ 6544 strings out of 493488
+ 105717 string characters out of 3141326
+ 223084 words of memory out of 3000000
+ 9585 multiletter control sequences out of 15000+200000
+ 23039 words of font info for 62 fonts, out of 3000000 for 9000
  1118 hyphenation exceptions out of 8191
- 44i,13n,42p,437b,322s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/local/t
-exlive/2012/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/texlive/2012/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2012/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2012/texmf
--dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2012/texmf-d
-ist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2012/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2012/texmf-dist/f
-onts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2012/texmf-dist/font
-s/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2012/texmf-dist/fonts
-/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2012/texmf-dist/fonts/t
-ype1/urw/courier/ucrb8a.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/urw
-/courier/ucrr8a.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/urw/courier
-/ucrro8a.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/urw/times/utmb8a.p
-fb></usr/local/texlive/2012/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/l
-ocal/texlive/2012/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on Macroparasite_DEB.pdf (10 pages, 206358 bytes).
+ 44i,13n,42p,434b,361s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/usr/local/texlive/2012/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
+exlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/te
+xlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/tex
+live/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texli
+ve/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive
+/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/20
+12/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2012/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2012/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2012/tex
+mf-dist/fonts/type1/urw/courier/ucrb8a.pfb></usr/local/texlive/2012/texmf-dist/
+fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2012/texmf-dist/fonts/ty
+pe1/urw/courier/ucrro8a.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/urw
+/times/utmb8a.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/urw/times/utm
+r8a.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on Macroparasite_DEB.pdf (11 pages, 222182 bytes).
 PDF statistics:
- 97 PDF objects out of 1000 (max. 8388607)
- 68 compressed objects within 1 object stream
+ 102 PDF objects out of 1000 (max. 8388607)
+ 70 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 11 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -1,4 +1,4 @@
-\documentclass[11pt,reqno,final,pdftex]{amsart}
+\documentclass[12pt,reqno,final,pdftex]{amsart}
 %% DO NOT DELETE OR CHANGE THE FOLLOWING TWO LINES!
 %% $Revision$
 %% $Date$
@@ -77,7 +77,7 @@ opts_chunk$set(
                size='scriptsize',
                fig.path='figure/',fig.lp="fig:",
                fig.align='left',
-               fig.show='asis',
+               fig.show='hold',
                fig.height=4,fig.width=6.83,
                out.width="\\linewidth",
                dpi=150,
@@ -337,7 +337,7 @@ The full model (assuming the demand-driven ingestion rate function):
 \frac{dS}{dt} &= 3\gamma(S) \left(\alpha^{1/3}L_{\infty }S^{2/3}-S\right) - \frac{\sigma_S P_3 S}{H_S + S}, \\
 \frac{dR}{dt} &= \epsilon_R\left(\rho \epsilon_A G-M(S,R,I_i)-C_G(S)\right)-b R (P_1+P_2+P_3+P_4) - \frac{\sigma_R P_4 R}{H_R + R}, \\
 \frac{dI_i}{dt} &= \epsilon_ib R P-\mu_II_i, \\
-\frac{d\mu}{dt} &= \mu_{\min} + \mu_{accel}\max\left(\theta \frac{S}{R} - 1, 0\right), \\
+\frac{d\mu}{dt} &= \mu_{\min} + \mu_{accel}\max\left(\frac{S}{R} - 1, 0\right), \\
 \frac{dP_1}{dt} &= \epsilon_P \frac{\sigma_G P_1 G}{H_G + G} - \mu_P P_1 - \mu_c I_c P_1 - \mu_i I_i P_1, \\
 \frac{dP_2}{dt} &= \epsilon_P \frac{\sigma_C P_2 C}{H_C + C} - \mu_P P_2 - \mu_c I_c P_2 - \mu_i I_i P_2, \\
 \frac{dP_3}{dt} &= \epsilon_P \frac{\sigma_S P_3 S}{H_S + S} - \mu_P P_3 - \mu_c I_c P_3 - \mu_i I_i P_3, \\
@@ -450,13 +450,25 @@ It makes the most sense to imagine that parasite abundance has a saturating effe
 \end{equation}
 In the absence of parasites, assimilation efficiency is $\epsilon_A$, as above.
 As parasite biomass increases, digestive efficiency falls; $\epsilon_{A_{\min}}$ gives the maximum possible reduction in digestive efficiency (bounded between 0 and 1, and more likely some value less than one).
-For simplicity, I am also going to assume a constant, biomass independent, ingestion rate to avoid the complexity of condition dependent ingestion.
 
-The model simplifies to:
+Initially, for simplicity, I wanted to assume that ingestion depends linearly on structural biomass, to avoid the complexity of condition dependent ingestion, and in accordance with Sarah's data.
+However, this does not work mathematically, and it is fairly straightforward to see why.
+You can show that the equilibrium reserve biomass in the absence of parasitism, $R^*$, under such a model, is:
+\begin{equation}
+R^* = \left(\frac{\epsilon_A \iota_{\max}}{m + k m_c} - 1 \right) S^*.
+\end{equation}
+You can see why in the Mathematica notebook ``Macroparasite\_DEB\_analytics.nb.''
+The ratio of reserves to structure is therefore equal to the term in parentheses.
+On the basis of Sarah's data (and the simple general model in \citep{deRoos2013}), this ratio should be approximately 0.25.
+That will happen when $\epsilon_A \iota_{\max} = 1.25(m + k m_c)$. Given that $\epsilon_A$ is a fraction close to unity in magnitude, this suggests that ingestion rate and maintenance rate should be quite close in value.
+But this is ridiculous: maintenance rates should be on the order of ten-fold smaller than ingestion rates.
+Thus, in a constant food environment with a determinantly growing organism, it is necessary to implement condition-dependent feeding.
+
+Therefore, the model is:
 \begin{align}
-\frac{dG}{dt} &= \iota_{\max} - \rho G, \\
+\frac{dG}{dt} &= \frac{\iota_{\max}S^{2/3}}{1 + \exp\left(\eta(R/S-\theta)\right)} - \rho G, \\
 \frac{dC}{dt} &= \rho (1-\epsilon_A(P_2))G - \rho C - \frac{\sigma_C P_2 C}{H_C + C}, \\
-\frac{dS}{dt} &= 3\gamma_{\min} \left(\alpha^{1/3}L_{\infty }S^{2/3}-S\right) - \frac{\sigma_S P_3 S}{H_S + S}, \\
+\frac{dS}{dt} &= 3\gamma_{\min} \left(\alpha^{1/3}L_{\infty }S^{2/3}-S\right), \\
 \frac{dR}{dt} &= \epsilon_R\left(\rho \epsilon_A(P_2) G-M(S,R,I_i)-C_G(S)\right)-b R P_2, \\
 \frac{dI_i}{dt} &= \epsilon_ib R P-\mu_II_i, \\
 \frac{d\mu}{dt} &= \mu_{\min} + \mu_{accel}\max\left(\theta \frac{S}{R} - 1, 0\right), \\
@@ -470,87 +482,54 @@ C_G(t)&=\epsilon_G 3 \gamma_{min}\left(\alpha^{1/3}L_{\infty }S(t)^{2/3}-S(t)\ri
 \epsilon_A(P_2) &= \epsilon_A\left(1 - \frac{\epsilon_{A_{\min}} P_2}{H_\epsilon + P_2}\right).
 \end{align}
 
-
-<<echo=TRUE,eval=FALSE>>=
+<<echo=TRUE,eval=TRUE,fig.width=4, fig.height=4, fig.cap="Proving that this parameter set produces something vaguely mouselike; the solid black line shows structural biomass and the dashed red line shows reserve biomass.">>=
 require(deSolve)
 ## Mouse parameters
 ##------------------
-## imax for balb/c = 7.86 g food/g mouse; black6 = 6.54 g food/g mouse
-## rho = 1 day
+## total ingestion for balb/c = 7.86 g food/day; black6 = 6.54
+## imax is between 0.15-0.4 g food/g mouse
+## rho = 4; it is 1/mean transit time, which is approx 6 hours
 ## balb/c theta = 3.93 g lean/g fat; black6 = 3.5 g lean/g fat
-## uI = 20 days (for CD4 cell)
-## mC = 11 hours (half-life for neutrophils, 60-70% of standing immune defense; 60 day lifespan for lymphocytes, 40% of standing immune defense)
-pars <- c(imax=, theta=, rho=,
-          epsA=, epsG=, epsR=, epsI=,
-          Linf=34, alpha=1, gmin=25,
-          m=, mc=, mi=,
-          k=, b=, uI=,
-          umin=, uacc=,
-          epsP=, sigmaC= hC=,
-          uP=, uC=, uI=,
-          epsAmin=, heps=)
+## ui = 20 days (for CD4 cell)
+## mC = 11 hours (half-life for neutrophils, 60-70% of standing immune
+## defense; 60 day lifespan for lymphocytes, 40% of standing immune
+## defense)
+## balb/c = 1.5 g at birth, black6=1.23g at birth,
+## balb/c = 664 days lifespan, black6=896 days lifespan
+## estimate of digestive assimilation efficiency=85%
+## assume all other conversion efficiencies = 1
+## weight of a lymphocyte 2.15e-10 g
+## maintenance rate of Mus musculus = 0.0065 (from Kooijman 2009, p. 212)
+## standing defense balb/c @8 weeks = 1.25e-3 g WBC mass, weight 25.4 g
+## standing defense black6 @8 weeks = 1.07e-3 g WBC mass, weight 23.7 g
+## 0.82
 
-## This model is slightly modified to focus on P_2 parasites whose biomass causes
-P2_deb <- function(t, y, p) {
-    ## HOST PARAMETERS
-    ## max. SA-specific ingest rate [food g^(-2/3) day^(-1)]
-    imax <- unname(p["imax"])
-    ## target body condition [dimensionless ratio]
-    theta <- unname(p["theta"])
-    # gut transit time [day^(-1)]
-    rho <- unname(p["rho"])
-    ## biomass conversion efficiencies [dim.]
-    epsA <- unname(p["epsA"]) # ingestion to assimilation
-    epsG <- unname(p["epsG"]) # assimilate to growth
-    epsR <- unname(p["epsR"]) # assimilate to reserve
-    epsI <- unname(p["epsI"]) # reserve to immune
-    ## max structural length [mm]
-    Linf <- unname(p["Linf"])
-    ## shape parameter (converts mm to g) [g mm^(-1)]
-    alpha <- unname(p["alpha"])
-    ## growth rate for host in good condition [day^(-1)]
-    gmin <- unname(p["gmin"])
-    ## maintenance rates for different tissues [day^(-1)]
-    m <- unname(p["m"])
-    mc <- unname(p["mc"])
-    mi <- unname(p["mi"])
-    ## constitutive immune biomass per total weight [dim.]
-    k <- unname(p["k"])
-    ## induced immune response rate [g^(-1) day^(-1)]
-    b <- unname(p["b"])
-    ## biomass loss rate of induced immune response [day^(-1)]
-    uI <- unname(p["uI"])
-    ## host background mortality rate [day^(-1)]
-    umin <- unname(p["umin"])
-    ## starvation mortality [day^(-1)]
-    uacc <- unname(p["uacc"])
-    epsAmin <- unname(p["epsAmin"])
-    heps <- unname(p["heps"])
+## initial conditions: assuming 3.93g lean mass for every g of fat
+## mass, and a birth rate of 1.5 g
+y0 <- c(G=0, C=0, S=1.5*3.93/4.93, R=1.5*1.93/4.93, Ii=0, mu=0, P2=1e-6)
 
-    ## PARASITE PARAMETERS
-    ## biomass conversion efficiency
-    epsP <- unname(p["epsA"])
-    ## parasite attack rates [g parasite^(-1) day^(-1)]
-    sigmaC <- unname(p["sigmaC"])
-    ## parasite handling times [g]
-    hC <- unname(p["hC"])
-    ## background biomass loss rate [day^(-1)]
-    uP <- unname(p["uP"])
-    ## biomass loss due to constitutive immune defense [day^(-1) g^(-1)]
-    uC <- unname(p["uC"])
-    ## biomass loss due to induced immune defense [day^(-1) g^(-1)]
-    uI <- unname(p["uI"])
+## Run for 500 days
+times <- seq(0, 500, 0.1)
 
-    ## State variables
-    G <- y[1]; C <- y[2];
+source("Macroparasite_DEB_models.R")
+## These parameters come from a combination of Sarah's estimates and
+## the de Roos and Persson book.
+pars <- c(imax=0.3, theta=1/3.93, rho=4, eta=20,
+          epsA=0.85, epsG=1, epsR=1, epsI=1,
+          Linf=2.94, alpha=1, gmin=.02,
+          m=0.03, mc=0.03, mi=0.03,
+          k=4.9e-5, b=1, ui=1/20,
+          umin=1/664, uacc=1/664,
+          epsP=1, sigmaC=0.1, hC=1e-3,
+          uP=1/664, uC=1e-3, uI=1e-3,
+          epsAmin=0.25, heps=1e-3,
+          tInf=510)
 
-
-
-
-}
+out <- ode(y=y0, times=times, func=P2_deb, parms=pars, method="lsoda")
+plot(out[,"time"], out[,"S"], type='l', lwd=1.5, col=1, xlab="Age (d)", ylab="Weight (g)")
+lines(out[,"time"], out[,"R"], lwd=1.5, lty=3, col=2)
 
 @
-
 
 \bibliographystyle{ecology.bst}
 \bibliography{Biblio.bib}
