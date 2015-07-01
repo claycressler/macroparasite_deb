@@ -10,17 +10,22 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       157,          7]
-NotebookDataLength[     14463,        473]
-NotebookOptionsPosition[     13329,        432]
-NotebookOutlinePosition[     13684,        448]
-CellTagsIndexPosition[     13641,        445]
+NotebookDataLength[     40334,       1178]
+NotebookOptionsPosition[     38329,       1110]
+NotebookOutlinePosition[     38685,       1126]
+CellTagsIndexPosition[     38642,       1123]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
 Notebook[{
-Cell["The model, without parasites:", "Text",
+Cell["\<\
+In terms of analysis, it will be most helpful, I think, to work with \
+increasingly complex subsets of the full model. The first submodel is the \
+model without parasites.\
+\>", "Text",
  CellChangeTimes->{{3.6445964703465137`*^9, 3.644596473937628*^9}, {
-  3.6445965661468067`*^9, 3.644596569351136*^9}}],
+  3.6445965661468067`*^9, 3.644596569351136*^9}, {3.644681749666543*^9, 
+  3.6446818257445307`*^9}}],
 
 Cell[BoxData[
  RowBox[{
@@ -70,7 +75,7 @@ Cell[BoxData[
   RowBox[{"Imax", " ", "S"}], "-", 
   RowBox[{"G", " ", "\[Rho]"}]}]], "Output",
  CellChangeTimes->{{3.644596678281289*^9, 3.644596684338436*^9}, 
-   3.644596760332507*^9}],
+   3.644596760332507*^9, 3.644669015026388*^9}],
 
 Cell[BoxData[
  RowBox[{
@@ -80,7 +85,7 @@ Cell[BoxData[
    RowBox[{"(", 
     RowBox[{"1", "-", "eA"}], ")"}], " ", "G", " ", "\[Rho]"}]}]], "Output",
  CellChangeTimes->{{3.644596678281289*^9, 3.644596684338436*^9}, 
-   3.644596760335215*^9}],
+   3.644596760332507*^9, 3.644669015029192*^9}],
 
 Cell[BoxData[
  RowBox[{"3", " ", 
@@ -93,7 +98,7 @@ Cell[BoxData[
      SuperscriptBox["\[Alpha]", 
       RowBox[{"1", "/", "3"}]]}]}], ")"}], " ", "\[Gamma]"}]], "Output",
  CellChangeTimes->{{3.644596678281289*^9, 3.644596684338436*^9}, 
-   3.644596760337669*^9}],
+   3.644596760332507*^9, 3.644669015031301*^9}],
 
 Cell[BoxData[
  RowBox[{"eR", " ", 
@@ -117,7 +122,7 @@ Cell[BoxData[
          RowBox[{"1", "/", "3"}]]}]}], ")"}], " ", "\[Gamma]"}], "+", 
     RowBox[{"eA", " ", "G", " ", "\[Rho]"}]}], ")"}]}]], "Output",
  CellChangeTimes->{{3.644596678281289*^9, 3.644596684338436*^9}, 
-   3.644596760339725*^9}]
+   3.644596760332507*^9, 3.6446690150337057`*^9}]
 }, Open  ]],
 
 Cell[TextData[{
@@ -171,103 +176,53 @@ Cell[TextData[{
          RowBox[{"k", " ", 
           SubscriptBox["m", "c"]}]}]], "-", "1"}], ")"}], 
      SuperscriptBox["S", "*"]}]}], TraditionalForm]}],
-  FormatType->"TraditionalForm"]
+  FormatType->"TraditionalForm"],
+ "\nNote that this conclusion is unrealistic, as it suggests that, at \
+equilibrium, the ratio of structure to reserves, ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{
+     SuperscriptBox["R", "*"], "/", 
+     SuperscriptBox["S", "*"]}], "="}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    FractionBox[
+     RowBox[{
+      SubscriptBox["\[Epsilon]", "A"], " ", 
+      SubscriptBox["\[Iota]", "max"]}], 
+     RowBox[{"m", "+", 
+      RowBox[{"k", " ", 
+       SubscriptBox["m", "c"]}]}]], "-", "1"}], TraditionalForm]]],
+ ". In order for this to be at or near 0.2-0.3, ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["\[Iota]", "max"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " and ",
+ StyleBox["m ",
+  FontSlant->"Italic"],
+ "must be of similar magnitude. This makes no biological sense, as they \
+should be more like an order of magnitude different from one another.\n\nWe \
+address this problem mathematically by considering condition-dependent \
+ingestion: the animal has a target ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"R", "/", "S"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " ratio that it wishes to maintain; when it is below this condition, it \
+accelerates ingestion rate; when it is above this condition, ingestion rate \
+drops. You can incorporate that into the following model:"
 }], "Text",
  CellChangeTimes->{{3.644596700538825*^9, 3.644596738818272*^9}, {
   3.6445968822786503`*^9, 3.6445969307234983`*^9}, {3.6445970002501993`*^9, 
-  3.6445970997265863`*^9}, {3.64459715787675*^9, 3.6445971947530813`*^9}}],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[{
- RowBox[{"Solve", "[", 
-  RowBox[{
-   RowBox[{"dG", "\[Equal]", "0"}], ",", "G"}], 
-  "]"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"Solve", "[", 
-   RowBox[{
-    RowBox[{"dC", "\[Equal]", "0"}], ",", "C"}], "]"}], "/.", 
-  RowBox[{
-   RowBox[{"Solve", "[", 
-    RowBox[{
-     RowBox[{"dG", "\[Equal]", "0"}], ",", "G"}], "]"}], 
-   "\[LeftDoubleBracket]", "1", 
-   "\[RightDoubleBracket]"}]}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"Collect", "[", 
-   RowBox[{
-    RowBox[{
-     RowBox[{
-      RowBox[{"Assuming", "[", 
-       RowBox[{
-        RowBox[{
-         RowBox[{"Linf", ">", "0"}], "&&", 
-         RowBox[{"\[Alpha]", ">", "0"}]}], ",", 
-        RowBox[{"Simplify", "[", 
-         RowBox[{
-          RowBox[{"Solve", "[", 
-           RowBox[{
-            RowBox[{"dR", "\[Equal]", "0"}], ",", "R"}], "]"}], "/.", 
-          RowBox[{"S", "\[Rule]", 
-           RowBox[{"\[Alpha]", " ", 
-            SuperscriptBox["Linf", "3"]}]}]}], "]"}]}], "]"}], "/.", 
-      RowBox[{
-       RowBox[{"Solve", "[", 
-        RowBox[{
-         RowBox[{"dG", "\[Equal]", "0"}], ",", "G"}], "]"}], 
-       "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}]}], "/.", 
-     RowBox[{"\[Alpha]", "\[Rule]", 
-      RowBox[{"S", "/", 
-       SuperscriptBox["Linf", "3"]}]}]}], ",", "S"}], "]"}], "//", 
-  "FullSimplify"}]}], "Input",
- CellChangeTimes->{{3.644596741337234*^9, 3.644596829257852*^9}, {
-  3.644596915944466*^9, 3.644596979125853*^9}, {3.6445971259476*^9, 
-  3.644597147392894*^9}, {3.6445972000469933`*^9, 3.6445972460939007`*^9}}],
-
-Cell[BoxData[
- RowBox[{"{", 
-  RowBox[{"{", 
-   RowBox[{"G", "\[Rule]", 
-    FractionBox[
-     RowBox[{"Imax", " ", "S"}], "\[Rho]"]}], "}"}], "}"}]], "Output",
- CellChangeTimes->{{3.644596746974744*^9, 3.64459682950255*^9}, {
-   3.6445969381407747`*^9, 3.6445969795774937`*^9}, 3.644597127848177*^9, {
-   3.6445972282312927`*^9, 3.64459724638169*^9}}],
-
-Cell[BoxData[
- RowBox[{"{", 
-  RowBox[{"{", 
-   RowBox[{"C", "\[Rule]", 
-    RowBox[{"-", 
-     FractionBox[
-      RowBox[{
-       RowBox[{"(", 
-        RowBox[{
-         RowBox[{"-", "1"}], "+", "eA"}], ")"}], " ", "Imax", " ", "S"}], 
-      "\[Rho]"]}]}], "}"}], "}"}]], "Output",
- CellChangeTimes->{{3.644596746974744*^9, 3.64459682950255*^9}, {
-   3.6445969381407747`*^9, 3.6445969795774937`*^9}, 3.644597127848177*^9, {
-   3.6445972282312927`*^9, 3.644597246383555*^9}}],
-
-Cell[BoxData[
- RowBox[{"{", 
-  RowBox[{"{", 
-   RowBox[{"R", "\[Rule]", 
-    FractionBox[
-     RowBox[{
-      RowBox[{"(", 
-       RowBox[{
-        RowBox[{"eA", " ", "Imax"}], "-", "m", "-", 
-        RowBox[{"k", " ", "mc"}]}], ")"}], " ", "S"}], 
-     RowBox[{"m", "+", 
-      RowBox[{"k", " ", "mc"}]}]]}], "}"}], "}"}]], "Output",
- CellChangeTimes->{{3.644596746974744*^9, 3.64459682950255*^9}, {
-   3.6445969381407747`*^9, 3.6445969795774937`*^9}, 3.644597127848177*^9, {
-   3.6445972282312927`*^9, 3.644597246384956*^9}}]
-}, Open  ]],
-
-Cell[CellGroupData[{
+  3.6445970997265863`*^9}, {3.64459715787675*^9, 3.6445971947530813`*^9}, {
+  3.644602954205653*^9, 3.644603064113399*^9}, {3.6446820177214003`*^9, 
+  3.644682065554751*^9}, {3.644682118949974*^9, 3.6446821324246283`*^9}, {
+  3.6446866348486023`*^9, 3.644686646660165*^9}, {3.6446867014046993`*^9, 
+  3.6446867099382277`*^9}}],
 
 Cell[BoxData[{
  RowBox[{"dG", "=", 
@@ -301,74 +256,13 @@ Cell[BoxData[{
         RowBox[{"mc", " ", "k"}]}], ")"}], 
       RowBox[{"(", 
        RowBox[{"S", "+", "R"}], ")"}]}], "-", 
-     RowBox[{"eG", " ", "Srate"}]}], ")"}]}]}]}], "Input",
- CellChangeTimes->{{3.64459643652151*^9, 3.644596509362967*^9}, {
-  3.644596571824956*^9, 3.6445966839586*^9}, {3.644596757189261*^9, 
-  3.6445967575967484`*^9}, {3.6445979641157503`*^9, 3.6445979967140417`*^9}}],
+     RowBox[{"eG", " ", "Srate"}]}], ")"}]}]}]}], "Input"],
 
-Cell[BoxData[
- RowBox[{
-  FractionBox[
-   RowBox[{"Imax", " ", 
-    SuperscriptBox["S", 
-     RowBox[{"2", "/", "3"}]]}], 
-   RowBox[{"1", "+", 
-    SuperscriptBox["\[ExponentialE]", 
-     RowBox[{"\[Eta]", " ", 
-      RowBox[{"(", 
-       RowBox[{
-        FractionBox["R", "S"], "-", "\[Theta]"}], ")"}]}]]}]], "-", 
-  RowBox[{"G", " ", "\[Rho]"}]}]], "Output",
- CellChangeTimes->{{3.644596678281289*^9, 3.644596684338436*^9}, 
-   3.644596760332507*^9, 3.6445979978770247`*^9}],
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{
-   RowBox[{"-", "C"}], " ", "\[Rho]"}], "+", 
-  RowBox[{
-   RowBox[{"(", 
-    RowBox[{"1", "-", "eA"}], ")"}], " ", "G", " ", "\[Rho]"}]}]], "Output",
- CellChangeTimes->{{3.644596678281289*^9, 3.644596684338436*^9}, 
-   3.644596760332507*^9, 3.644597997922172*^9}],
-
-Cell[BoxData[
- RowBox[{"3", " ", 
-  RowBox[{"(", 
-   RowBox[{
-    RowBox[{"-", "S"}], "+", 
-    RowBox[{"Linf", " ", 
-     SuperscriptBox["S", 
-      RowBox[{"2", "/", "3"}]], " ", 
-     SuperscriptBox["\[Alpha]", 
-      RowBox[{"1", "/", "3"}]]}]}], ")"}], " ", "\[Gamma]"}]], "Output",
- CellChangeTimes->{{3.644596678281289*^9, 3.644596684338436*^9}, 
-   3.644596760332507*^9, 3.644597997923584*^9}],
-
-Cell[BoxData[
- RowBox[{"eR", " ", 
-  RowBox[{"(", 
-   RowBox[{
-    RowBox[{
-     RowBox[{"-", 
-      RowBox[{"(", 
-       RowBox[{"m", "+", 
-        RowBox[{"k", " ", "mc"}]}], ")"}]}], " ", 
-     RowBox[{"(", 
-      RowBox[{"R", "+", "S"}], ")"}]}], "-", 
-    RowBox[{"3", " ", "eG", " ", 
-     RowBox[{"(", 
-      RowBox[{
-       RowBox[{"-", "S"}], "+", 
-       RowBox[{"Linf", " ", 
-        SuperscriptBox["S", 
-         RowBox[{"2", "/", "3"}]], " ", 
-        SuperscriptBox["\[Alpha]", 
-         RowBox[{"1", "/", "3"}]]}]}], ")"}], " ", "\[Gamma]"}], "+", 
-    RowBox[{"eA", " ", "G", " ", "\[Rho]"}]}], ")"}]}]], "Output",
- CellChangeTimes->{{3.644596678281289*^9, 3.644596684338436*^9}, 
-   3.644596760332507*^9, 3.644597997925103*^9}]
-}, Open  ]],
+Cell["\<\
+The equilibrium R depends on the equilibrium gut biomass, as above.\
+\>", "Text",
+ CellChangeTimes->{{3.6446868115772047`*^9, 3.644686853253828*^9}, {
+  3.644686910452125*^9, 3.644686913700144*^9}}],
 
 Cell[CellGroupData[{
 
@@ -389,9 +283,9 @@ Cell[BoxData[
         SuperscriptBox["Linf", "3"]}]}]}], "]"}]}], "]"}], "/.", 
   RowBox[{"\[Alpha]", "\[Rule]", 
    RowBox[{"S", "/", 
-    SuperscriptBox["Linf", "3"]}]}]}]], "Input",
- CellChangeTimes->{{3.644599533326502*^9, 3.644599547536429*^9}, {
-   3.6445996133467627`*^9, 3.644599622512767*^9}, 3.644599711112669*^9}],
+    RowBox[{"Linf", "^", "3"}]}]}]}]], "Input",
+ CellChangeTimes->{{3.644686734706976*^9, 3.6446867394188137`*^9}, 
+   3.6446868041524878`*^9, {3.644686881176633*^9, 3.644686895112135*^9}}],
 
 Cell[BoxData[
  RowBox[{"{", 
@@ -407,31 +301,815 @@ Cell[BoxData[
       RowBox[{"eA", " ", "G", " ", "\[Rho]"}]}], 
      RowBox[{"m", "+", 
       RowBox[{"k", " ", "mc"}]}]]}], "}"}], "}"}]], "Output",
- CellChangeTimes->{
-  3.6445995409421053`*^9, {3.644599614603653*^9, 3.6445996230293093`*^9}, 
-   3.644599711899682*^9}]
+ CellChangeTimes->{3.6446867443288193`*^9, 3.644686806033127*^9, 
+  3.644686896690576*^9}]
 }, Open  ]],
 
 Cell[TextData[{
- "With this model, the long-term goal is to have ",
+ "You can use this to find an expression for ",
  Cell[BoxData[
   FormBox[
-   SuperscriptBox["R", "*"], TraditionalForm]],
+   RowBox[{"R", "/", "S"}], TraditionalForm]],
   FormatType->"TraditionalForm"],
- " such that the ratio of ",
+ ", but it doesn\[CloseCurlyQuote]t really help you much. You still get \
+stuck. Suffice it to say that, at equilibrium, there will be some value of ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"R", "/", "S"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " that will be larger than \[Theta], and this will cause the ingestion rate \
+to be slightly smaller than ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["\[Iota]", "max"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ "."
+}], "Text",
+ CellChangeTimes->{{3.644687003081161*^9, 3.644687081744475*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"pars", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"Imax", "\[Rule]", "2"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"\[Theta]", "\[Rule]", 
+      RowBox[{"1", "/", "3.93"}]}], ",", "\[IndentingNewLine]", 
+     RowBox[{"\[Rho]", "\[Rule]", "2"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"\[Eta]", "\[Rule]", "10"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"eA", "\[Rule]", "0.85"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"eG", "\[Rule]", "1"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"eR", "\[Rule]", "1"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"eI", "\[Rule]", 
+      SuperscriptBox["10", 
+       RowBox[{"-", "5"}]]}], ",", "\[IndentingNewLine]", 
+     RowBox[{"Linf", "\[Rule]", "2.94"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"\[Alpha]", "\[Rule]", "1"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"\[Gamma]", "\[Rule]", "0.02"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"m", "\[Rule]", "0.2"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"mc", "\[Rule]", "0.03"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"mi", "\[Rule]", "0.03"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"k", "\[Rule]", 
+      RowBox[{"4.9", " ", 
+       SuperscriptBox["10", 
+        RowBox[{"-", "5"}]]}]}]}], "}"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.644687362688603*^9, 3.644687593141356*^9}}],
+
+Cell[TextData[{
+ "Numerical simulations with the above parameter values produce a mouse that \
+ends up with an ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{"R", "/", "S"}], "=", "0.277777"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ". Given these parameter values, that means that the effective ingestion \
+rate of such a mouse is:"
+}], "Text",
+ CellChangeTimes->{{3.644687291765971*^9, 3.644687307658868*^9}, {
+  3.64468733930551*^9, 3.644687354038968*^9}, {3.644687598976001*^9, 
+  3.644687620310025*^9}, {3.644687654576044*^9, 3.644687681741909*^9}, {
+  3.644687892753797*^9, 3.6446878949991903`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   FractionBox["Imax", 
+    RowBox[{"1", "+", 
+     RowBox[{"Exp", "[", 
+      RowBox[{"\[Eta]", " ", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"R", "/", "S"}], "-", "\[Theta]"}], ")"}]}], "]"}]}]], "/.", 
+   "pars"}], "/.", 
+  RowBox[{"R", "\[Rule]", 
+   RowBox[{"0.277777", " ", "S"}]}]}]], "Input",
+ CellChangeTimes->{{3.6446876561699*^9, 3.6446876971991796`*^9}}],
+
+Cell[BoxData["0.883905461718653`"], "Output",
+ CellChangeTimes->{{3.6446876651573753`*^9, 3.6446876687289743`*^9}, 
+   3.644687698911188*^9}]
+}, Open  ]],
+
+Cell["\<\
+Because we are considering parasites of the colon, structure and reserves \
+will both settle down to this ratio if the parasite does not provoke an \
+immune response. Let\[CloseCurlyQuote]s consider that unrealistic case to \
+help guide the choice of parameter values for the parasite. The ingestion \
+rate is replaced by the effective ingestion rate calculated above:\
+\>", "Text",
+ CellChangeTimes->{{3.644687724335681*^9, 3.644687775001595*^9}, {
+  3.6446878467523823`*^9, 3.64468786752009*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"dG", "=", 
+   RowBox[{
+    RowBox[{"Ieff", " ", "S"}], "-", 
+    RowBox[{"\[Rho]", " ", "G"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"dC", "=", 
+   RowBox[{
+    RowBox[{"\[Rho]", " ", 
+     RowBox[{"(", 
+      RowBox[{"1", "-", "eA"}], ")"}], " ", "G"}], "-", 
+    RowBox[{"\[Rho]", " ", "C"}], "-", 
+    FractionBox[
+     RowBox[{"\[Sigma]", " ", "C", " ", "P"}], 
+     RowBox[{"H", "+", "C"}]]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"dP", "=", 
+   RowBox[{
+    RowBox[{"eP", " ", 
+     FractionBox[
+      RowBox[{"\[Sigma]", " ", "C", " ", "P"}], 
+      RowBox[{"H", "+", "C"}]]}], "-", 
+    RowBox[{"\[Mu]", " ", "P"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Eq1", "=", 
+  RowBox[{"Solve", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"dG", ",", "dC", ",", "dP"}], "}"}], "\[Equal]", "0"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"G", ",", "C", ",", "P"}], "}"}]}], "]"}]}]}], "Input",
+ CellChangeTimes->{{3.6446757498867903`*^9, 3.644675775306068*^9}, {
+  3.6446758414981327`*^9, 3.644675846690941*^9}, {3.64467600897444*^9, 
+  3.644676015924951*^9}, {3.6446878300656233`*^9, 3.644687830427684*^9}, {
+  3.644687987973475*^9, 3.6446879892962103`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"G", "\[Rule]", 
+      FractionBox[
+       RowBox[{"Ieff", " ", "S"}], "\[Rho]"]}], ",", 
+     RowBox[{"C", "\[Rule]", 
+      FractionBox[
+       RowBox[{
+        RowBox[{"Ieff", " ", "S"}], "-", 
+        RowBox[{"eA", " ", "Ieff", " ", "S"}]}], "\[Rho]"]}], ",", 
+     RowBox[{"P", "\[Rule]", "0"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"G", "\[Rule]", 
+      FractionBox[
+       RowBox[{"Ieff", " ", "S"}], "\[Rho]"]}], ",", 
+     RowBox[{"C", "\[Rule]", 
+      RowBox[{"-", 
+       FractionBox[
+        RowBox[{"H", " ", "\[Mu]"}], 
+        RowBox[{"\[Mu]", "-", 
+         RowBox[{"eP", " ", "\[Sigma]"}]}]]}]}], ",", 
+     RowBox[{"P", "\[Rule]", 
+      FractionBox[
+       RowBox[{"eP", " ", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"Ieff", " ", "S", " ", "\[Mu]"}], "-", 
+          RowBox[{"eA", " ", "Ieff", " ", "S", " ", "\[Mu]"}], "+", 
+          RowBox[{"H", " ", "\[Mu]", " ", "\[Rho]"}], "-", 
+          RowBox[{"eP", " ", "Ieff", " ", "S", " ", "\[Sigma]"}], "+", 
+          RowBox[{"eA", " ", "eP", " ", "Ieff", " ", "S", " ", "\[Sigma]"}]}],
+          ")"}]}], 
+       RowBox[{"\[Mu]", " ", 
+        RowBox[{"(", 
+         RowBox[{"\[Mu]", "-", 
+          RowBox[{"eP", " ", "\[Sigma]"}]}], ")"}]}]]}]}], "}"}]}], 
+  "}"}]], "Output",
+ CellChangeTimes->{3.644676018701912*^9, 3.644687878107477*^9, 
+  3.644687991224759*^9}]
+}, Open  ]],
+
+Cell["\<\
+It is clear that the parasite will set the total biomass of the colon. Given \
+what the simulations suggest is a reasonable amount of food in the colon \
+(0.57 g), we want to choose these parameter to make this value make sense. \
+However, we also want to ensure that we have a reasonable biomass of \
+parasites as well. What is reasonable? Well, some old data on infection of \
+rats with tapeworm (Hymenolepis) suggests that a chronic tapeworm infection \
+has worm biomass of ~100 mg (0.1 g). So, not much. \
+\>", "Text",
+ CellChangeTimes->{{3.6446871268054*^9, 3.644687165565023*^9}, {
+   3.644687231698743*^9, 3.644687241527285*^9}, {3.6446879013192244`*^9, 
+   3.64468792271826*^9}, {3.6446879782845078`*^9, 3.6446880104277563`*^9}, {
+   3.644688196600081*^9, 3.64468819787029*^9}, {3.644688574422515*^9, 
+   3.64468867572782*^9}, {3.644688877894557*^9, 3.6446888857567873`*^9}, {
+   3.644688934912573*^9, 3.644688964271731*^9}, 3.644690913160302*^9}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"Eq1", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}], "/.", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"Ieff", "\[Rule]", "0.27777"}], ",", 
+     RowBox[{"S", "\[Rule]", 
+      RowBox[{"\[Alpha]", " ", 
+       SuperscriptBox["Linf", "3"]}]}]}], "}"}]}], "/.", 
+  "pars"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Pstar", "=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Eq1", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}],
+         "/.", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"Ieff", "\[Rule]", "0.27777"}], ",", 
+          RowBox[{"S", "\[Rule]", 
+           RowBox[{"\[Alpha]", " ", 
+            SuperscriptBox["Linf", "3"]}]}]}], "}"}]}], "/.", "pars"}], ")"}],
+      "[", 
+     RowBox[{"[", "3", "]"}], "]"}], "[", 
+    RowBox[{"[", "2", "]"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Pstar", "\[Equal]", 
+   RowBox[{
+    FractionBox["eP", "\[Mu]"], 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"(", "1.0588113524520004`", ")"}], "-", 
+      RowBox[{"2", " ", 
+       RowBox[{"(", 
+        RowBox[{"-", 
+         FractionBox[
+          RowBox[{"H", " ", "\[Mu]"}], 
+          RowBox[{"\[Mu]", "-", 
+           RowBox[{"eP", " ", "\[Sigma]"}]}]]}], ")"}]}]}], ")"}]}]}], "//", 
+  "Simplify"}]}], "Input",
+ CellChangeTimes->{{3.6446889886197987`*^9, 3.644689018847084*^9}, {
+  3.64468905036014*^9, 3.644689126957082*^9}, {3.6446891785652933`*^9, 
+  3.644689179628916*^9}, {3.644689285139188*^9, 3.644689290017104*^9}, {
+  3.644689560554944*^9, 3.644689637428097*^9}, {3.6446896692610483`*^9, 
+  3.6446896804723673`*^9}, {3.644690956188052*^9, 3.6446909849715567`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"G", "\[Rule]", "3.5293711748399996`"}], ",", 
+   RowBox[{"C", "\[Rule]", 
+    RowBox[{"-", 
+     FractionBox[
+      RowBox[{"H", " ", "\[Mu]"}], 
+      RowBox[{"\[Mu]", "-", 
+       RowBox[{"eP", " ", "\[Sigma]"}]}]]}]}], ",", 
+   RowBox[{"P", "\[Rule]", 
+    FractionBox[
+     RowBox[{"eP", " ", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"1.0588113524520004`", " ", "\[Mu]"}], "+", 
+        RowBox[{"2", " ", "H", " ", "\[Mu]"}], "-", 
+        RowBox[{"1.0588113524520004`", " ", "eP", " ", "\[Sigma]"}]}], 
+       ")"}]}], 
+     RowBox[{"\[Mu]", " ", 
+      RowBox[{"(", 
+       RowBox[{"\[Mu]", "-", 
+        RowBox[{"eP", " ", "\[Sigma]"}]}], ")"}]}]]}]}], "}"}]], "Output",
+ CellChangeTimes->{{3.644690960374831*^9, 3.644690985826436*^9}}],
+
+Cell[BoxData["True"], "Output",
+ CellChangeTimes->{{3.644690960374831*^9, 3.644690985829008*^9}}]
+}, Open  ]],
+
+Cell[TextData[{
+ "Let\[CloseCurlyQuote]s look a little more closely: you can show that the \
+equilibrium ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SuperscriptBox["P", "*"], "=", 
+    RowBox[{
+     FractionBox[
+      SubscriptBox["\[Epsilon]", "P"], "\[Mu]"], 
+     RowBox[{"(", 
+      RowBox[{"1.06", "-", 
+       RowBox[{"2", " ", 
+        SuperscriptBox["C", "*"]}]}], ")"}]}]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ", and ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SuperscriptBox["C", "*"], "=", 
+    FractionBox["H", 
+     RowBox[{
+      RowBox[{
+       FractionBox[
+        SubscriptBox["\[Epsilon]", "P"], "\[Mu]"], "\[Sigma]"}], "-", 
+      "1"}]]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ". So what is critical is not either ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["\[Epsilon]", "P"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " or \[Mu], but rather their ratio. That is useful to know. In particular, \
+if \[Mu] < ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["\[Epsilon]", "P"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ", which seems reasonable to me, then the only way for ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["P", "*"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " to be small is for ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["C", "*"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " to be large - near 0.53, which is essentially the colon biomass in the \
+absence of infection.  \n\nConsidering that we want ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["C", "*"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " to be fairly low - the parasite should eat most of what is there in the \
+absence of any immune regulation - then then ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SubscriptBox["\[Epsilon]", "P"], "/", "\[Mu]"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " should be small, which would require \[Mu] > ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["\[Epsilon]", "P"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ". This is one of those mathematical realities that feels biologically \
+wrong. \n\nMaybe ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["C", "*"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " should not be so small. Let\[CloseCurlyQuote]s imagine choosing parameters \
+such that ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["C", "*"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " is half what it would be normally, so about 0.25. Then to get ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SuperscriptBox["P", "*"], "=", "0.1"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ", you would need ",
  Cell[BoxData[
   FormBox[
    RowBox[{
     RowBox[{
-     SuperscriptBox["R", "*"], "/", 
-     SuperscriptBox["S", "*"]}], "=", "\[Theta]"}], TraditionalForm]],
+     SubscriptBox["\[Epsilon]", "P"], "/", "\[Mu]"}], "=", 
+    RowBox[{
+     FractionBox["0.1", 
+      RowBox[{"1.06", "-", 
+       RowBox[{"2", " ", 
+        RowBox[{"(", "0.25", ")"}]}]}]], "=", "0.18"}]}], TraditionalForm]],
   FormatType->"TraditionalForm"],
- "."
+ ", that is ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SubscriptBox["\[Epsilon]", "P"], "=", 
+    RowBox[{"0.18", " ", "\[Mu]"}]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ". To get ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SuperscriptBox["C", "*"], "=", "0.25"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ", I need to choose H and \[Sigma] such that 0.25(0.15 \[Sigma] - 1) = H. \n\
+\nHere is a set of parameters that seems to produce something reasonable."
 }], "Text",
- CellChangeTimes->{{3.6445980209093847`*^9, 3.6445980544605637`*^9}}]
+ CellChangeTimes->{{3.644689481441844*^9, 3.6446894865989656`*^9}, {
+  3.644689733603738*^9, 3.644689765402631*^9}, {3.644689799118792*^9, 
+  3.6446900492237597`*^9}, {3.644690318020401*^9, 3.644690475946871*^9}, {
+  3.644690601657827*^9, 3.644690700908527*^9}, {3.644691037546834*^9, 
+  3.644691151605358*^9}, {3.6446912048537617`*^9, 3.6446912514445133`*^9}, {
+  3.644691333505197*^9, 3.644691341225727*^9}, {3.644696738714466*^9, 
+  3.644696741008754*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"Eq1", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}], "/.", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"Ieff", "\[Rule]", "0.27777"}], ",", 
+      RowBox[{"S", "\[Rule]", 
+       RowBox[{"\[Alpha]", " ", 
+        SuperscriptBox["Linf", "3"]}]}]}], "}"}]}], "/.", "pars"}], "/.", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"eP", "\[Rule]", "0.15"}], ",", " ", 
+    RowBox[{"\[Mu]", "\[Rule]", "1"}], ",", " ", 
+    RowBox[{"\[Sigma]", "\[Rule]", "10"}], ",", " ", 
+    RowBox[{"H", "\[Rule]", "0.1"}]}], "}"}]}]], "Input",
+ CellChangeTimes->{{3.64469116871502*^9, 3.644691194159644*^9}, {
+  3.644691266190569*^9, 3.644691325153401*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"G", "\[Rule]", "3.5293711748399996`"}], ",", 
+   RowBox[{"C", "\[Rule]", "0.2`"}], ",", 
+   RowBox[{"P", "\[Rule]", "0.09882170286780008`"}]}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.6446911948466454`*^9, {3.644691273513479*^9, 3.644691325508361*^9}}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"pars", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"Imax", "\[Rule]", "2"}], ",", 
+     RowBox[{"\[Theta]", "\[Rule]", "0.2544529262086514`"}], ",", 
+     RowBox[{"\[Rho]", "\[Rule]", "2"}], ",", 
+     RowBox[{"\[Eta]", "\[Rule]", "10"}], ",", 
+     RowBox[{"eA", "\[Rule]", "0.85`"}], ",", 
+     RowBox[{"eG", "\[Rule]", "1"}], ",", 
+     RowBox[{"eR", "\[Rule]", "1"}], ",", 
+     RowBox[{"eI", "\[Rule]", 
+      FractionBox["1", "100000"]}], ",", 
+     RowBox[{"Linf", "\[Rule]", "2.94`"}], ",", 
+     RowBox[{"\[Alpha]", "\[Rule]", "1"}], ",", 
+     RowBox[{"\[Gamma]", "\[Rule]", "0.02`"}], ",", 
+     RowBox[{"m", "\[Rule]", "0.2`"}], ",", 
+     RowBox[{"mc", "\[Rule]", "0.03`"}], ",", 
+     RowBox[{"mi", "\[Rule]", "0.03`"}], ",", 
+     RowBox[{"k", "\[Rule]", "0.000049"}], ",", 
+     RowBox[{"eP", "\[Rule]", "0.15"}], ",", " ", 
+     RowBox[{"\[Mu]", "\[Rule]", "1"}], ",", " ", 
+     RowBox[{"\[Sigma]", "\[Rule]", "10"}], ",", " ", 
+     RowBox[{"H", "\[Rule]", "0.1"}]}], "}"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.6446970884711113`*^9, 3.644697128244207*^9}}],
+
+Cell[TextData[{
+ "Okay, the next step (really, the final step analytically) is to look at \
+what happens when you add only a constitutive immune response. Again, this \
+has the advantage of not affecting either ",
+ StyleBox["S ",
+  FontSlant->"Italic"],
+ "or ",
+ StyleBox["R. ",
+  FontSlant->"Italic"],
+ "All that we need to do is add in the effect of the immune response on the \
+parasite."
+}], "Text",
+ CellChangeTimes->{{3.644696825062574*^9, 3.644696863413768*^9}, {
+  3.6446969590829077`*^9, 3.6446970148736057`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"dG", "=", 
+   RowBox[{
+    RowBox[{"Ieff", " ", "S"}], "-", 
+    RowBox[{"\[Rho]", " ", "G"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"dC", "=", 
+   RowBox[{
+    RowBox[{"\[Rho]", " ", 
+     RowBox[{"(", 
+      RowBox[{"1", "-", "eA"}], ")"}], " ", "G"}], "-", 
+    RowBox[{"\[Rho]", " ", "C"}], "-", 
+    FractionBox[
+     RowBox[{"\[Sigma]", " ", "C", " ", "P"}], 
+     RowBox[{"H", "+", "C"}]]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"dP", "=", 
+   RowBox[{
+    RowBox[{"eP", " ", 
+     FractionBox[
+      RowBox[{"\[Sigma]", " ", "C", " ", "P"}], 
+      RowBox[{"H", "+", "C"}]]}], "-", 
+    RowBox[{"\[Mu]", " ", "P"}], "-", 
+    RowBox[{"\[Mu]c", " ", "P", " ", "Ii"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Eq2", "=", 
+  RowBox[{"Solve", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"dG", ",", "dC", ",", "dP"}], "}"}], "\[Equal]", "0"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"G", ",", "C", ",", "P"}], "}"}]}], "]"}]}]}], "Input",
+ CellChangeTimes->{{3.6446757498867903`*^9, 3.644675775306068*^9}, {
+  3.6446758414981327`*^9, 3.644675846690941*^9}, {3.64467600897444*^9, 
+  3.644676015924951*^9}, {3.6446878300656233`*^9, 3.644687830427684*^9}, {
+  3.644687987973475*^9, 3.6446879892962103`*^9}, {3.6446970301090803`*^9, 
+  3.64469705375784*^9}, {3.644697289887594*^9, 3.64469733154846*^9}, {
+  3.64469821998252*^9, 3.644698220127988*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"G", "\[Rule]", 
+      FractionBox[
+       RowBox[{"Ieff", " ", "S"}], "\[Rho]"]}], ",", 
+     RowBox[{"C", "\[Rule]", 
+      FractionBox[
+       RowBox[{
+        RowBox[{"Ieff", " ", "S"}], "-", 
+        RowBox[{"eA", " ", "Ieff", " ", "S"}]}], "\[Rho]"]}], ",", 
+     RowBox[{"P", "\[Rule]", "0"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"G", "\[Rule]", 
+      FractionBox[
+       RowBox[{"Ieff", " ", "S"}], "\[Rho]"]}], ",", 
+     RowBox[{"C", "\[Rule]", 
+      RowBox[{"-", 
+       FractionBox[
+        RowBox[{"H", " ", 
+         RowBox[{"(", 
+          RowBox[{"\[Mu]", "+", 
+           RowBox[{"Ii", " ", "\[Mu]c"}]}], ")"}]}], 
+        RowBox[{"\[Mu]", "+", 
+         RowBox[{"Ii", " ", "\[Mu]c"}], "-", 
+         RowBox[{"eP", " ", "\[Sigma]"}]}]]}]}], ",", 
+     RowBox[{"P", "\[Rule]", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"eP", " ", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"Ieff", " ", "S", " ", "\[Mu]"}], "-", 
+           RowBox[{"eA", " ", "Ieff", " ", "S", " ", "\[Mu]"}], "+", 
+           RowBox[{"Ieff", " ", "Ii", " ", "S", " ", "\[Mu]c"}], "-", 
+           RowBox[{"eA", " ", "Ieff", " ", "Ii", " ", "S", " ", "\[Mu]c"}], 
+           "+", 
+           RowBox[{"H", " ", "\[Mu]", " ", "\[Rho]"}], "+", 
+           RowBox[{"H", " ", "Ii", " ", "\[Mu]c", " ", "\[Rho]"}], "-", 
+           RowBox[{"eP", " ", "Ieff", " ", "S", " ", "\[Sigma]"}], "+", 
+           RowBox[{
+           "eA", " ", "eP", " ", "Ieff", " ", "S", " ", "\[Sigma]"}]}], 
+          ")"}]}], ")"}], "/", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"\[Mu]", "+", 
+           RowBox[{"Ii", " ", "\[Mu]c"}]}], ")"}], " ", 
+         RowBox[{"(", 
+          RowBox[{"\[Mu]", "+", 
+           RowBox[{"Ii", " ", "\[Mu]c"}], "-", 
+           RowBox[{"eP", " ", "\[Sigma]"}]}], ")"}]}], ")"}]}]}]}], "}"}]}], 
+  "}"}]], "Output",
+ CellChangeTimes->{3.644697062640957*^9, 3.6446973320425367`*^9, 
+  3.644698220726235*^9}]
+}, Open  ]],
+
+Cell[TextData[{
+ "Okay, let\[CloseCurlyQuote]s look at this a bit more carefully. In order \
+for ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["C", "*"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " to be positive, it must be the case that ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{
+     SubscriptBox["I", "i"], " ", 
+     SubscriptBox["\[Mu]", "i"]}], "<", "0.5"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ". "
+}], "Text",
+ CellChangeTimes->{{3.644697262060918*^9, 3.644697273082449*^9}, {
+   3.644697340296812*^9, 3.6446974332641163`*^9}, {3.6446976811658163`*^9, 
+   3.644697727566409*^9}, {3.644697848181141*^9, 3.644697943272794*^9}, 
+   3.6446979933958*^9, {3.644698140095916*^9, 3.6446981404968443`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Eq2", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}], "/.",
+   "pars"}]], "Input",
+ CellChangeTimes->{{3.644697134500852*^9, 3.6446971362073936`*^9}, {
+  3.6446971695837193`*^9, 3.644697175068157*^9}, {3.644698315050228*^9, 
+  3.644698319878286*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"G", "\[Rule]", 
+    FractionBox[
+     RowBox[{"Ieff", " ", "S"}], "2"]}], ",", 
+   RowBox[{"C", "\[Rule]", 
+    RowBox[{"-", 
+     FractionBox[
+      RowBox[{"0.1`", " ", 
+       RowBox[{"(", 
+        RowBox[{"1", "+", 
+         RowBox[{"Ii", " ", "\[Mu]c"}]}], ")"}]}], 
+      RowBox[{
+       RowBox[{"-", "0.5`"}], "+", 
+       RowBox[{"Ii", " ", "\[Mu]c"}]}]]}]}], ",", 
+   RowBox[{"P", "\[Rule]", 
+    FractionBox[
+     RowBox[{"0.15`", " ", 
+      RowBox[{"(", 
+       RowBox[{"0.2`", "\[VeryThinSpace]", "-", 
+        RowBox[{"0.07500000000000018`", " ", "Ieff", " ", "S"}], "+", 
+        RowBox[{"0.2`", " ", "Ii", " ", "\[Mu]c"}], "+", 
+        RowBox[{
+        "0.15000000000000002`", " ", "Ieff", " ", "Ii", " ", "S", " ", 
+         "\[Mu]c"}]}], ")"}]}], 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"-", "0.5`"}], "+", 
+        RowBox[{"Ii", " ", "\[Mu]c"}]}], ")"}], " ", 
+      RowBox[{"(", 
+       RowBox[{"1", "+", 
+        RowBox[{"Ii", " ", "\[Mu]c"}]}], ")"}]}]]}]}], "}"}]], "Output",
+ CellChangeTimes->{3.644697137280065*^9, 3.644697175814473*^9, 
+  3.644698223329362*^9}]
+}, Open  ]],
+
+Cell[TextData[{
+ "But actually, for an adult, I know exactly how big ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["I", "i"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " is, because ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SubscriptBox["I", "i"], "=", 
+    RowBox[{"k", "(", 
+     RowBox[{"S", "+", "R"}], ")"}]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ "; a healthy mouse, according to the simulation, has a total biomass of \
+~32g. Based on Sarah\[CloseCurlyQuote]s mouse data, ",
+ StyleBox["k ",
+  FontSlant->"Italic"],
+ "= 4.9e-5, so ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SubscriptBox["I", "i"], "=", "0.0016"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ". Here is a range of ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["\[Mu]", "c"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " values that produce ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["C", "*"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " values between the value induced by parasites on their own and the \
+parasite-free equilibrium, and ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["P", "*"], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " values less than the value attained by the parasite on its own. So, a ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SubscriptBox["\[Mu]", "c"], "=", "100"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " seems to work fairly well."
+}], "Text",
+ CellChangeTimes->{
+  3.644698000589542*^9, {3.644698147301914*^9, 3.644698148804297*^9}, {
+   3.6446982078417597`*^9, 3.644698255568406*^9}, {3.644698405252653*^9, 
+   3.6446984692318573`*^9}, 3.644698593577118*^9}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Table", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"Eq2", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}], "/.", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"Ieff", "\[Rule]", "0.27777"}], ",", 
+        RowBox[{"S", "\[Rule]", 
+         RowBox[{"\[Alpha]", " ", 
+          SuperscriptBox["Linf", "3"]}]}]}], "}"}]}], "/.", "pars"}], "/.", 
+    RowBox[{"{", 
+     RowBox[{"Ii", "\[Rule]", "0.0016"}], "}"}]}], " ", ",", " ", 
+   RowBox[{"{", 
+    RowBox[{"\[Mu]c", ",", " ", "10", ",", "150", ",", " ", "10"}], "}"}]}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.644698327899878*^9, 3.6446983839839077`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"G", "\[Rule]", "3.5293711748399996`"}], ",", 
+     RowBox[{"C", "\[Rule]", "0.20991735537190087`"}], ",", 
+     RowBox[{"P", "\[Rule]", "0.0943371026144`"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"G", "\[Rule]", "3.5293711748399996`"}], ",", 
+     RowBox[{"C", "\[Rule]", "0.22051282051282053`"}], ",", 
+     RowBox[{"P", "\[Rule]", "0.08979443480034349`"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"G", "\[Rule]", "3.5293711748399996`"}], ",", 
+     RowBox[{"C", "\[Rule]", "0.23185840707964603`"}], ",", 
+     RowBox[{"P", "\[Rule]", "0.08517574498464392`"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"G", "\[Rule]", "3.5293711748399996`"}], ",", 
+     RowBox[{"C", "\[Rule]", "0.24403669724770644`"}], ",", 
+     RowBox[{"P", "\[Rule]", "0.0804611782833541`"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"G", "\[Rule]", "3.5293711748399996`"}], ",", 
+     RowBox[{"C", "\[Rule]", "0.2571428571428572`"}], ",", 
+     RowBox[{"P", "\[Rule]", "0.07562856085642924`"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"G", "\[Rule]", "3.5293711748399996`"}], ",", 
+     RowBox[{"C", "\[Rule]", "0.2712871287128713`"}], ",", 
+     RowBox[{"P", "\[Rule]", "0.07065288709301033`"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"G", "\[Rule]", "3.5293711748399996`"}], ",", 
+     RowBox[{"C", "\[Rule]", "0.2865979381443299`"}], ",", 
+     RowBox[{"P", "\[Rule]", "0.06550568473426419`"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"G", "\[Rule]", "3.5293711748399996`"}], ",", 
+     RowBox[{"C", "\[Rule]", "0.3032258064516129`"}], ",", 
+     RowBox[{"P", "\[Rule]", "0.06015422068467812`"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"G", "\[Rule]", "3.5293711748399996`"}], ",", 
+     RowBox[{"C", "\[Rule]", "0.3213483146067416`"}], ",", 
+     RowBox[{"P", "\[Rule]", "0.05456049692812794`"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"G", "\[Rule]", "3.5293711748399996`"}], ",", 
+     RowBox[{"C", "\[Rule]", "0.3411764705882353`"}], ",", 
+     RowBox[{"P", "\[Rule]", "0.04867996697528477`"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"G", "\[Rule]", "3.5293711748399996`"}], ",", 
+     RowBox[{"C", "\[Rule]", "0.362962962962963`"}], ",", 
+     RowBox[{"P", "\[Rule]", "0.04245987583240819`"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"G", "\[Rule]", "3.5293711748399996`"}], ",", 
+     RowBox[{"C", "\[Rule]", "0.387012987012987`"}], ",", 
+     RowBox[{"P", "\[Rule]", "0.03583708621132954`"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"G", "\[Rule]", "3.5293711748399996`"}], ",", 
+     RowBox[{"C", "\[Rule]", "0.4136986301369863`"}], ",", 
+     RowBox[{"P", "\[Rule]", "0.02873519356515326`"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"G", "\[Rule]", "3.5293711748399996`"}], ",", 
+     RowBox[{"C", "\[Rule]", "0.4434782608695652`"}], ",", 
+     RowBox[{"P", "\[Rule]", "0.02106064101873485`"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"G", "\[Rule]", "3.5293711748399996`"}], ",", 
+     RowBox[{"C", "\[Rule]", "0.4769230769230769`"}], ",", 
+     RowBox[{"P", "\[Rule]", "0.012697403057159733`"}]}], "}"}]}], 
+  "}"}]], "Output",
+ CellChangeTimes->{{3.644698329070681*^9, 3.644698384587451*^9}, 
+   3.6446985424522*^9}]
+}, Open  ]]
 },
-WindowSize->{740, 652},
-WindowMargins->{{1, Automatic}, {Automatic, 0}},
+WindowSize->{680, 724},
+WindowMargins->{{45, Automatic}, {Automatic, 0}},
 FrontEndVersion->"8.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (February 23, \
 2011)",
 StyleDefinitions->"Default.nb"
@@ -447,37 +1125,63 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[557, 20, 164, 2, 32, "Text"],
-Cell[724, 24, 392, 11, 41, "Input"],
+Cell[557, 20, 365, 7, 51, "Text"],
+Cell[925, 29, 392, 11, 41, "Input"],
 Cell[CellGroupData[{
-Cell[1141, 39, 959, 26, 91, "Input"],
-Cell[2103, 67, 196, 5, 33, "Output"],
-Cell[2302, 74, 277, 8, 33, "Output"],
-Cell[2582, 84, 379, 11, 42, "Output"],
-Cell[2964, 97, 722, 22, 42, "Output"]
+Cell[1342, 44, 959, 26, 91, "Input"],
+Cell[2304, 72, 218, 5, 33, "Output"],
+Cell[2525, 79, 299, 8, 33, "Output"],
+Cell[2827, 89, 401, 11, 42, "Output"],
+Cell[3231, 102, 746, 22, 42, "Output"]
 }, Open  ]],
-Cell[3701, 122, 1742, 55, 162, "Text"],
+Cell[3992, 127, 3369, 97, 345, "Text"],
+Cell[7364, 226, 1009, 32, 122, "Input"],
+Cell[8376, 260, 208, 4, 32, "Text"],
 Cell[CellGroupData[{
-Cell[5468, 181, 1559, 44, 154, "Input"],
-Cell[7030, 227, 352, 8, 54, "Output"],
-Cell[7385, 237, 475, 13, 55, "Output"],
-Cell[7863, 252, 527, 14, 54, "Output"]
+Cell[8609, 268, 693, 19, 66, "Input"],
+Cell[9305, 289, 481, 15, 54, "Output"]
 }, Open  ]],
+Cell[9801, 307, 736, 20, 70, "Text"],
+Cell[10540, 329, 1343, 26, 318, "Input"],
+Cell[11886, 357, 626, 14, 70, "Text"],
 Cell[CellGroupData[{
-Cell[8427, 271, 1222, 35, 122, "Input"],
-Cell[9652, 308, 478, 14, 69, "Output"],
-Cell[10133, 324, 299, 8, 33, "Output"],
-Cell[10435, 334, 401, 11, 42, "Output"],
-Cell[10839, 347, 744, 22, 42, "Output"]
+Cell[12537, 375, 416, 13, 58, "Input"],
+Cell[12956, 390, 141, 2, 33, "Output"]
 }, Open  ]],
+Cell[13112, 395, 508, 8, 89, "Text"],
 Cell[CellGroupData[{
-Cell[11620, 374, 692, 19, 66, "Input"],
-Cell[12315, 395, 511, 16, 54, "Output"]
+Cell[13645, 407, 1247, 35, 142, "Input"],
+Cell[14895, 444, 1461, 42, 145, "Output"]
 }, Open  ]],
-Cell[12841, 414, 484, 16, 32, "Text"]
+Cell[16371, 489, 965, 14, 126, "Text"],
+Cell[CellGroupData[{
+Cell[17361, 507, 1734, 48, 151, "Input"],
+Cell[19098, 557, 807, 23, 100, "Output"],
+Cell[19908, 582, 97, 1, 33, "Output"]
+}, Open  ]],
+Cell[20020, 586, 3975, 118, 366, "Text"],
+Cell[CellGroupData[{
+Cell[24020, 708, 705, 18, 60, "Input"],
+Cell[24728, 728, 306, 7, 33, "Output"]
+}, Open  ]],
+Cell[25049, 738, 1120, 25, 143, InheritFromParent],
+Cell[26172, 765, 522, 13, 89, "Text"],
+Cell[CellGroupData[{
+Cell[26719, 782, 1441, 38, 142, "Input"],
+Cell[28163, 822, 2076, 57, 173, "Output"]
+}, Open  ]],
+Cell[30254, 882, 748, 20, 51, "Text"],
+Cell[CellGroupData[{
+Cell[31027, 906, 293, 6, 33, "Input"],
+Cell[31323, 914, 1167, 35, 101, "Output"]
+}, Open  ]],
+Cell[32505, 952, 1663, 51, 126, "Text"],
+Cell[CellGroupData[{
+Cell[34193, 1007, 673, 18, 65, "Input"],
+Cell[34869, 1027, 3444, 80, 300, "Output"]
+}, Open  ]]
 }
 ]
 *)
 
 (* End of internal cache information *)
-

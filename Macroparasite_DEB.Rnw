@@ -212,6 +212,10 @@ An organism must pay the metabolic cost of all of its cells, which means that a 
 M=m(S+R)+m_cI_c+m_iI_i,
 \end{equation}
 where $m$ is the maintenance rate for weight, which is assumed to be the same for structure and reserves, $m_c$ is the maintenance rate for constitutive immune biomass, and $m_i$ is the maintenance rate for induced immune biomass.
+On the one hand, it seems like $m_c=m_i$ because the cells that are produced during the induced immune response are simply clones of those cells of the constitutive immune population that reacted to the antigen.
+However, that is not the case because the production of constitutive immune cells is very wasteful: for every 100 immune cells produced by the thymus, 95 are destroyed immediately, either because they won't work with MHC or because they are self-reactive.
+Thus, the cost of maintaining an effective constitutive immune cell should be much higher than the cost of maintaining an effective induced immune cell, even though biologically, they are clones.
+Assuming the 95\% figure is reliable, it is reasonable to imagine that the maintenance cost for 1g of constitutive immune biomass is 20-fold higher than the cost of maintaining 1g of induced immune biomass.
 
 It may be worth questioning whether there should be separate maintenance rates for structure $S(t)$ versus reserves $R(t)$, but this is probably reasonable for the moment.
 I discuss the separate maintenance costs for constitutive versus induced immune biomass below.
@@ -227,6 +231,8 @@ I_c=k(S+R),
 where $k$ is the biomass of the constitutive immune system relative to the total biomass in weight ($k<<1$).
 
 Note that we do not consider the cost of building these cells, or, more precisely, we assume that the building cost and the maintenance cost are identical.
+This is reasonably well-supported by data, according to Andrea: as noted above, these cells are constantly being produced by a very wasteful process; moreover, these cells have a fairly short half-life, resulting in very fast turnover of the entire population.
+All of this dynamic can be captured reasonably well by simply assuming that the standing army of effective constitutive immune cells is tied to total mass of the host.
 This is quite different from our assumptions for the induced immune response (discussed below).
 
 \subsection*{ Induced immune response}
@@ -238,11 +244,13 @@ where $\epsilon _i$ is the cost of converting reserve biomass into \textit{effec
 
 With this model formulation, if an infection is cleared, the induced immune response returns to 0; we may, at some point in the future, want to consider the fact that some of the cells of the induced immune response become part of the constitutive immune system after infection (e.g., memory cells).
 
-We can also make some assumptions about parameter values.
-The induced immune response is very costly to develop because it is wasteful: lymphocytes go through a process of differentiation followed by somatic selection that culls most of these newly produced cells.
-Maintaining the effective cells should be comparatively cheap.
-Most likely, what this would imply is that the parameter $b$ should be relatively large - lots of energy is invested in the induced immune response - but $\epsilon_I$ should be relatively small - most of that energy is spent building immune cells that will not actually be effective.
-On the other hand, the cost of maintaining the effective induced immune cells $m_i$ should be different from either $b$ or $\epsilon_i$, different from the case of constitutive immune biomass.
+We can also make some assumptions about parameter values and model initial conditions.
+According to Perelson, the probability that a lymphocyte (for example) of the constitutive immune system will react with any particular epitope is very small, on the order of $10^{-5}$.
+This suggests that the initial condition of the induced immune system is $10^{-5}I_c$.
+The rate of proliferation will depend on $\epsilon_i b$, which may be possible to find estimates for in the published literature; finding the estimate of $b$ or $\epsilon_i$ by itself might be more challenging.
+
+Andrea has suggested the work of Rob de Boer and Andrew Yates for models of immune cell proliferation (and killing too).
+There is also some nice stuff by Kirk Klasing looking at the energetic/protein cost of the innate and induced immune response.
 
 \subsection*{Cost of growth}
 This one turns out be slightly more complicated.
@@ -309,7 +317,7 @@ A simpler solution is to imagine that, given its structural volume, an organism 
 This is known, in the dynamic energy budget literature, as the ``weak homeostasis assumption.''
 It can be modelled as:
 \begin{equation}
-\frac{d\mu}{dt} = \mu_{\min} + \mu_{accel}\max\left(\theta \frac{S}{R} - 1, 0\right),
+\frac{d\mu}{dt} = \mu_{\min} + \mu_{accel}\max\left(\theta \frac{S}{R}-1, 0\right),
 \end{equation}
 where $\mu_{\min}$ is the baseline mortality rate of a healthy host (which we assume for simplicity is independent of age), $\mu_{accel}$ is the rate that mortality accelerates with decreasing body condition, and $\theta$ is the target ratio of reserves $R$ to structure $S$ (as above in the resource ingestion rate equation).
 With this formulation, as $R$ approaches zero, mortality rate accelerates dramatically.
@@ -337,7 +345,7 @@ The full model (assuming the demand-driven ingestion rate function):
 \frac{dS}{dt} &= 3\gamma(S) \left(\alpha^{1/3}L_{\infty }S^{2/3}-S\right) - \frac{\sigma_S P_3 S}{H_S + S}, \\
 \frac{dR}{dt} &= \epsilon_R\left(\rho \epsilon_A G-M(S,R,I_i)-C_G(S)\right)-b R (P_1+P_2+P_3+P_4) - \frac{\sigma_R P_4 R}{H_R + R}, \\
 \frac{dI_i}{dt} &= \epsilon_ib R P-\mu_II_i, \\
-\frac{d\mu}{dt} &= \mu_{\min} + \mu_{accel}\max\left(\frac{S}{R} - 1, 0\right), \\
+\frac{d\mu}{dt} &= \mu_{\min} + \mu_{accel}\max\left(\theta \frac{S}{R} - 1, 0\right), \\
 \frac{dP_1}{dt} &= \epsilon_P \frac{\sigma_G P_1 G}{H_G + G} - \mu_P P_1 - \mu_c I_c P_1 - \mu_i I_i P_1, \\
 \frac{dP_2}{dt} &= \epsilon_P \frac{\sigma_C P_2 C}{H_C + C} - \mu_P P_2 - \mu_c I_c P_2 - \mu_i I_i P_2, \\
 \frac{dP_3}{dt} &= \epsilon_P \frac{\sigma_S P_3 S}{H_S + S} - \mu_P P_3 - \mu_c I_c P_3 - \mu_i I_i P_3, \\
@@ -482,52 +490,65 @@ C_G(t)&=\epsilon_G 3 \gamma_{min}\left(\alpha^{1/3}L_{\infty }S(t)^{2/3}-S(t)\ri
 \epsilon_A(P_2) &= \epsilon_A\left(1 - \frac{\epsilon_{A_{\min}} P_2}{H_\epsilon + P_2}\right).
 \end{align}
 
-<<echo=TRUE,eval=TRUE,fig.width=4, fig.height=4, fig.cap="Proving that this parameter set produces something vaguely mouselike; the solid black line shows structural biomass and the dashed red line shows reserve biomass.">>=
+<<echo=TRUE,eval=TRUE,fig.width=4, fig.height=4, fig.cap="Proving that this parameter set produces something vaguely mouselike. This set of parameters yields a healthy mouse that eats 7 g of food per day, has 25g of structural biomass and 7 g of reserve biomass, and at any point will have about 4g of food in its guts.">>=
 require(deSolve)
-## Mouse parameters
-##------------------
-## total ingestion for balb/c = 7.86 g food/day; black6 = 6.54
-## imax is between 0.15-0.4 g food/g mouse
-## rho = 4; it is 1/mean transit time, which is approx 6 hours
-## balb/c theta = 3.93 g lean/g fat; black6 = 3.5 g lean/g fat
-## ui = 20 days (for CD4 cell)
-## mC = 11 hours (half-life for neutrophils, 60-70% of standing immune
-## defense; 60 day lifespan for lymphocytes, 40% of standing immune
-## defense)
-## balb/c = 1.5 g at birth, black6=1.23g at birth,
-## balb/c = 664 days lifespan, black6=896 days lifespan
-## estimate of digestive assimilation efficiency=85%
-## assume all other conversion efficiencies = 1
-## weight of a lymphocyte 2.15e-10 g
-## maintenance rate of Mus musculus = 0.0065 (from Kooijman 2009, p. 212)
-## standing defense balb/c @8 weeks = 1.25e-3 g WBC mass, weight 25.4 g
-## standing defense black6 @8 weeks = 1.07e-3 g WBC mass, weight 23.7 g
-## 0.82
-
 ## initial conditions: assuming 3.93g lean mass for every g of fat
 ## mass, and a birth rate of 1.5 g
 y0 <- c(G=0, C=0, S=1.5*3.93/4.93, R=1.5*1.93/4.93, Ii=0, mu=0, P2=1e-6)
 
-## Run for 500 days
-times <- seq(0, 500, 0.1)
+## Run for 664 days (when mortality occurs for healthy mouse)
+times <- seq(0, 664, 0.1)
+
+plotall <- function(x) {
+    par(mfrow=c(3,3), mar=c(2,4,0.5,0.5), oma=rep(0.5,4))
+    labels <- c("Age", "Gut biomass", "Waste biomass", "Structure biomass",
+                "Reserve biomass", "Immune biomass", "Cumulative hazard",
+                "Parasite biomass", "Ingestion rate", "Assimilation rate")
+    for (i in 2:ncol(x))
+        plot(x[,1], x[,i], xlab='', ylab=labels[i], type='l')
+}
 
 source("Macroparasite_DEB_models.R")
-## These parameters come from a combination of Sarah's estimates and
-## the de Roos and Persson book.
-pars <- c(imax=0.3, theta=1/3.93, rho=4, eta=20,
-          epsA=0.85, epsG=1, epsR=1, epsI=1,
-          Linf=2.94, alpha=1, gmin=.02,
-          m=0.03, mc=0.03, mi=0.03,
-          k=4.9e-5, b=1, ui=1/20,
-          umin=1/664, uacc=1/664,
-          epsP=1, sigmaC=0.1, hC=1e-3,
-          uP=1/664, uC=1e-3, uI=1e-3,
-          epsAmin=0.25, heps=1e-3,
-          tInf=510)
+## See mathematica notebook to see the justification for these
+## parasite and constitutive defense parameters.
+pars <- c(imax=2, ## estimated on the basis of Sarah's data
+          theta=1/3.93, ## estimated on the basis of Sarah's data
+          rho=2, ## estimated on the basis of Sarah's data
+          eta=10, ## guestimate based on parasite-free body condition
+          epsA=0.85, ## estimate from data
+          epsG=1, ## total guess
+          epsR=1, ## total guess
+          Linf=2.94, ## from Kooijman
+          alpha=1, ## from Kooijman
+          gmin=.02, ## guestimate based on parasite-free body condition
+          m=0.2, ## guestimate based on imax
+          mc=0.03, ## made up
+          mi=0.005, ## guestimate based on imax
+          k=4.9e-5, ## estimated on the basis of Sarah's data
+          b=5e-3, # probably should be pretty small, as reserve
+                  # biomass should not be greatly depleted by the
+                  # induced immune response
+          ui=1/20, ## based on avg lifespan of 20 days (for non-B-cell lymphocytes)
+          umin=1/664, ## based on avg host lifespan
+          uacc=1/664, ## made up
+          epsP=0.15, ## based on model analysis
+          epsI=0.8, ## total guess
+          sigmaC=10, ## based on model analysis
+          hC=0.1, ## based on model analysis
+          uP=1, ## based on model analysis
+          uC=100, ## guess
+          uI=200, ## total guess
+          epsAmin=0.5, ## total guess
+          heps=1e-3, ## total guess
+          tInf=Inf) ## no infection
+out1 <- ode(y=y0, times=times, func=P2_deb, parms=pars, method="lsoda")
+plotall(out1)
+@
 
-out <- ode(y=y0, times=times, func=P2_deb, parms=pars, method="lsoda")
-plot(out[,"time"], out[,"S"], type='l', lwd=1.5, col=1, xlab="Age (d)", ylab="Weight (g)")
-lines(out[,"time"], out[,"R"], lwd=1.5, lty=3, col=2)
+<<echo=FALSE, eval=TRUE, fig.height=4, fig.width=4, fig.cap="Results of a model with both consitutive and induced immune response.">>=
+pars["tInf"] <- 50
+out5 <- ode(y=y0, times=times, func=P2_deb, parms=pars, method="lsoda")
+plotall(out5)
 
 @
 

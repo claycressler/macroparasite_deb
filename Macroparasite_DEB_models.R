@@ -14,7 +14,7 @@ mouseVB <- function(t, y, p) {
     return(list(c(dSdt)))
 }
 
-## This model is slightly modified to focus on P_2 parasites whose biomass causes
+## This model is slightly modified to focus on P_2 parasites whose biomass causes a reduction in assimilation efficiency
 P2_deb <- function(t, y, p) {
     y <- unname(y)
     ## HOST PARAMETERS
@@ -56,7 +56,7 @@ P2_deb <- function(t, y, p) {
 
     ## PARASITE PARAMETERS
     ## biomass conversion efficiency
-    epsP <- unname(p["epsA"])
+    epsP <- unname(p["epsP"])
     ## parasite attack rates [g parasite^(-1) day^(-1)]
     sigmaC <- unname(p["sigmaC"])
     ## parasite handling times [g]
@@ -80,7 +80,7 @@ P2_deb <- function(t, y, p) {
         epsA <- epsA*(1-epsAmin*P2/(heps+P2))
     } else epsA <- epsA
     ## ingestion rate
-    In <- imax*S^2/3/(1+exp(eta*(R/S-theta)))
+    In <- imax*S^(2/3)/(1+exp(eta*(R/S-theta)))
     ## growth rate
     Grate <- 3*gmin*(alpha^(1/3)*Linf*S^(2/3)-S)
     ## cost of growth
@@ -89,7 +89,6 @@ P2_deb <- function(t, y, p) {
     Ic <- k*(S+R)
     ## maintenance rate
     M <- m*(S+R) + mc*Ic + mi*Ii
-    print(In)
 
     ## Rate equations
     dGdt <- In - rho*G
@@ -101,10 +100,10 @@ P2_deb <- function(t, y, p) {
     dP2dt <- 0
     if (t > tInf) {
         dCdt <- dCdt - sigmaC*P2*C/(hC+C)
-        dRdt <- dRdt - b*R*P
-        dIidt <- dIidt + epsI*(b*R*P - ui*Ii)
+        dRdt <- dRdt - b*R*P2
+        dIidt <- dIidt + epsI*b*R*P2 - ui*Ii
         dP2dt <- dP2dt + epsP*sigmaC*P2*C/(hC+C) - uP*P2 - uC*Ic*P2 - uI*Ii*P2
     }
-    return(list(c(G=dGdt, C=dCdt, S=dSdt, R=dRdt, Ii=dIidt, mu=dmudt, P2=dP2dt)))
+    return(list(c(G=dGdt, C=dCdt, S=dSdt, R=dRdt, Ii=dIidt, mu=dmudt, P2=dP2dt), ingest=In, assim=epsA))
 
 }
