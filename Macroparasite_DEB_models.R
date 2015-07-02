@@ -71,9 +71,9 @@ P2_deb <- function(t, y, p) {
     tInf <- unname(p["tInf"])
 
     ## State variables
-    G <- y[1]; C <- y[2]; S <- y[3];
-    R <- y[4]; Ii <- y[5]; mu <- y[6];
-    P2 <- y[7];
+    G <- y[0]; C <- y[1]; S <- y[2];
+    R <- y[3]; Ii <- y[4]; mu <- y[5];
+    P2 <- y[6];
 
     ## assimilation efficiency
     if (t > tInf) {
@@ -104,6 +104,6 @@ P2_deb <- function(t, y, p) {
         dIidt <- dIidt + epsI*b*R*P2 - ui*Ii
         dP2dt <- dP2dt + epsP*sigmaC*P2*C/(hC+C) - uP*P2 - uC*Ic*P2 - uI*Ii*P2
     }
-    return(list(c(G=dGdt, C=dCdt, S=dSdt, R=dRdt, Ii=dIidt, mu=dmudt, P2=dP2dt), ingest=In, assim=epsA))
+    return(list(c(G=dGdt, C=dCdt, S=dSdt, R=dRdt, Ii=dIidt, mu=dmudt, P2=dP2dt), ingest=In, assim=epsA, immalloc=b*R*P2))
 
 }

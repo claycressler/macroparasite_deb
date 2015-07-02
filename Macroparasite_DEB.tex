@@ -491,6 +491,26 @@ C_G(t)&=\epsilon_G 3 \gamma_{min}\left(\alpha^{1/3}L_{\infty }S(t)^{2/3}-S(t)\ri
 
 \end{knitrout}
 
+
+More conversation about plausible parameter values:
+\begin{itemize}
+\item Sarah's intuition is that all of the $\epsilon_{\text{whatever}}$ parameters should be pretty high: conversion of biomass between host bins and parasite should be pretty efficient.
+\item The parameter $b$ that governs that rate that reserve biomass is turned into induced immune cells should be pretty high, in order for reserve to actually be depleted appreciably during an immune response. I discovered this by considering the immune system attacking a $P_2$ parasite that didn't reduce assimilation efficiency: without any parasite-induced reduction in reserve, the immune response was basically have no effect on reserve dynamics at all.
+\item Putting these two points together, this suggests that $\mu_I$ (the biomass loss rate of the induced immune response) should also be very high to prevent an unrealistic buildup of immune cells. Sarah suggests that this is supported by data: the activated cells that do most of the killing during an immune response actually have \emph{very} short (5-9 hours) half lives. This is very different from the half-lives of cells of the constitutive immune defense.
+\item An alternative approach is to allow a very big buildup of induced immune cells, but to make them rather inefficient at killing parasites. Ignoring for a moment the ambiguity in the word ``inefficient'' (since efficiency must be defined relative to something), this would seem not to make any sense.
+\end{itemize}
+
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}
+
+\includegraphics[width=\linewidth]{figure/unnamed-chunk-4-1} \hfill{}
+
+\caption[Results of a quick simulation study showing how different ways of dealing with infection by a P2 parasite affect mortality rates]{Results of a quick simulation study showing how different ways of dealing with infection by a P2 parasite affect mortality rates. The point of these results is that they already suggest that, under some circumstances, tolerance will be a better strategy than resistance.\label{fig:unnamed-chunk-4}}
+\end{figure}
+
+
+\end{knitrout}
+
 \bibliographystyle{ecology.bst}
 \bibliography{Biblio.bib}
 

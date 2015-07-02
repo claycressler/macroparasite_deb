@@ -2,3 +2,5 @@ base
 knitr
 xtable
 deSolve
+ggplot2
+scales

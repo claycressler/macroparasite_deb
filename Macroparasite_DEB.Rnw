@@ -552,6 +552,79 @@ plotall(out5)
 
 @
 
+
+More conversation about plausible parameter values:
+\begin{itemize}
+\item Sarah's intuition is that all of the $\epsilon_{\text{whatever}}$ parameters should be pretty high: conversion of biomass between host bins and parasite should be pretty efficient.
+\item The parameter $b$ that governs that rate that reserve biomass is turned into induced immune cells should be pretty high, in order for reserve to actually be depleted appreciably during an immune response. I discovered this by considering the immune system attacking a $P_2$ parasite that didn't reduce assimilation efficiency: without any parasite-induced reduction in reserve, the immune response was basically have no effect on reserve dynamics at all.
+\item Putting these two points together, this suggests that $\mu_I$ (the biomass loss rate of the induced immune response) should also be very high to prevent an unrealistic buildup of immune cells. Sarah suggests that this is supported by data: the activated cells that do most of the killing during an immune response actually have \emph{very} short (5-9 hours) half lives. This is very different from the half-lives of cells of the constitutive immune defense.
+\item An alternative approach is to allow a very big buildup of induced immune cells, but to make them rather inefficient at killing parasites. Ignoring for a moment the ambiguity in the word ``inefficient'' (since efficiency must be defined relative to something), this would seem not to make any sense.
+\end{itemize}
+
+<<echo=FALSE, fig.height=4, fig.width=4, fig.cap="Results of a quick simulation study showing how different ways of dealing with infection by a P2 parasite affect mortality rates. The point of these results is that they already suggest that, under some circumstances, tolerance will be a better strategy than resistance.">>=
+## C code for fast solution of the system
+## Parameters
+pars <- c(imax=2, theta=1/3.93, eta=10, rho=2,
+          epsA=0.85, epsG=1, epsR=1, epsI=6e-5,
+          Linf=2.94, alpha=1, gmin=.02,
+          m=0.2, mc=0.03, mi=0.005, k=0,
+          b=1e5, ui=1/20, umin=1/664, uacc=1/664,
+          epsAmin=0.5, heps=1e-3,
+          epsP=0.15, sigmaC=10, hC=0.1,
+          uP=1, uC=100, uI=200, InfDose=1e-5)
+## Initial conditions
+y0 <- c(G=0, C=0, S=1, R=0.5, Ii=0, mu=0, P2=0)
+## Timepoints to record
+times <- seq(0, 664, 0.1)
+## Model code
+dyn.load("P2_deb.so")
+## Set the time of infection
+tInf <- 50
+t1 = system.time(out <- ode(y=y0, times=times, func="derivs", parms=pars, dllname="P2_deb", initfunc="initmod", events=list(func="event", time=tInf)))
+
+## Compare against old method
+#source("Macroparasite_DEB_models.R")
+#parms <- c(pars, tInf=50)
+#y1 <- y0; y1["P2"] <- 1e-5
+#t2 = system.time(out2 <- ode(y=y1, times=times, func=P2_deb, parms=parms))
+#t2/t1 ## 200x speedup using the C code
+
+## Okay, run a simple experiment: compare the mortality caused by a
+## completely unrestrained parasite, to the mortality caused when that
+## parasite is resisted by an active induced response only (no
+## const. immunity), to the mortality cased when it is tolerated by
+## compensatory feeding only, the mortality caused when both are used.
+nonepars <- pars
+nonepars["b"] <- 0 ## no induced immunity
+nonepars["eta"] <- 0 ## no compensatory feeding
+respars <- pars
+respars["eta"] <- 0 ## no compensatory feeding
+tolpars <- pars
+tolpars["b"] <- 0 ## no induced immunity
+allpars <- pars
+
+lapply(list(nonepars, respars, tolpars, pars),
+       function(pars) {
+           sapply(seq(0, 0.25, 0.01),
+                  function(eAmin) {
+                      pars["epsAmin"] <- eAmin
+                      y0 <- c(G=0, C=0, S=1, R=0.5, Ii=0, mu=0, P2=0)
+                      times <- seq(0, 1000, 0.1)
+                      tInf <- 50
+                      out <- ode(y=y0, times=times, func="derivs", parms=pars, dllname="P2_deb", initfunc="initmod", events=list(func="event", time=tInf))
+                      min(which(out[,"mu"] >= 1))/10
+                  }
+                  )
+       }) -> results
+
+par(mar=c(5,5,1,1), oma=rep(0,4))
+plot(seq(0, .25, 0.01), (1/results[[1]])/(1/664), type='l', lwd=2, xlab="Reduction in assimilation efficiency", ylab="Fold increase in mortality rate")
+lines(seq(0, .25, 0.01), (1/results[[2]])/(1/664), lwd=2, col=2)
+lines(seq(0, .25, 0.01), (1/results[[3]])/(1/664), lwd=2, col="Light blue")
+lines(seq(0, .25, 0.01), (1/results[[4]])/(1/664), lwd=2, col="Purple")
+legend(x='topleft', fill=c(1,2,"Light blue","Purple"), c("No defense", "Resistance", "Tolerance","Both"), bty='n')
+@
+
 \bibliographystyle{ecology.bst}
 \bibliography{Biblio.bib}
 
