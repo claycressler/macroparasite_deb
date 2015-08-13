@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       157,          7]
-NotebookDataLength[     40334,       1178]
-NotebookOptionsPosition[     38329,       1110]
-NotebookOutlinePosition[     38685,       1126]
-CellTagsIndexPosition[     38642,       1123]
+NotebookDataLength[     40051,       1167]
+NotebookOptionsPosition[     38055,       1099]
+NotebookOutlinePosition[     38412,       1115]
+CellTagsIndexPosition[     38369,       1112]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -484,7 +484,7 @@ Cell[BoxData[
           RowBox[{"eP", " ", "\[Sigma]"}]}], ")"}]}]]}]}], "}"}]}], 
   "}"}]], "Output",
  CellChangeTimes->{3.644676018701912*^9, 3.644687878107477*^9, 
-  3.644687991224759*^9}]
+  3.644687991224759*^9, 3.644852211938871*^9}]
 }, Open  ]],
 
 Cell["\<\
@@ -578,10 +578,12 @@ Cell[BoxData[
       RowBox[{"(", 
        RowBox[{"\[Mu]", "-", 
         RowBox[{"eP", " ", "\[Sigma]"}]}], ")"}]}]]}]}], "}"}]], "Output",
- CellChangeTimes->{{3.644690960374831*^9, 3.644690985826436*^9}}],
+ CellChangeTimes->{{3.644690960374831*^9, 3.644690985826436*^9}, 
+   3.644852219917633*^9}],
 
 Cell[BoxData["True"], "Output",
- CellChangeTimes->{{3.644690960374831*^9, 3.644690985829008*^9}}]
+ CellChangeTimes->{{3.644690960374831*^9, 3.644690985826436*^9}, 
+   3.644852219974825*^9}]
 }, Open  ]],
 
 Cell[TextData[{
@@ -597,8 +599,7 @@ equilibrium ",
      RowBox[{"(", 
       RowBox[{"1.06", "-", 
        RowBox[{"2", " ", 
-        SuperscriptBox["C", "*"]}]}], ")"}]}]}], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+        SuperscriptBox["C", "*"]}]}], ")"}]}]}], TraditionalForm]]],
  ", and ",
  Cell[BoxData[
   FormBox[
@@ -609,65 +610,54 @@ equilibrium ",
       RowBox[{
        FractionBox[
         SubscriptBox["\[Epsilon]", "P"], "\[Mu]"], "\[Sigma]"}], "-", 
-      "1"}]]}], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+      "1"}]]}], TraditionalForm]]],
  ". So what is critical is not either ",
  Cell[BoxData[
   FormBox[
-   SubscriptBox["\[Epsilon]", "P"], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+   SubscriptBox["\[Epsilon]", "P"], TraditionalForm]]],
  " or \[Mu], but rather their ratio. That is useful to know. In particular, \
 if \[Mu] < ",
  Cell[BoxData[
   FormBox[
-   SubscriptBox["\[Epsilon]", "P"], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+   SubscriptBox["\[Epsilon]", "P"], TraditionalForm]]],
  ", which seems reasonable to me, then the only way for ",
  Cell[BoxData[
   FormBox[
-   SuperscriptBox["P", "*"], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+   SuperscriptBox["P", "*"], TraditionalForm]]],
  " to be small is for ",
  Cell[BoxData[
   FormBox[
-   SuperscriptBox["C", "*"], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+   SuperscriptBox["C", "*"], TraditionalForm]]],
  " to be large - near 0.53, which is essentially the colon biomass in the \
 absence of infection.  \n\nConsidering that we want ",
  Cell[BoxData[
   FormBox[
-   SuperscriptBox["C", "*"], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+   SuperscriptBox["C", "*"], TraditionalForm]]],
  " to be fairly low - the parasite should eat most of what is there in the \
 absence of any immune regulation - then then ",
  Cell[BoxData[
   FormBox[
    RowBox[{
-    SubscriptBox["\[Epsilon]", "P"], "/", "\[Mu]"}], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+    SubscriptBox["\[Epsilon]", "P"], "/", "\[Mu]"}], TraditionalForm]]],
  " should be small, which would require \[Mu] > ",
  Cell[BoxData[
   FormBox[
-   SubscriptBox["\[Epsilon]", "P"], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+   SubscriptBox["\[Epsilon]", "P"], TraditionalForm]]],
  ". This is one of those mathematical realities that feels biologically \
 wrong. \n\nMaybe ",
  Cell[BoxData[
   FormBox[
-   SuperscriptBox["C", "*"], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+   SuperscriptBox["C", "*"], TraditionalForm]]],
  " should not be so small. Let\[CloseCurlyQuote]s imagine choosing parameters \
 such that ",
  Cell[BoxData[
   FormBox[
-   SuperscriptBox["C", "*"], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+   SuperscriptBox["C", "*"], TraditionalForm]]],
  " is half what it would be normally, so about 0.25. Then to get ",
  Cell[BoxData[
   FormBox[
    RowBox[{
-    SuperscriptBox["P", "*"], "=", "0.1"}], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+    SuperscriptBox["P", "*"], "=", "0.1"}], TraditionalForm]]],
  ", you would need ",
  Cell[BoxData[
   FormBox[
@@ -678,21 +668,18 @@ such that ",
      FractionBox["0.1", 
       RowBox[{"1.06", "-", 
        RowBox[{"2", " ", 
-        RowBox[{"(", "0.25", ")"}]}]}]], "=", "0.18"}]}], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+        RowBox[{"(", "0.25", ")"}]}]}]], "=", "0.18"}]}], TraditionalForm]]],
  ", that is ",
  Cell[BoxData[
   FormBox[
    RowBox[{
     SubscriptBox["\[Epsilon]", "P"], "=", 
-    RowBox[{"0.18", " ", "\[Mu]"}]}], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+    RowBox[{"0.18", " ", "\[Mu]"}]}], TraditionalForm]]],
  ". To get ",
  Cell[BoxData[
   FormBox[
    RowBox[{
-    SuperscriptBox["C", "*"], "=", "0.25"}], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+    SuperscriptBox["C", "*"], "=", "0.25"}], TraditionalForm]]],
  ", I need to choose H and \[Sigma] such that 0.25(0.15 \[Sigma] - 1) = H. \n\
 \nHere is a set of parameters that seems to produce something reasonable."
 }], "Text",
@@ -702,7 +689,7 @@ such that ",
   3.644690601657827*^9, 3.644690700908527*^9}, {3.644691037546834*^9, 
   3.644691151605358*^9}, {3.6446912048537617`*^9, 3.6446912514445133`*^9}, {
   3.644691333505197*^9, 3.644691341225727*^9}, {3.644696738714466*^9, 
-  3.644696741008754*^9}}],
+  3.644696741008754*^9}, {3.644852249293397*^9, 3.6448522504725657`*^9}}],
 
 Cell[CellGroupData[{
 
@@ -724,7 +711,8 @@ Cell[BoxData[
     RowBox[{"\[Sigma]", "\[Rule]", "10"}], ",", " ", 
     RowBox[{"H", "\[Rule]", "0.1"}]}], "}"}]}]], "Input",
  CellChangeTimes->{{3.64469116871502*^9, 3.644691194159644*^9}, {
-  3.644691266190569*^9, 3.644691325153401*^9}}],
+  3.644691266190569*^9, 3.644691325153401*^9}, {3.644852202498402*^9, 
+  3.644852228907591*^9}}],
 
 Cell[BoxData[
  RowBox[{"{", 
@@ -733,7 +721,8 @@ Cell[BoxData[
    RowBox[{"C", "\[Rule]", "0.2`"}], ",", 
    RowBox[{"P", "\[Rule]", "0.09882170286780008`"}]}], "}"}]], "Output",
  CellChangeTimes->{
-  3.6446911948466454`*^9, {3.644691273513479*^9, 3.644691325508361*^9}}]
+  3.6446911948466454`*^9, {3.644691273513479*^9, 3.644691325508361*^9}, {
+   3.644852203966268*^9, 3.644852229446864*^9}}]
 }, Open  ]],
 
 Cell[BoxData[
@@ -1109,7 +1098,7 @@ Cell[BoxData[
 }, Open  ]]
 },
 WindowSize->{680, 724},
-WindowMargins->{{45, Automatic}, {Automatic, 0}},
+WindowMargins->{{Automatic, 132}, {Automatic, 0}},
 FrontEndVersion->"8.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (February 23, \
 2011)",
 StyleDefinitions->"Default.nb"
@@ -1151,34 +1140,34 @@ Cell[12956, 390, 141, 2, 33, "Output"]
 Cell[13112, 395, 508, 8, 89, "Text"],
 Cell[CellGroupData[{
 Cell[13645, 407, 1247, 35, 142, "Input"],
-Cell[14895, 444, 1461, 42, 145, "Output"]
+Cell[14895, 444, 1483, 42, 145, "Output"]
 }, Open  ]],
-Cell[16371, 489, 965, 14, 126, "Text"],
+Cell[16393, 489, 965, 14, 126, "Text"],
 Cell[CellGroupData[{
-Cell[17361, 507, 1734, 48, 151, "Input"],
-Cell[19098, 557, 807, 23, 100, "Output"],
-Cell[19908, 582, 97, 1, 33, "Output"]
+Cell[17383, 507, 1734, 48, 151, "Input"],
+Cell[19120, 557, 833, 24, 100, "Output"],
+Cell[19956, 583, 123, 2, 33, "Output"]
 }, Open  ]],
-Cell[20020, 586, 3975, 118, 366, "Text"],
+Cell[20094, 588, 3528, 103, 366, "Text"],
 Cell[CellGroupData[{
-Cell[24020, 708, 705, 18, 60, "Input"],
-Cell[24728, 728, 306, 7, 33, "Output"]
+Cell[23647, 695, 754, 19, 60, "Input"],
+Cell[24404, 716, 356, 8, 33, "Output"]
 }, Open  ]],
-Cell[25049, 738, 1120, 25, 143, InheritFromParent],
-Cell[26172, 765, 522, 13, 89, "Text"],
+Cell[24775, 727, 1120, 25, 143, "Input"],
+Cell[25898, 754, 522, 13, 89, "Text"],
 Cell[CellGroupData[{
-Cell[26719, 782, 1441, 38, 142, "Input"],
-Cell[28163, 822, 2076, 57, 173, "Output"]
+Cell[26445, 771, 1441, 38, 142, "Input"],
+Cell[27889, 811, 2076, 57, 173, "Output"]
 }, Open  ]],
-Cell[30254, 882, 748, 20, 51, "Text"],
+Cell[29980, 871, 748, 20, 51, "Text"],
 Cell[CellGroupData[{
-Cell[31027, 906, 293, 6, 33, "Input"],
-Cell[31323, 914, 1167, 35, 101, "Output"]
+Cell[30753, 895, 293, 6, 33, "Input"],
+Cell[31049, 903, 1167, 35, 101, "Output"]
 }, Open  ]],
-Cell[32505, 952, 1663, 51, 126, "Text"],
+Cell[32231, 941, 1663, 51, 126, "Text"],
 Cell[CellGroupData[{
-Cell[34193, 1007, 673, 18, 65, "Input"],
-Cell[34869, 1027, 3444, 80, 300, "Output"]
+Cell[33919, 996, 673, 18, 65, "Input"],
+Cell[34595, 1016, 3444, 80, 300, "Output"]
 }, Open  ]]
 }
 ]

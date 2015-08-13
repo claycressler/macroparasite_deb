@@ -1,0 +1,808 @@
+\documentclass[12pt,reqno,final,pdftex]{amsart}
+%% DO NOT DELETE OR CHANGE THE FOLLOWING TWO LINES!
+%% $Revision$
+%% $Date$
+\usepackage[round,sort,elide]{natbib}
+\usepackage{graphicx}
+\usepackage{times}
+\usepackage{rotating}
+\usepackage{subfig}
+\usepackage{color}
+\newcommand{\aak}[1]{\textcolor{cyan}{#1}}
+\newcommand{\mab}[1]{\textcolor{red}{#1}}
+\newcommand{\cec}[1]{\textcolor{blue}{#1}}
+
+\setlength{\textwidth}{6.25in}
+\setlength{\textheight}{8.75in}
+\setlength{\evensidemargin}{0in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\topmargin}{-.35in}
+\setlength{\parskip}{.1in}
+\setlength{\parindent}{0in}
+
+%% cleveref must be last loaded package
+\usepackage[sort&compress]{cleveref}
+\crefname{figure}{Fig.}{Figs.}
+\Crefname{figure}{Fig.}{Figs.}
+\crefname{table}{Table}{Tables}
+\Crefname{table}{Tab.}{Tables}
+\crefname{equation}{Eq.}{Eqs.}
+\Crefname{equation}{Eq.}{Eqs.}
+\crefname{appendix}{Appendix}{Appendices}
+\Crefname{appendix}{Appendix}{Appendices}
+\creflabelformat{equation}{#2#1#3}
+\newcommand{\crefrangeconjunction}{--}
+\newcommand{\creflastconjunction}{, and~}
+
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}
+\newtheorem{corol}[thm]{Corollary}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{lemma}[thm]{Lemma}
+\newtheorem{defn}[thm]{Definition}
+\newtheorem{hyp}[thm]{Hypothesis}
+\newtheorem{example}[thm]{Example}
+\newtheorem{conj}[thm]{Conjecture}
+\newtheorem{algorithm}[thm]{Algorithm}
+\newtheorem{remark}{Remark}
+\renewcommand\thethm{\arabic{thm}}
+\renewcommand{\theremark}{}
+
+\numberwithin{equation}{part}
+\renewcommand\theequation{\arabic{equation}}
+\renewcommand\thesection{\arabic{section}}
+\renewcommand\thesubsection{\thesection.\arabic{subsection}}
+\renewcommand\thefigure{\arabic{figure}}
+\renewcommand\thetable{\arabic{table}}
+\renewcommand\thefootnote{\arabic{footnote}}
+
+\newcommand\scinot[2]{$#1 \times 10^{#2}$}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\pkg}[1]{\textsf{#1}}
+\newcommand{\dlta}[1]{{\Delta}{#1}}
+\newcommand{\Prob}[1]{\mathbb{P}\left[#1\right]}
+\newcommand{\Expect}[1]{\mathbb{E}\left[#1\right]}
+\newcommand{\Var}[1]{\mathrm{Var}\left[#1\right]}
+\newcommand{\dd}[1]{\mathrm{d}{#1}}
+\newcommand{\citetpos}[1]{\citeauthor{#1}'s \citeyearpar{#1}}
+
+\begin{document}
+
+<<setup,include=FALSE,cache=FALSE>>=
+require(knitr)
+opts_chunk$set(
+               progress=TRUE,prompt=FALSE,tidy=FALSE,highlight=TRUE,
+               warning=FALSE,message=FALSE,error=FALSE,
+               results='hide',echo=FALSE,cache=TRUE,
+               size='scriptsize',
+               fig.path='figure/',fig.lp="fig:",
+               fig.align='left',
+               fig.show='hold',
+               fig.height=4,fig.width=6.83,
+               out.width="\\linewidth",
+               dpi=150,
+               dev=c('png','tiff'),
+               dev.args=list(
+                 png=list(bg='transparent'),
+                 tiff=list(compression='lzw')
+                 )
+               )
+
+scinot <- function (x, digits = 2, type = c("expression","latex")) {
+  type <- match.arg(type)
+  x <- signif(x,digits=digits)
+  ch <- floor(log10(abs(x)))
+  mn <- x/10^ch
+  switch(type,
+         expression={
+           bquote(.(mn)%*%10^.(ch))
+         },
+         latex={
+           paste0("\\scinot{",mn,"}{",ch,"}")
+         }
+         )
+}
+
+require(xtable)
+
+options(scipen=-1)
+
+options(
+        xtable.caption.placement="top",
+        xtable.include.rownames=FALSE
+        )
+
+@
+
+\begin{figure}
+\includegraphics[width=\textwidth]{Macroparasite_DEB.png}
+\caption{The basic model structure showing the state variables for the host (in boxes) and parasite (in circles). See the text for full details.}
+\label{fig:model}
+\end{figure}
+
+The basic model (shown in Fig. \ref{fig:model}) defines five individual host state variables: $G(t)$, the biomass of ingested food in the ``gut''; $C(t)$, the biomass of unassimilated food in the ``colon''; $S(t)$, the structural biomass; $R(t)$, the reserve biomass; and $I_i(t)$, the biomass of the induced immune system.
+We also need to consider the biomass of the constitutive immune system, $I_c(t)$, but as we discuss below, this has a very simple dependence on the other state variables.
+There is also one state variable for the parasite biomass, $P(t)$, and we consider four possible ways that the parasite's can access host biomass.
+
+A couple of notes.
+$G(t)$ can be thought of as all of the ingested food that is still being processed by the host (it has neither been assimilated or lost as waste).
+$C(t)$ is all of the unassimilated food - it is still in the gut (biologically), but is no longer available to the host.
+$I_c(t)$ is the total biomass of all of the immune cells present in a host prior to parasite invasion, regardless of whether these cells are part of the innate immune system (e.g., eosinophils, macrophages) or the adaptive immune system (e.g., lymphocytes).
+Similarly, $I_i(t)$ is the total biomass of all the immune cells produced in response to parasite invasion, regardless of their specific type.
+
+The reason for including $G(t)$ and $C(t)$ is that it allows different parasites to have equivalent dynamical equations (as we will see below).
+Previous versions of the model had the $P_1$ parasitizing the \emph{flow} of biomass through ingestion and $P_2$ parasitizing the \emph{flow} of biomass to waste, whereas $P_3$ and $P_4$ parasitize \emph{stored} biomass.
+Thus, the parameters of different parasite growth equations had different units and were not totally comparable (at least in my head).
+By considering biomass stored in the ``gut'' and ``colon,'' however, all of the parasites have equivalent parameters.
+
+We make the assumption that we are modeling the biology of animals with determinant growth, so we move away from the standard DEB model assumptions.
+In particular, we make some very strong assumptions about the growth of structural biomass and constitutive immune biomass.
+
+\subsection*{Model assumptions:}
+\begin{itemize}
+\item individuals have a genetically predetermined growth pattern in structural biomass that is independent of how much they are eating;
+\item individuals have a genetically predetermined constitutive immune system that depends only on the total weight $(S(t)+R(t))$ of the organism, not on how much they are eating;
+\item total maintenance costs depend on the total weight and the biomasses of the constitutive and induced immune systems;
+\item all assimilated biomass that is not used for maintenance or structural growth is stored in reserves;
+\item the induced immune response ``paid'' using reserve biomass.
+\end{itemize}
+
+\subsection*{Ingestion}
+We can consider a couple of different models of ingestion.
+Since we are considering \emph{ad lib} feeding right now, we can ignore the fact that ingestion rate should be nonlinearly related to food abundance (e.g., by a Type II functional response), as food abundance is always saturating.
+Then the simplest model would assume that ingestion is completely independent of anything related to individual state.
+\citet{vanLeeuwen2002}, looking at data from mice, suggest that mice raised under \emph{ad lib} feeding conditions have an ingestion rate that is independent of age, size, or condition.
+That would suggest that a reasonable model of ingestion rate $\iota$ is simply:
+\begin{equation}
+\iota = \iota_{\max},
+\end{equation}
+where $\iota_{\max}$ is the maximum ingestion rate.
+
+On the other, standard DEB assumptions are that ingestion should scale with the surface area of structure, that is, with $S(t)^{2/3}$.
+In this case, ingestion rate is
+\begin{equation}
+\iota=\iota_{\max }S^{2/3},
+\end{equation}
+where $\iota_{\max}$ is now the \emph{surface-area-specific} maximum ingestion rate (so it does not have the same units as $\iota_{\max}$ in the previous model.
+
+However, \citet{deRoos2013} suggest that for demand-driven systems (where ingestion is adjusted to meet the individual's demands for resources), ingestion rate should depend on both size and body condition, as measured by the ratio of structure to reserves.
+For animals feeding on super-abundant food, their model for ingestion rate is
+\begin{equation}
+\iota = \frac{2M_c/H_c}{1 + \exp\left(\eta(R/S-\theta)\right)}S^{2/3},
+\end{equation}
+where $\theta$ is the ``target'' body condition (ratio of reserve to structure); $\eta$ is a parameter that determines how quickly ingestion rate accelerates when $R/S$ drops below $\theta$; $M_c$ is the scaling constant of maximum ingestion rate with $S^{2/3}$; and $H_c$ is the half-saturation resource density.
+For simplicity, we will combine $2M_c/H_c$ into a single parameter $\iota_{\max}$, so the model is then
+\begin{equation}
+\iota = \frac{\iota_{\max}S^{2/3}}{1 + \exp\left(\eta(R/S-\theta)\right)}.
+\end{equation}
+
+
+\subsection*{Dynamics of food biomass in the gut}
+Ingested food biomass is temporarily stored in the gut, where it is processed.
+Biomass that leaves the gut is either assimilated or excreted as waste (stopping temporarily in $C(t)$).
+Thus,
+\begin{equation}
+\frac{dG}{dt} = \iota - \rho G,
+\end{equation}
+where $\rho$ is the rate food biomass leaves the gut ($1/\rho$ is therefore the mean gut transit time).
+We assume that a fraction of this biomass is assimilated, and the remainder move onto $C$.
+
+\subsection*{Dynamics of food biomass in the ``colon''}
+Let $\rho (1-\epsilon_A) G$ be the rate that undigested food enters the ``colon''.
+In reality, there is likely some relationship between $\epsilon_A$ and $\rho$: assimilation efficiency should increase as gut transit time slows down.
+Moreover, many parasites will influence $\epsilon_A$; in fact, if an organism doesn't reduce $\epsilon_A$, it isn't really a parasite at all.
+Since we have defined $\rho$ to be the gut transit time, and in reality we are still in the gut, undigested biomass should leave this compartment at the same rate as it enters.
+This makes the model,
+\begin{equation}
+\frac{dC}{dt} = \rho (1-\epsilon_A)G - \rho C.
+\end{equation}
+
+\subsection*{Reserve dynamics}
+The key equation for host dynamics is the equation for reserve dynamics, which is
+\begin{equation}
+\frac{dR}{dt}=\epsilon _R\left(\rho \epsilon_A G-M-C_G\right)-b R P,
+\end{equation}
+where $M$ is the total maintenance rate, $C_G$ is the cost of growth in structural biomass, $\epsilon _R$ is the cost of converting assimilated biomass into reserve biomass, and $bRP$ is the allocation of reserve to fuel an induced immune response.
+Note that this last assumption makes the induced response independent of the number of induced (or constitutive) immune cells.
+This kind of model has been studied by other authors \citep{Bonhoeffer1994,Alizon2005,Fenton2006,Hamilton2008}, and reflects the fact that the immune-parasite interaction is not really a predator-prey interaction in the sense that the immune response is not stimulated by direction contact between immune cells and parasites.
+
+\subsection*{Maintenance}
+An organism must pay the metabolic cost of all of its cells, which means that a reasonable model of maintenance is
+\begin{equation}
+M=m(S+R)+m_cI_c+m_iI_i,
+\end{equation}
+where $m$ is the maintenance rate for weight, which is assumed to be the same for structure and reserves, $m_c$ is the maintenance rate for constitutive immune biomass, and $m_i$ is the maintenance rate for induced immune biomass.
+On the one hand, it seems like $m_c=m_i$ because the cells that are produced during the induced immune response are simply clones of those cells of the constitutive immune population that reacted to the antigen.
+However, that is not the case because the production of constitutive immune cells is very wasteful: for every 100 immune cells produced by the thymus, 95 are destroyed immediately, either because they won't work with MHC or because they are self-reactive.
+Thus, the cost of maintaining an effective constitutive immune cell should be much higher than the cost of maintaining an effective induced immune cell, even though biologically, they are clones.
+Assuming the 95\% figure is reliable, it is reasonable to imagine that the maintenance cost for 1g of constitutive immune biomass is 20-fold higher than the cost of maintaining 1g of induced immune biomass.
+
+It may be worth questioning whether there should be separate maintenance rates for structure $S(t)$ versus reserves $R(t)$, but this is probably reasonable for the moment.
+I discuss the separate maintenance costs for constitutive versus induced immune biomass below.
+
+\subsection*{Constitutive immune defense}
+Rather than considering a dynamic constitutive immune defense, we instead assume that organisms maintain a constitutive immune biomass that is proportional to total biomass.
+To some extent, this makes biological sense: hosts should want to maintain a relatively constant level of surveillance, regardless of how much tissue they have.
+At least some theoretical evidence supports this assumption \citep{Wiegel2004}.
+Therefore, we assume that the total biomass of constitutive defense is:
+\begin{equation}
+I_c=k(S+R),
+\end{equation}
+where $k$ is the biomass of the constitutive immune system relative to the total biomass in weight ($k<<1$).
+
+Note that we do not consider the cost of building these cells, or, more precisely, we assume that the building cost and the maintenance cost are identical.
+This is reasonably well-supported by data, according to Andrea: as noted above, these cells are constantly being produced by a very wasteful process; moreover, these cells have a fairly short half-life, resulting in very fast turnover of the entire population.
+All of this dynamic can be captured reasonably well by simply assuming that the standing army of effective constitutive immune cells is tied to total mass of the host.
+This is quite different from our assumptions for the induced immune response (discussed below).
+
+\subsection*{ Induced immune response}
+The derivation of the reserve dynamics equation implies a model for the induced immune response of
+\begin{equation}
+\frac{dI_i}{dt}=\epsilon _ib R P-\mu _II_i,
+\end{equation}
+where $\epsilon _i$ is the cost of converting reserve biomass into \textit{effective} induced immune biomass (see below), $b$ is the rate reserve biomass is allocated to the immune system per unit of parasite biomass, and $\mu _I$ is the background rate that immune cells are lost.
+
+With this model formulation, if an infection is cleared, the induced immune response returns to 0; we may, at some point in the future, want to consider the fact that some of the cells of the induced immune response become part of the constitutive immune system after infection (e.g., memory cells).
+
+We can also make some assumptions about parameter values and model initial conditions.
+According to Perelson, the probability that a lymphocyte (for example) of the constitutive immune system will react with any particular epitope is very small, on the order of $10^{-5}$.
+This suggests that the initial condition of the induced immune system is $10^{-5}I_c$.
+The rate of proliferation will depend on $\epsilon_i b$, which may be possible to find estimates for in the published literature; finding the estimate of $b$ or $\epsilon_i$ by itself might be more challenging.
+
+Andrea has suggested the work of Rob de Boer and Andrew Yates for models of immune cell proliferation (and killing too).
+There is also some nice stuff by Kirk Klasing looking at the energetic/protein cost of the innate and induced immune response.
+
+\subsection*{Cost of growth}
+This one turns out be slightly more complicated.
+Let's start with the equation for structural biomass.
+
+If you assume that structural biomass $S$ scales with structural length $L$ as $S =\epsilon L^3$, and you assume that structural length
+follows a von Bertalanffy equation, then
+\begin{align}
+\frac{dS}{dt} &=\frac{d\left(\alpha L^3\right)}{\text{dt}} \\
+& =3\alpha  L^2 \frac{dL}{dt} \\
+& =3 \alpha  L^2 \left(\gamma \left(L_{\infty}-L\right)\right) \\
+& =3 \gamma \left(\alpha  L^2 L_{\infty}-\epsilon  L^3\right) \\
+& =3 \gamma \left(\alpha  L^2L_{\infty }-S\right).
+\end{align}
+
+Note that $S^{2/3}=\alpha^{2/3}L^2$, or $L^2=S^{2/3}/\alpha^{2/3}$, so
+\begin{equation}
+\frac{dS}{dt}=3\gamma  \left(\alpha^{1/3}L_{\infty }S^{2/3}-S\right).
+\end{equation}
+If a unit of structural biomass increase costs $\epsilon_G$, then the total cost for structural growth is
+\begin{equation}
+C_G = \epsilon _G 3\gamma  \left(\alpha ^{1/3}L_{\infty }S^{2/3}-S\right).
+\end{equation}
+This agrees with Anieke's derivation.
+Most of these parameters have probably already been estimated (for mice, anyway; see the back of Kooijman's book), including the shape parameter $\alpha$, the maximum structural length $L_{\infty }$, and the growth rate in structure $\gamma$.
+
+Of course, it is possible to directly solve the von Bertalanffy growth equation, so we could eliminate one equation from the model by simply solving for the size of the animal at any age.
+In particular, $\frac{dL}{dt}=\gamma \left(L_{\infty }-L\right), \text{with} L(0)=L_b$, has the solution $L(t)=L_{\infty }+\left(L_b-L_{\infty}\right)e^{-\gamma t}$, and the structural biomass $S(t)=\alpha L(t)^3$.
+
+However, if the parasite utilizes structure as a resource, the structural growth equation has to be modified to include parasitism, and we will no longer be able to solve the equation.
+In particular, the structural biomass equation will become
+\begin{equation}
+\frac{dS}{dt}=3\gamma  \left(\alpha^{1/3}L_{\infty }S^{2/3}-S\right)-\frac{\sigma_S S P_3}{H_S+S}.
+\end{equation}
+However, we can still make use of the analytical solution: when the parasite is using up structural biomass as resource, the amount allocated to growth (i.e., $C_G$)should increase in proportion to how far the host is from it's target structural biomass.
+That is, define
+\begin{equation}
+S_{\text{target}}(t)=\alpha \left(\left(L_b-L_{\infty }\right) e^{-\gamma  t}+L_{\infty }\right)^3,
+\end{equation} and let the solution of the differential equation for $\frac{dS}{dt}$ give the actual weight.
+
+It makes sense to me, at this point, to imagine that what happens when an organism is below its target structural biomass is that it increases the amount of energy allocated to growth to accelerate its growth rate (e.g., engage in ``catch-up'' growth).
+Mathematically, that could be accomplished by making the parameter $\gamma$ a function of the difference between the target structural biomass and the actual structural biomass.
+For example, if you let
+\begin{equation}
+\gamma =\gamma _{\min }+\gamma _{\text{catchup}}\left(\frac{S_{\text{target}}(t)}{S(t)}-1\right),
+\end{equation}
+then whenever $S(t)<S_{\text{target}}(t)$, $\gamma$ increases, increasing the allocation of energy towards growth and enabling the \textit{possibility} of catch-up growth.
+Of course, if there is a parasite that is also sucking up biomass, the host may or may not actually be able to catch up.
+If the parasite is cleared, the host will have an increased growth rate until $S(t)=S_{\text{target}}(t)$, and then the growth rate will fall back to normal.
+
+Thus, we have equations for the rate of structural biomass increase, the growth rate, and cost of growth:
+\begin{align}
+\frac{dS}{dt} &= 3\gamma  \left(\alpha^{1/3}L_{\infty }S(t)^{2/3}-S(t)\right)-\frac{k S(t) P(t)}{h+S(t)} \\
+C_G(t)&=\epsilon_G 3\gamma \left(\alpha^{1/3}L_{\infty }S(t)^{2/3}-S(t)\right) \\
+\gamma(S) &=\gamma_{\min}+\gamma_{\text{catchup}}\left(\frac{S_{\text{target}}(t)}{S(t)}-1\right) \\
+S_{\text{target}}(t) &=\alpha \left(\left(L_b-L_{\infty }\right) e^{-\gamma  t}+L_{\infty }\right)^3
+\end{align}
+For non-parasitized hosts, or hosts parasitized by parasites targeting other sources of biomass, then $S(t)=S_{\text{target}}(t)$, and you only need two of the above equations.
+
+\subsection*{Host mortality}
+The last consideration is of host mortality rate.
+DEB theory has been used extensively to consider how metabolic activity relates to mortality risk \citep[by keeping track of things like oxidative damage, e.g.,][]{vanLeeuwen2002,Kooijman2009}, but that might be more complicated than we wish to deal with at the moment.
+A simpler solution is to imagine that, given its structural volume, an organism has a ``target'' amount of reserves that it seeks to maintain.
+This is known, in the dynamic energy budget literature, as the ``weak homeostasis assumption.''
+It can be modelled as:
+\begin{equation}
+\frac{d\mu}{dt} = \mu_{\min} + \mu_{accel}\max\left(\theta \frac{S}{R}-1, 0\right),
+\end{equation}
+where $\mu_{\min}$ is the baseline mortality rate of a healthy host (which we assume for simplicity is independent of age), $\mu_{accel}$ is the rate that mortality accelerates with decreasing body condition, and $\theta$ is the target ratio of reserves $R$ to structure $S$ (as above in the resource ingestion rate equation).
+With this formulation, as $R$ approaches zero, mortality rate accelerates dramatically.
+The parameter $\theta$ allows mortality rate to accelerate well before $R$ actually gets close to zero, which is likely quite biologically reasonable.
+A slightly simplified version of this would be
+\begin{equation}
+\frac{d\mu}{dt} = \mu_{\min} + \mu_{R}\left(\theta \frac{S}{R} - 1\right),
+\end{equation}
+which allows mortality rate to \emph{fall} when $R$ is large relative to $S$.
+This may not be particularly biologically reasonable, given the negative health consequences of obesity, but does make the system a bit more analytically tractable.
+
+\section*{Model equations, including parasitism}
+As seen in Fig. \ref{fig:model}, we consider 4 kinds of parasite: $P_1$ are parasites of ingestion; $P_2$ are parasites of waste; $P_3$ are parasites of structure; and $P_4$ are parasites of reserves.
+By allowing the existence of a gut and colon, all four of these parasites can bemodelled with an equivalent mathematical formulation:
+\begin{equation}
+\frac{dP_j}{dt} = \epsilon_P \frac{\sigma P_j E_j}{H_j+E_j}  - \mu_P P_j - \mu_c P_j I_c - \mu_i P_j I_i,
+\end{equation}
+where $j$ refers the parasite class and $E_j$ is the parasite's source of energy: either $G(t)$ (for $j=1$), $C(t)$ (for $j=2$), $S(t)$ (for $j=3$), or $R(t)$ (for $j=4$).
+The parameters are: $\epsilon_P$ is the cost of converting a gram of stolen host biomass into a gram of parasite biomass, which likely varies with parasite type; $\sigma$ is the parasite's rate of biomass consumption; $\mu_P$ is the parasite's background rate of biomass loss; $\mu_c$ and $\mu_i$ are the biomass loss rates due to interaction with the constitutive and induced immune responses, respectively.
+
+The full model (assuming the demand-driven ingestion rate function):
+\begin{align}
+\frac{dG}{dt} &= \frac{\iota_{\max}S^{2/3}}{1 + \exp\left(\eta(R/S-\theta)\right)} - \rho G - \frac{\sigma_G P_1 G}{H_G + G}, \\
+\frac{dC}{dt} &= \rho (1-\epsilon_A)G - \rho C - \frac{\sigma_C P_2 C}{H_C + C}, \\
+\frac{dS}{dt} &= 3\gamma(S) \left(\alpha^{1/3}L_{\infty }S^{2/3}-S\right) - \frac{\sigma_S P_3 S}{H_S + S}, \\
+\frac{dR}{dt} &= \epsilon_R\left(\rho \epsilon_A G-M(S,R,I_i)-C_G(S)\right)-b R (P_1+P_2+P_3+P_4) - \frac{\sigma_R P_4 R}{H_R + R}, \\
+\frac{dI_i}{dt} &= \epsilon_ib R P-\mu_II_i, \\
+\frac{d\mu}{dt} &= \mu_{\min} + \mu_{accel}\max\left(\theta \frac{S}{R} - 1, 0\right), \\
+\frac{dP_1}{dt} &= \epsilon_P \frac{\sigma_G P_1 G}{H_G + G} - \mu_P P_1 - \mu_c I_c P_1 - \mu_i I_i P_1, \\
+\frac{dP_2}{dt} &= \epsilon_P \frac{\sigma_C P_2 C}{H_C + C} - \mu_P P_2 - \mu_c I_c P_2 - \mu_i I_i P_2, \\
+\frac{dP_3}{dt} &= \epsilon_P \frac{\sigma_S P_3 S}{H_S + S} - \mu_P P_3 - \mu_c I_c P_3 - \mu_i I_i P_3, \\
+\frac{dP_4}{dt} &= \epsilon_P \frac{\sigma_R P_4 R}{H_R + R} - \mu_P P_4 - \mu_c I_c P_4 - \mu_i I_i P_4.
+\end{align}
+
+The functions for maintenance rate, constitutive immune response, cost of growth, and structural growth rate are:
+\begin{align}
+M &= m(S+R)+m_cI_c+m_iI_i, \\
+I_c &= k(S + R), \\
+C_G(t)&=\epsilon_G 3\gamma(R) \left(\alpha^{1/3}L_{\infty }S(t)^{2/3}-S(t)\right), \\
+\gamma(S) &=\gamma _{\min}+\gamma_{\text{catchup}}\left(\frac{S_{\text{target}}(t)}{S(t)}-1\right), \\
+S_{\text{target}}(t) &= \alpha \left(\left(L_b-L_{\infty }\right) e^{-\gamma  t}+L_{\infty }\right)^3.
+\end{align}
+
+<<echo=FALSE,eval=FALSE>>=
+require(deSolve)
+## Mouse parameters
+##------------------
+## imax for balb/c = 7.86 g food/g mouse; black6 = 6.54 g food/g mouse
+## rho = 1 day
+## balb/c theta = 3.93 g lean/g fat; black6 = 3.5 g lean/g fat
+## uI = 20 days (for CD4 cell)
+## mC = 11 hours (half-life for neutrophils, 60-70% of standing immune defense; 60 day lifespan for lymphocytes, 40% of standing immune defense)
+pars <- c(imax=, theta=, eta=, rho=,
+          epsA=, epsG=, epsR=, epsI=,
+          Linf=34, alpha=1, gmin=25, gup=,
+          m=, mc=, mi=,
+          k=, b=, uI=,
+          umin=, uacc=,
+          epsP=,
+          sigmaG=0, sigmaC=, sigmaS=0, sigmaR=0,
+          hG=0, hC=, hS=0, hR=0,
+          uP=, uC=, uI=,
+          epsAmin=, heps=)
+
+## This model is slightly modified to focus on P_2 parasites whose biomass causes
+macro_deb <- function(t, y, p) {
+    ## HOST PARAMETERS
+    ## max. SA-specific ingest rate [food g^(-2/3) day^(-1)]
+    imax <- unname(p["imax"])
+    ## target body condition [dimensionless ratio]
+    theta <- unname(p["theta"])
+    ## scaling parameter of ingestion rate w/ body condition [dim.]
+    eta <- unname(p["eta"])
+    # gut transit time [day^(-1)]
+    rho <- unname(p["rho"])
+    ## biomass conversion efficiencies [dim.]
+    epsA <- unname(p["epsA"]) # ingestion to assimilation
+    epsG <- unname(p["epsG"]) # assimilate to growth
+    epsR <- unname(p["epsR"]) # assimilate to reserve
+    epsI <- unname(p["epsI"]) # reserve to immune
+    ## max structural length [mm]
+    Linf <- unname(p["Linf"])
+    ## shape parameter (converts mm to g) [g mm^(-1)]
+    alpha <- unname(p["alpha"])
+    ## growth rate for host in good condition [day^(-1)]
+    gmin <- unname(p["gmin"])
+    ## catchup growth rate acceleration [day^(-1)]
+    gup <- unname(p["gup"])
+    ## maintenance rates for different tissues [day^(-1)]
+    m <- unname(p["m"])
+    mc <- unname(p["mc"])
+    mi <- unname(p["mi"])
+    ## constitutive immune biomass per total weight [dim.]
+    k <- unname(p["k"])
+    ## induced immune response rate [g^(-1) day^(-1)]
+    b <- unname(p["b"])
+    ## biomass loss rate of induced immune response [day^(-1)]
+    uI <- unname(p["uI"])
+    ## host background mortality rate [day^(-1)]
+    umin <- unname(p["umin"])
+    ## starvation mortality [day^(-1)]
+    uacc <- unname(p["uacc"])
+
+    ## PARASITE PARAMETERS
+    ## biomass conversion efficiency
+    epsP <- unname(p["epsA"])
+    ## parasite attack rates [g parasite^(-1) day^(-1)]
+    sigmaG <- unname(p["sigmaG"])
+    sigmaC <- unname(p["sigmaC"])
+    sigmaS <- unname(p["sigmaS"])
+    sigmaR <- unname(p["sigmaR"])
+    ## parasite handling times [g]
+    hG <- unname(p["hG"])
+    hC <- unname(p["hC"])
+    hS <- unname(p["hS"])
+    hR <- unname(p["hR"])
+    ## background biomass loss rate [day^(-1)]
+    uP <- unname(p["uP"])
+    ## biomass loss due to constitutive immune defense [day^(-1) g^(-1)]
+    uC <- unname(p["uC"])
+    ## biomass loss due to induced immune defense [day^(-1) g^(-1)]
+    uI <- unname(p["uI"])
+}
+
+@
+
+
+\section*{Interesting mathematical experiments}
+\begin{itemize}
+\item How much does a $P_2$ parasite have to reduce digestion efficiency before it becomes worthwhile to attack it rather than ignore it? Mounting an immune response to a parasite engenders a cost to the host by reducing $R$ (which accelerates mortality rate). Is it worthwhile to attack \emph{any} parasite that invades, or is it better to ignore some? This amounts to an argument about tolerance.
+\end{itemize}
+
+To model this, we need to consider how parasite biomass affects assimilation efficiency.
+It is clear that we cannot simply assume that the presence of a parasite causes a \emph{fixed} decrease in assimilation efficiency, as there would be no point in fighting such a parasite because unless the parasite can be cleared, no advantage is gained by wasting energy fighting it.
+It makes the most sense to imagine that parasite abundance has a saturating effect on digestion efficiency:
+\begin{equation}
+\epsilon_A(P_2) = \epsilon_A\left(1 - \frac{\epsilon_{A_{\min}} P_2}{H_\epsilon + P_2}\right).
+\end{equation}
+In the absence of parasites, assimilation efficiency is $\epsilon_A$, as above.
+As parasite biomass increases, digestive efficiency falls; $\epsilon_{A_{\min}}$ gives the maximum possible reduction in digestive efficiency (bounded between 0 and 1, and more likely some value less than one).
+
+Initially, for simplicity, I wanted to assume that ingestion depends linearly on structural biomass, to avoid the complexity of condition dependent ingestion, and in accordance with Sarah's data.
+However, this does not work mathematically, and it is fairly straightforward to see why.
+You can show that the equilibrium reserve biomass in the absence of parasitism, $R^*$, under such a model, is:
+\begin{equation}
+R^* = \left(\frac{\epsilon_A \iota_{\max}}{m + k m_c} - 1 \right) S^*.
+\end{equation}
+You can see why in the Mathematica notebook ``Macroparasite\_DEB\_analytics.nb.''
+The ratio of reserves to structure is therefore equal to the term in parentheses.
+On the basis of Sarah's data (and the simple general model in \citep{deRoos2013}), this ratio should be approximately 0.25.
+That will happen when $\epsilon_A \iota_{\max} = 1.25(m + k m_c)$. Given that $\epsilon_A$ is a fraction close to unity in magnitude, this suggests that ingestion rate and maintenance rate should be quite close in value.
+But this is ridiculous: maintenance rates should be on the order of ten-fold smaller than ingestion rates.
+Thus, in a constant food environment with a determinantly growing organism, it is necessary to implement condition-dependent feeding.
+
+Therefore, the model is:
+\begin{align}
+\frac{dG}{dt} &= \frac{\iota_{\max}S^{2/3}}{1 + \exp\left(\eta(R/S-\theta)\right)} - \rho G, \\
+\frac{dC}{dt} &= \rho (1-\epsilon_A(P_2))G - \rho C - \frac{\sigma_C P_2 C}{H_C + C}, \\
+\frac{dS}{dt} &= 3\gamma_{\min} \left(\alpha^{1/3}L_{\infty }S^{2/3}-S\right), \\
+\frac{dR}{dt} &= \epsilon_R\left(\rho \epsilon_A(P_2) G-M(S,R,I_i)-C_G(S)\right)-b R P_2, \\
+\frac{dI_i}{dt} &= \epsilon_ib R P-\mu_II_i, \\
+\frac{d\mu}{dt} &= \mu_{\min} + \mu_{accel}\max\left(\theta \frac{S}{R} - 1, 0\right), \\
+\frac{dP_2}{dt} &= \epsilon_P \frac{\sigma_C P_2 C}{H_C + C} - \mu_P P_2 - \mu_c I_c P_2 - \mu_i I_i P_2,
+\end{align}
+where
+\begin{align}
+M &= m(S+R)+m_cI_c+m_iI_i, \\
+I_c &= k(S + R), \\
+C_G(t)&=\epsilon_G 3 \gamma_{min}\left(\alpha^{1/3}L_{\infty }S(t)^{2/3}-S(t)\right), \\
+\epsilon_A(P_2) &= \epsilon_A\left(1 - \frac{\epsilon_{A_{\min}} P_2}{H_\epsilon + P_2}\right).
+\end{align}
+
+<<echo=TRUE,eval=TRUE,fig.width=4, fig.height=4, fig.cap="Proving that this parameter set produces something vaguely mouselike. This set of parameters yields a healthy mouse that eats 7 g of food per day, has 25g of structural biomass and 7 g of reserve biomass, and at any point will have about 4g of food in its guts.">>=
+require(deSolve)
+## initial conditions: assuming 3.93g lean mass for every g of fat
+## mass, and a birth rate of 1.5 g
+y0 <- c(G=0, C=0, S=1.5*3.93/4.93, R=1.5*1.93/4.93, Ii=0, mu=0, P2=1e-6)
+
+## Run for 664 days (when mortality occurs for healthy mouse)
+times <- seq(0, 664, 0.1)
+
+plotall <- function(x) {
+    par(mfrow=c(3,3), mar=c(2,4,0.5,0.5), oma=rep(0.5,4))
+    labels <- c("Age", "Gut biomass", "Waste biomass", "Structure biomass",
+                "Reserve biomass", "Immune biomass", "Cumulative hazard",
+                "Parasite biomass", "Ingestion rate", "Assimilation rate")
+    for (i in 2:ncol(x))
+        plot(x[,1], x[,i], xlab='', ylab=labels[i], type='l')
+}
+
+source("Macroparasite_DEB_models.R")
+## See mathematica notebook to see the justification for these
+## parasite and constitutive defense parameters.
+pars <- c(imax=2, ## estimated on the basis of Sarah's data
+          theta=1/3.93, ## estimated on the basis of Sarah's data
+          rho=2, ## estimated on the basis of Sarah's data
+          eta=10, ## guestimate based on parasite-free body condition
+          epsA=0.85, ## estimate from data
+          epsG=1, ## total guess
+          epsR=1, ## total guess
+          Linf=2.94, ## from Kooijman
+          alpha=1, ## from Kooijman
+          gmin=.02, ## guestimate based on parasite-free body condition
+          m=0.2, ## guestimate based on imax
+          mc=0.03, ## made up
+          mi=0.005, ## guestimate based on imax
+          k=4.9e-5, ## estimated on the basis of Sarah's data
+          b=5e-3, # probably should be pretty small, as reserve
+                  # biomass should not be greatly depleted by the
+                  # induced immune response
+          ui=1/20, ## based on avg lifespan of 20 days (for non-B-cell lymphocytes)
+          umin=1/664, ## based on avg host lifespan
+          uacc=1/664, ## made up
+          epsP=0.15, ## based on model analysis
+          epsI=0.8, ## total guess
+          sigmaC=10, ## based on model analysis
+          hC=0.1, ## based on model analysis
+          uP=1, ## based on model analysis
+          uC=100, ## guess
+          uI=200, ## total guess
+          epsAmin=0.5, ## total guess
+          heps=1e-3, ## total guess
+          tInf=Inf) ## no infection
+out1 <- ode(y=y0, times=times, func=P2_deb, parms=pars, method="lsoda")
+plotall(out1)
+@
+
+<<echo=FALSE, eval=TRUE, fig.height=4, fig.width=4, fig.cap="Results of a model with both consitutive and induced immune response.">>=
+pars["tInf"] <- 50
+out5 <- ode(y=y0, times=times, func=P2_deb, parms=pars, method="lsoda")
+plotall(out5)
+
+@
+
+
+More conversation about plausible parameter values:
+\begin{itemize}
+\item Sarah's intuition is that all of the $\epsilon_{\text{whatever}}$ parameters should be pretty high: conversion of biomass between host bins and parasite should be pretty efficient.
+\item The parameter $b$ that governs that rate that reserve biomass is turned into induced immune cells should be pretty high, in order for reserve to actually be depleted appreciably during an immune response. I discovered this by considering the immune system attacking a $P_2$ parasite that didn't reduce assimilation efficiency: without any parasite-induced reduction in reserve, the immune response was basically have no effect on reserve dynamics at all.
+\item Putting these two points together, this suggests that $\mu_I$ (the biomass loss rate of the induced immune response) should also be very high to prevent an unrealistic buildup of immune cells. Sarah suggests that this is supported by data: the activated cells that do most of the killing during an immune response actually have \emph{very} short (5-9 hours) half lives. This is very different from the half-lives of cells of the constitutive immune defense.
+\item An alternative approach is to allow a very big buildup of induced immune cells, but to make them rather inefficient at killing parasites. Ignoring for a moment the ambiguity in the word ``inefficient'' (since efficiency must be defined relative to something), this would seem not to make any sense.
+\end{itemize}
+
+<<echo=FALSE, fig.height=4, fig.width=4, fig.cap="Results of a quick simulation study showing how different ways of dealing with infection by a P2 parasite affect mortality rates. The point of these results is that they already suggest that, under some circumstances, tolerance will be a better strategy than resistance.">>=
+library(deSolve)
+## C code for fast solution of the system
+## Parameters
+pars <- c(imax=2, theta=1/3.93, eta=10, rho=2,
+          epsA=0.85, epsG=1, epsR=1, epsI=6e-5,
+          Linf=2.94, alpha=1, gmin=.02,
+          m=0.2, mc=0.03, mi=0.005, k=0,
+          b=1e5, ui=1/20, umin=1/664, uacc=1/664,
+          epsAmin=0.5, heps=1e-3,
+          epsP=0.15, sigmaC=10, hC=0.1,
+          uP=1, uC=100, uI=200, InfDose=1e-5)
+## Initial conditions
+y0 <- c(G=0, C=0, S=1, R=0.5, Ii=0, mu=0, P2=0)
+## Timepoints to record
+times <- seq(0, 664, 0.1)
+## Model code
+dyn.load("P2_deb.so")
+## Set the time of infection
+tInf <- 50
+t1 = system.time(out <- ode(y=y0, times=times, func="derivs", parms=pars, dllname="P2_deb", initfunc="initmod", events=list(func="event", time=tInf), method="lsoda"))
+
+## Compare against old method
+#source("Macroparasite_DEB_models.R")
+#parms <- c(pars, tInf=50)
+#y1 <- y0; y1["P2"] <- 1e-5
+#t2 = system.time(out2 <- ode(y=y1, times=times, func=P2_deb, parms=parms))
+#t2/t1 ## 200x speedup using the C code
+
+## Okay, run a simple experiment: compare the mortality caused by a
+## completely unrestrained parasite, to the mortality caused when that
+## parasite is resisted by an active induced response only (no
+## const. immunity), to the mortality cased when it is tolerated by
+## compensatory feeding only, the mortality caused when both are used.
+nonepars <- pars
+nonepars["b"] <- 0 ## no induced immunity
+nonepars["eta"] <- 0 ## no compensatory feeding
+respars <- pars
+respars["eta"] <- 0 ## no compensatory feeding
+tolpars <- pars
+tolpars["b"] <- 0 ## no induced immunity
+allpars <- pars
+
+lapply(list(nonepars, respars, tolpars, pars),
+       function(pars) {
+           sapply(seq(0, 0.25, 0.01),
+                  function(eAmin) {
+                      pars["epsAmin"] <- eAmin
+                      y0 <- c(G=0, C=0, S=1, R=0.5, Ii=0, mu=0, P2=0)
+                      times <- seq(0, 1000, 0.1)
+                      tInf <- 50
+                      out <- ode(y=y0, times=times, func="derivs", parms=pars, dllname="P2_deb", initfunc="initmod", events=list(func="event", time=tInf))
+                      min(which(out[,"mu"] >= 1))/10
+                  }
+                  )
+       }) -> results
+
+par(mar=c(5,5,1,1), oma=rep(0,4))
+plot(seq(0, .25, 0.01), (1/results[[1]])/(1/664), type='l', lwd=2, xlab="Reduction in assimilation efficiency", ylab="Fold increase in mortality rate")
+lines(seq(0, .25, 0.01), (1/results[[2]])/(1/664), lwd=2, col=2)
+lines(seq(0, .25, 0.01), (1/results[[3]])/(1/664), lwd=2, col="Light blue")
+lines(seq(0, .25, 0.01), (1/results[[4]])/(1/664), lwd=2, col="Purple")
+legend(x='topleft', fill=c(1,2,"Light blue","Purple"), c("No defense", "Resistance", "Tolerance","Both"), bty='n')
+@
+
+Essential theoretical experiments:
+\begin{itemize}
+\item Resistance vs tolerance strategies for hosts: for many of the parasite classes we are considering, there are means by which a host might be able to compensate for a parasite. Holding (as best we are able) parasite traits constant across the different classes of parasite, are there certain classes that are more harmful than others (assuming no defense was mounted). Are there certain classes that are better defended through the active engagement of the immune system? Are there certain classes that are better defended through tolerance measures (e.g., compensatory feeding for $P_1$ or $P_2$ parasites, increased allocation to structure for $P_3$ parasites).
+\item Anorexia as a means for defending against parasites. Under what circumstances will a host be able to stop eating in order to clear an infection (before the host itself dies)?
+\item Bistability as a means of producing either acute or chronic infections. It is clear that the initial condition for the induced immune response depends on the size of the constitutive immune response. Can varying this initial value cause the system to either approach the disease-free equilibrium or the endemic equilibrium? If so, then we have evolutionary bistability and differences in whether infection is acute or chronic can be explained in terms of the initial investment in defense. This would also suggest the potential for age-dependent susceptibility.
+\item Acute vs chronic infections through high-amplitude oscillations. Are some parasites for likely to produce stable limit cycles (or high amplitude oscillations towards a stable focus)? If so, then those parasites are more likely to go extinct stochastically.
+\item My general sense is that gut parasites ($P_1$ and $P_2$) are (biologically) much more likely to be tolerated and to establish chronic infections. By definition, I suppose, the definitions of acute vs chronic and resistance vs tolerance are somewhat bound up together: all tolerance strategies will produce chronic infectionss, whereas resistance strategies may produce acute infections (if the host's resistance strategy is successful) or chronic infections (if it is not).
+\item It would also be interesting to look at host strategy in an evolutionary setting by calculating a host $R_0$. This will require adding host reproduction, at the very least, but also considering how infection might vary with age and the possibility of multiple infection within a single lifespan. Still, a classic life history approach might be really informative.
+\end{itemize}
+
+\section*{Figures for Sarah's proposal}
+Some slight tweaks to the model structure are being used here.
+The only slightly significant one is that the initial abundance of induced immune cells will be $10^{-5}$ times the abundance of constitutive immune cells at the time when infection begins.
+This will allow the induced response to be faster and stronger in hosts that have invested more in constitutive defense, either because their $k$ value is larger or because they have had access to more food.
+<<echo=FALSE>>=
+library(deSolve)
+## Model code
+dyn.load("P2_deb.so")
+pars <- c(imax=2, theta=1/3.93, eta=5, rho=2,
+          epsA=0.85, epsG=1, epsR=1, epsI=6e-5,
+          Linf=2.94, alpha=1, gmin=.02,
+          m=0.2, mc=0.03, mi=0.005, k=0,
+          b=1e5, ui=1/20, umin=1/664, uacc=1/664,
+          epsAmin=0.2, heps=1e-3,
+          epsP=0.15, sigmaC=10, hC=0.1,
+          uP=1, uC=100, uI=200, InfDose=1e-5)
+nonepars <- pars
+nonepars["b"] <- 0 ## no induced immunity
+nonepars["eta"] <- 0 ## no compensatory feeding
+respars <- pars
+respars["eta"] <- 0 ## no compensatory feeding
+tolpars <- pars
+tolpars["b"] <- 0 ## no induced immunity
+
+lapply(list(nonepars, respars, tolpars),
+       function(pars) {
+           sapply(seq(1.8, 2.2, 0.01), function(imax) {
+               pars["imax"] <- imax
+               y0 <- c(G=0, C=0, S=1, R=0.5, Ii=0, mu=0, P2=0)
+               times <- seq(0, 116, 0.1)
+               tInf <- 56
+               out <- ode(y=y0, times=times, func="derivs", parms=pars, dllname="P2_deb", initfunc="initmod", events=list(func="event", time=tInf))
+               sum(tail(out[,c("S","R")],1))
+           })
+       }) -> results
+
+lapply(list(nonepars, respars, tolpars),
+       function(pars) {
+           sapply(seq(1.8, 2.2, 0.01), function(imax) {
+               pars["imax"] <- imax
+               y0 <- c(G=0, C=0, S=1, R=0.5, Ii=0, mu=0, P2=0)
+               times <- seq(0, 116, 0.1)
+               tInf <- 56
+               out <- ode(y=y0, times=times, func="derivs", parms=pars, dllname="P2_deb", initfunc="initmod", events=list(func="event", time=tInf))
+               tail(out[,"P2"],1)
+           })
+       }) -> results2
+
+
+png(filename="Sarah_Fig_1a.png", width=8, height=4, units='in', res=300)
+par(mar=c(5,5,1,1), oma=rep(0,4), mfrow=c(1,2))
+plot(results[[2]], xaxt='none', yaxt='none', ylab="", xlab="", type='l', lwd=2, ylim=range(results))
+axis(1, at=c(5, 35), labels=c("Low protein", "High protein"))
+axis(2, at=seq(22, 32, 2))
+mtext(side=1, line=3, "Diet quality", cex=1.3)
+mtext(side=2, line=3, "Body weight (g)", cex=1.3)
+lines(results[[3]], lwd=2, lty=2)
+legend(x="bottomright", lty=1:2, c("Resistance", "Tolerance"), bty='n')
+legend(x="topleft", c("A"), bty='n', cex=1.25, lwd=1.5)
+
+plot(results2[[2]]*100, xaxt='none', yaxt='none', ylab="", xlab="", type='l', lwd=2, ylim=range(unlist(results2)*100))
+axis(1, at=c(5, 35), labels=c("Low protein", "High protein"))
+axis(2)
+mtext(side=1, line=3, "Diet quality", cex=1.3)
+mtext(side=2, line=3, "Parasite biomass (mg)", cex=1.3)
+lines(results2[[3]]*100, lwd=2, lty=2)
+legend(x="topleft", c("B"), bty='n', cex=1.25)
+dev.off()
+
+png(filename="Sarah_Fig_1b.png", width=8, height=4, units='in', res=300)
+par(mar=c(5,5,1,1), oma=rep(0,4), mfrow=c(1,2))
+plot(results[[1]], xaxt='none', yaxt='none', ylab="", xlab="", type='l', lwd=2, ylim=range(results))
+axis(1, at=c(5, 35), labels=c("Low protein", "High protein"))
+axis(2, at=seq(22, 32, 2))
+mtext(side=1, line=3, "Diet quality", cex=1.3)
+mtext(side=2, line=3, "Body weight (g)", cex=1.3)
+lines(results[[2]], lwd=2, lty=2)
+lines(results[[3]], lwd=2, lty=3)
+legend(x="bottomright", lty=1:3, c("No defense", "Resistance", "Tolerance"), bty='n', lwd=1.5)
+legend(x="topleft", c("A"), bty='n', cex=1.25)
+
+
+plot(results2[[1]]*100, xaxt='none', yaxt='none', ylab="", xlab="", type='l', lwd=2, ylim=range(unlist(results2)*100))
+axis(1, at=c(5, 35), labels=c("Low protein", "High protein"))
+axis(2)
+mtext(side=1, line=3, "Diet quality", cex=1.3)
+mtext(side=2, line=3, "Parasite biomass (mg)", cex=1.3)
+lines(results2[[2]]*100, lwd=2, lty=2)
+lines(results2[[3]]*100, lwd=2, lty=3)
+legend(x="topleft", c("B"), bty='n', cex=1.25)
+dev.off()
+
+
+pars <- c(imax=2, theta=1/3.93, eta=5, rho=2,
+          epsA=0.85, epsG=1, epsR=1, epsI=6e-5,
+          Linf=2.94, alpha=1, gmin=.02,
+          m=0.2, mc=0.03, mi=0.005, k=0,
+          b=1e5, ui=1/20, umin=1/664, uacc=1/664,
+          epsAmin=0.2, heps=1e-3,
+          epsP=0.15, sigmaC=10, hC=0.1,
+          uP=1, uC=100, uI=100, InfDose=1e-5)
+sapply(1:3, function(i) {
+    tpars <- pars
+    if (i==2) tpars["eta"] <- 0 ## resistance only
+    if (i==3) tpars["b"] <- 0 ## tolerance only
+    lopars <- hipars <- tpars
+    lopars["imax"] <- 1.8
+    hipars["imax"] <- 2.7
+    ## low food, then high food when infected
+    lopars["InfDose"] <- 0
+    out <- ode(y=y0, times=seq(0,30,0.1), func="derivs", parms=lopars, dllname="P2_deb", initfunc="initmod", events=list(func="event", time=0))
+    y1 <- as.numeric(tail(out[,2:ncol(out)],1))
+    names(y1) <- names(y0)
+    hipars["InfDose"] <- 1e-5
+    out <- ode(y=y1, times=seq(0,200,0.1), func="derivs", parms=hipars, dllname="P2_deb", initfunc="initmod", events=list(func="event", time=0.1))
+    c(sum(tail(out[,c("S","R")],1)), tail(out[,"P2"],1))
+}) -> lohiresults
+sapply(1:3, function(i) {
+    tpars <- pars
+    if (i==2) tpars["eta"] <- 0 ## resistance only
+    if (i==3) tpars["b"] <- 0 ## tolerance only
+    lopars <- hipars <- tpars
+    lopars["imax"] <- 1.8
+    hipars["imax"] <- 2.7
+    ## high food, then low food when infected
+    hipars["InfDose"] <- 0
+    out <- ode(y=y0, times=seq(0,30,0.1), func="derivs", parms=hipars, dllname="P2_deb", initfunc="initmod", events=list(func="event", time=0))
+    y1 <- as.numeric(tail(out[,2:ncol(out)],1))
+    names(y1) <- names(y0)
+    lopars["InfDose"] <- 1e-5
+    out <- ode(y=y1, times=seq(0,200,0.1), func="derivs", parms=lopars, dllname="P2_deb", initfunc="initmod", events=list(func="event", time=0.1))
+    if (i==2) plotall(out)
+    c(sum(tail(out[,c("S","R")],1)), tail(out[,"P2"],1))
+}) -> hiloresults
+lohiresults
+hiloresults
+
+png(file="Sarah_Fig2.png", height=4, width=8, units='in', res=300)
+par(mar=c(5,5,1,1), oma=rep(0,4), mfrow=c(1,2))
+plot.new()
+plot.window(xlim=c(0.9,2.1), ylim=c(24, 35))
+box('plot')
+axis(1, at=c(1,2), labels=c("Pre-infection", "Post-infection"))
+axis(2)
+points(c(1,2), c(hiloresults[1,2], lohiresults[1,2]), type='l', lwd=2)
+points(c(1,2), c(hiloresults[1,3], lohiresults[1,3]), type='l', lty=2, lwd=2)
+points(c(1,2), c(hiloresults[1,1], lohiresults[1,1]), type='l', lty=3, lwd=2)
+mtext(side=2, line=3, "Body weight (g)", cex=1.5)
+legend(x='bottomright', lty=1:3, c("Resistance", "Tolerance", "Both"), lwd=1.5, bty='n')
+legend(x="topleft", "A", bty='n', cex=1.3)
+
+plot.new()
+plot.window(xlim=c(0.9,2.1), ylim=c(0, 40))
+box('plot')
+axis(1, at=c(1,2), labels=c("Pre-infection", "Post-infection"))
+axis(2)
+points(c(1,2), c(hiloresults[2,2]*100, lohiresults[2,2]*100), type='l', lwd=2)
+points(c(1,2), c(hiloresults[2,3]*100, lohiresults[2,3]*100), type='l', lty=2, lwd=2)
+points(c(1,2), c(hiloresults[2,1]*100, lohiresults[2,1]*100), type='l', lty=3, lwd=2)
+mtext(side=1, line=-2, "Timing of diet supplement", cex=1.5, outer=TRUE)
+mtext(side=2, line=3, "Parasite biomass (mg)", cex=1.5)
+legend(x="topleft", "B", bty='n', cex=1.3)
+dev.off()
+
+@
+
+\bibliographystyle{ecology.bst}
+\bibliography{Biblio.bib}
+
+\end{document}

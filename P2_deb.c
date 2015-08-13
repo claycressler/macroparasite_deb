@@ -58,11 +58,11 @@ void derivs (int *neq, double *t, double *y, double *ydot) {
   // growth rate
   double Grate = 3 * gmin * (pow(alpha, 0.33333333) * Linf * pow(S, 0.66666667) - S);
   // cost of growth
-  double CG = epsG * Grate;
+  double CG = 1/epsG * Grate;
   // constitutive defense
   double Ic = k * (S + R);
   // maintenance rate
-  double M = (m + mc * Ic)*(S + R) + mi * Ii;
+  double M = m * (S + R)  + mc * Ic + mi * Ii;
 
   // rate equations
   ydot[0] = In - rho * G;

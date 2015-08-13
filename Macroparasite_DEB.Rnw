@@ -562,6 +562,7 @@ More conversation about plausible parameter values:
 \end{itemize}
 
 <<echo=FALSE, fig.height=4, fig.width=4, fig.cap="Results of a quick simulation study showing how different ways of dealing with infection by a P2 parasite affect mortality rates. The point of these results is that they already suggest that, under some circumstances, tolerance will be a better strategy than resistance.">>=
+library(deSolve)
 ## C code for fast solution of the system
 ## Parameters
 pars <- c(imax=2, theta=1/3.93, eta=10, rho=2,
@@ -580,7 +581,7 @@ times <- seq(0, 664, 0.1)
 dyn.load("P2_deb.so")
 ## Set the time of infection
 tInf <- 50
-t1 = system.time(out <- ode(y=y0, times=times, func="derivs", parms=pars, dllname="P2_deb", initfunc="initmod", events=list(func="event", time=tInf)))
+t1 = system.time(out <- ode(y=y0, times=times, func="derivs", parms=pars, dllname="P2_deb", initfunc="initmod", events=list(func="event", time=tInf), method="lsoda"))
 
 ## Compare against old method
 #source("Macroparasite_DEB_models.R")
@@ -623,6 +624,185 @@ lines(seq(0, .25, 0.01), (1/results[[2]])/(1/664), lwd=2, col=2)
 lines(seq(0, .25, 0.01), (1/results[[3]])/(1/664), lwd=2, col="Light blue")
 lines(seq(0, .25, 0.01), (1/results[[4]])/(1/664), lwd=2, col="Purple")
 legend(x='topleft', fill=c(1,2,"Light blue","Purple"), c("No defense", "Resistance", "Tolerance","Both"), bty='n')
+@
+
+Essential theoretical experiments:
+\begin{itemize}
+\item Resistance vs tolerance strategies for hosts: for many of the parasite classes we are considering, there are means by which a host might be able to compensate for a parasite. Holding (as best we are able) parasite traits constant across the different classes of parasite, are there certain classes that are more harmful than others (assuming no defense was mounted). Are there certain classes that are better defended through the active engagement of the immune system? Are there certain classes that are better defended through tolerance measures (e.g., compensatory feeding for $P_1$ or $P_2$ parasites, increased allocation to structure for $P_3$ parasites).
+\item Anorexia as a means for defending against parasites. Under what circumstances will a host be able to stop eating in order to clear an infection (before the host itself dies)?
+\item Bistability as a means of producing either acute or chronic infections. It is clear that the initial condition for the induced immune response depends on the size of the constitutive immune response. Can varying this initial value cause the system to either approach the disease-free equilibrium or the endemic equilibrium? If so, then we have evolutionary bistability and differences in whether infection is acute or chronic can be explained in terms of the initial investment in defense. This would also suggest the potential for age-dependent susceptibility.
+\item Acute vs chronic infections through high-amplitude oscillations. Are some parasites for likely to produce stable limit cycles (or high amplitude oscillations towards a stable focus)? If so, then those parasites are more likely to go extinct stochastically.
+\item My general sense is that gut parasites ($P_1$ and $P_2$) are (biologically) much more likely to be tolerated and to establish chronic infections. By definition, I suppose, the definitions of acute vs chronic and resistance vs tolerance are somewhat bound up together: all tolerance strategies will produce chronic infectionss, whereas resistance strategies may produce acute infections (if the host's resistance strategy is successful) or chronic infections (if it is not).
+\item It would also be interesting to look at host strategy in an evolutionary setting by calculating a host $R_0$. This will require adding host reproduction, at the very least, but also considering how infection might vary with age and the possibility of multiple infection within a single lifespan. Still, a classic life history approach might be really informative.
+\end{itemize}
+
+\section*{Figures for Sarah's proposal}
+Some slight tweaks to the model structure are being used here.
+The only slightly significant one is that the initial abundance of induced immune cells will be $10^{-5}$ times the abundance of constitutive immune cells at the time when infection begins.
+This will allow the induced response to be faster and stronger in hosts that have invested more in constitutive defense, either because their $k$ value is larger or because they have had access to more food.
+<<echo=FALSE>>=
+library(deSolve)
+## Model code
+dyn.load("P2_deb.so")
+pars <- c(imax=2, theta=1/3.93, eta=5, rho=2,
+          epsA=0.85, epsG=1, epsR=1, epsI=6e-5,
+          Linf=2.94, alpha=1, gmin=.02,
+          m=0.2, mc=0.03, mi=0.005, k=0,
+          b=1e5, ui=1/20, umin=1/664, uacc=1/664,
+          epsAmin=0.2, heps=1e-3,
+          epsP=0.15, sigmaC=10, hC=0.1,
+          uP=1, uC=100, uI=200, InfDose=1e-5)
+nonepars <- pars
+nonepars["b"] <- 0 ## no induced immunity
+nonepars["eta"] <- 0 ## no compensatory feeding
+respars <- pars
+respars["eta"] <- 0 ## no compensatory feeding
+tolpars <- pars
+tolpars["b"] <- 0 ## no induced immunity
+
+lapply(list(nonepars, respars, tolpars),
+       function(pars) {
+           sapply(seq(1.8, 2.2, 0.01), function(imax) {
+               pars["imax"] <- imax
+               y0 <- c(G=0, C=0, S=1, R=0.5, Ii=0, mu=0, P2=0)
+               times <- seq(0, 116, 0.1)
+               tInf <- 56
+               out <- ode(y=y0, times=times, func="derivs", parms=pars, dllname="P2_deb", initfunc="initmod", events=list(func="event", time=tInf))
+               sum(tail(out[,c("S","R")],1))
+           })
+       }) -> results
+
+lapply(list(nonepars, respars, tolpars),
+       function(pars) {
+           sapply(seq(1.8, 2.2, 0.01), function(imax) {
+               pars["imax"] <- imax
+               y0 <- c(G=0, C=0, S=1, R=0.5, Ii=0, mu=0, P2=0)
+               times <- seq(0, 116, 0.1)
+               tInf <- 56
+               out <- ode(y=y0, times=times, func="derivs", parms=pars, dllname="P2_deb", initfunc="initmod", events=list(func="event", time=tInf))
+               tail(out[,"P2"],1)
+           })
+       }) -> results2
+
+
+png(filename="Sarah_Fig_1a.png", width=8, height=4, units='in', res=300)
+par(mar=c(5,5,1,1), oma=rep(0,4), mfrow=c(1,2))
+plot(results[[2]], xaxt='none', yaxt='none', ylab="", xlab="", type='l', lwd=2, ylim=range(results))
+axis(1, at=c(5, 35), labels=c("Low protein", "High protein"))
+axis(2, at=seq(22, 32, 2))
+mtext(side=1, line=3, "Diet quality", cex=1.3)
+mtext(side=2, line=3, "Body weight (g)", cex=1.3)
+lines(results[[3]], lwd=2, lty=2)
+legend(x="bottomright", lty=1:2, c("Resistance", "Tolerance"), bty='n')
+legend(x="topleft", c("A"), bty='n', cex=1.25, lwd=1.5)
+
+plot(results2[[2]]*100, xaxt='none', yaxt='none', ylab="", xlab="", type='l', lwd=2, ylim=range(unlist(results2)*100))
+axis(1, at=c(5, 35), labels=c("Low protein", "High protein"))
+axis(2)
+mtext(side=1, line=3, "Diet quality", cex=1.3)
+mtext(side=2, line=3, "Parasite biomass (mg)", cex=1.3)
+lines(results2[[3]]*100, lwd=2, lty=2)
+legend(x="topleft", c("B"), bty='n', cex=1.25)
+dev.off()
+
+png(filename="Sarah_Fig_1b.png", width=8, height=4, units='in', res=300)
+par(mar=c(5,5,1,1), oma=rep(0,4), mfrow=c(1,2))
+plot(results[[1]], xaxt='none', yaxt='none', ylab="", xlab="", type='l', lwd=2, ylim=range(results))
+axis(1, at=c(5, 35), labels=c("Low protein", "High protein"))
+axis(2, at=seq(22, 32, 2))
+mtext(side=1, line=3, "Diet quality", cex=1.3)
+mtext(side=2, line=3, "Body weight (g)", cex=1.3)
+lines(results[[2]], lwd=2, lty=2)
+lines(results[[3]], lwd=2, lty=3)
+legend(x="bottomright", lty=1:3, c("No defense", "Resistance", "Tolerance"), bty='n', lwd=1.5)
+legend(x="topleft", c("A"), bty='n', cex=1.25)
+
+
+plot(results2[[1]]*100, xaxt='none', yaxt='none', ylab="", xlab="", type='l', lwd=2, ylim=range(unlist(results2)*100))
+axis(1, at=c(5, 35), labels=c("Low protein", "High protein"))
+axis(2)
+mtext(side=1, line=3, "Diet quality", cex=1.3)
+mtext(side=2, line=3, "Parasite biomass (mg)", cex=1.3)
+lines(results2[[2]]*100, lwd=2, lty=2)
+lines(results2[[3]]*100, lwd=2, lty=3)
+legend(x="topleft", c("B"), bty='n', cex=1.25)
+dev.off()
+
+
+pars <- c(imax=2, theta=1/3.93, eta=5, rho=2,
+          epsA=0.85, epsG=1, epsR=1, epsI=6e-5,
+          Linf=2.94, alpha=1, gmin=.02,
+          m=0.2, mc=0.03, mi=0.005, k=0,
+          b=1e5, ui=1/20, umin=1/664, uacc=1/664,
+          epsAmin=0.2, heps=1e-3,
+          epsP=0.15, sigmaC=10, hC=0.1,
+          uP=1, uC=100, uI=100, InfDose=1e-5)
+sapply(1:3, function(i) {
+    tpars <- pars
+    if (i==2) tpars["eta"] <- 0 ## resistance only
+    if (i==3) tpars["b"] <- 0 ## tolerance only
+    lopars <- hipars <- tpars
+    lopars["imax"] <- 1.8
+    hipars["imax"] <- 2.5
+    ## low food, then high food when infected
+    lopars["InfDose"] <- 0
+    out <- ode(y=y0, times=seq(0,30,0.1), func="derivs", parms=lopars, dllname="P2_deb", initfunc="initmod", events=list(func="event", time=0))
+    y1 <- as.numeric(tail(out[,2:ncol(out)],1))
+    names(y1) <- names(y0)
+    hipars["InfDose"] <- 1e-5
+    out <- ode(y=y1, times=seq(0,200,0.1), func="derivs", parms=hipars, dllname="P2_deb", initfunc="initmod", events=list(func="event", time=0.1))
+    c(sum(tail(out[,c("S","R")],1)), tail(out[,"P2"],1))
+}) -> lohiresults
+sapply(1:3, function(i) {
+    tpars <- pars
+    if (i==2) tpars["eta"] <- 0 ## resistance only
+    if (i==3) tpars["b"] <- 0 ## tolerance only
+    lopars <- hipars <- tpars
+    lopars["imax"] <- 1.8
+    hipars["imax"] <- 2.5
+    ## high food, then low food when infected
+    hipars["InfDose"] <- 0
+    out <- ode(y=y0, times=seq(0,30,0.1), func="derivs", parms=hipars, dllname="P2_deb", initfunc="initmod", events=list(func="event", time=0))
+    y1 <- as.numeric(tail(out[,2:ncol(out)],1))
+    names(y1) <- names(y0)
+    lopars["InfDose"] <- 1e-5
+    out <- ode(y=y1, times=seq(0,200,0.1), func="derivs", parms=lopars, dllname="P2_deb", initfunc="initmod", events=list(func="event", time=0.1))
+    if (i==2) plotall(out)
+    c(sum(tail(out[,c("S","R")],1)), tail(out[,"P2"],1))
+}) -> hiloresults
+lohiresults
+hiloresults
+
+png(file="Sarah_Fig2.png", height=4, width=4, units='in', res=300)
+par(mar=c(5,5,1,1), oma=rep(0,4), mfrow=c(1,2))
+plot.new()
+plot.window(xlim=c(0.9,2.1), ylim=c(20, 26))
+box('plot')
+axis(1, at=c(1,2), labels=c("Pre-infection", "Post-infection"))
+axis(2)
+points(c(1,2), c(hiloresults[1,2], lohiresults[1,2]), type='l', lwd=2)
+points(c(1,2), c(hiloresults[1,3], lohiresults[1,3]), type='l', lty=2, lwd=2)
+points(c(1,2), c(hiloresults[1,1], lohiresults[1,1]), type='l', lty=2, lwd=2)
+mtext(side=1, line=3, "Timing of diet supplement", cex=1.5)
+mtext(side=2, line=3, "Body weight (g)", cex=1.5)
+legend(x='bottomright', lty=1:3, c("Resistance", "Tolerance", "Both"), lwd=1.5, bty='n')
+
+plot.new()
+plot.window(xlim=c(0.9,2.1), ylim=c(20, 26))
+box('plot')
+axis(1, at=c(1,2), labels=c("Pre-infection", "Post-infection"))
+axis(2)
+points(c(1,2), c(hiloresults[1,2], lohiresults[1,2]), type='l', lwd=2)
+points(c(1,2), c(hiloresults[1,3], lohiresults[1,3]), type='l', lty=2, lwd=2)
+points(c(1,2), c(hiloresults[1,1], lohiresults[1,1]), type='l', lty=2, lwd=2)
+mtext(side=1, line=3, "Timing of diet supplement", cex=1.5)
+mtext(side=2, line=3, "Parasite biomass (mg)", cex=1.5)
+
+
+
+
+dev.off()
+
 @
 
 \bibliographystyle{ecology.bst}
