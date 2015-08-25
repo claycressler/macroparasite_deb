@@ -802,6 +802,49 @@ dev.off()
 
 @
 
+\clearpage
+
+I have been thinking more about the parameter values for the model.
+My initial intuition was that: $b$ (the rate reserve is depleted per gram of parasite) must be large for the production of immune cells to have a significant energetic cost;
+$\epsilon_i$ (the conversion efficiency of reserve biomass into immune biomass) should be close to one as existing data suggests that immune cells are fairly cheap to produce;
+$\mu_i$ (the parasite's biomass loss rate per immune cell) should be much larger than $\mu_P$ (the ``background'' parasite biomass loss rate) for obvious reasons.
+However, this intuition was deeply at odds with the model analysis, which suggested that parameter values like that \emph{always} produced parasite extinction.
+In fact, in order to produce the results that I sent for the NIH proposal, I had to assume that $\epsilon_i$ was very, very small, so that most of the energy allocated to the immune system was not going into produce parasite-killing cells.
+
+That discrepancy made me do some reading and thinking, and I came to believe that the analytical result makes complete sense.
+If $b$ is very large, then for every gram of parasite biomass, more than a gram of reserve biomass is allocated to the immune system;
+if $\epsilon_i \approx 1$, then for every gram of parasite biomass, more than a gram of immune biomass is produced;
+if $\mu_i$ is large, then every gram of immune biomass removes more than a gram of parasite biomass.
+With those parameter values, it makes complete sense that the parasite would be excluded.
+
+I can get a persistent infection by changing any of the three parameters, but it makes more sense to change one of these than the others.
+If I reduce $b$, then the immune system is essentially cost-free and the resource budget model aspect is mostly irrelevant.
+If I reduce $\mu_i$, then the immune system is woefully ineffective, which doesn't make any sense biologically.
+Reducing $\epsilon_i$ actually makes biological sense on a number of levels.
+
+First, it is important to remember that $I_i$ and $I_c$ are not really measures of the full immune response, because both $I_i$ and $I_c$ are involved in killing parasites.
+In reality, the immune system produces all kinds of molecules and cells, only a fraction of which are actually involved with direct killing - I don't know what this fraction is, but it would be worth investigating - many of the cells are signalling molecules that are important in coordinating the immune response, but don't actually do any killing themselves.
+
+Second, as I was reading some of the work on measuring immune costs in chickens, especially some of Kirk Klasing's old stuff \citep[e.g., ][]{Klasing1999}, I realized that most of the energetic cost of ramping up the immune system does not appear to be related to producing immune cells.
+From \cite{Klasing1999}: ``Thus, a summation of cells and effector molecules consumed during an immune response suggests that use of the immune system should not have important nutritional costs. Yet this cannot be true - simple observation of sick birds tells us that they lose body condition. ... The missing component must be \emph{due to quantitatively important changes in non-lymphoid tissues}.'' (emphasis mine.)
+He goes on to discuss, in particular, anorexia, the inflammatory response, and fever as being the primary drivers of the nutritional cost of the immune response.
+
+The upshot of this is that I am comfortable with the idea that $\epsilon_i$ should be a number that is much less than 1.
+However, this does raise some other issues, such as the fact that $b$ is probably time-dependent: during the early days of infection, $b$ is probably very high, reflecting the cost of the acute phase response.
+If that is insufficient to clear the infection, however, it also seems reasonable that the host would ramp $b$ down to reduce the energetic cost.
+Simultaneously, however, $\epsilon_i$ might increase because, as the host is no longer producing acute phase proteins, an increased fraction of the reserve used by the immune system would be used to produce immune effectors.
+An alternative modeling approach would be to distinguish between reserve allocated to producing immune cells versus e.g. acute phase proteins.
+In this case, we might have immune biomass $I_i$ and acute-phase biomass $I_a$.
+$I_a$ are all of the cells that don't play a role in killing; reserve allocation to $I_a$ is high initially but drops off rapidly.
+$I_i$ are all of the cells that are involved in parasite killing; reserve allocation to $I_i$ is more or less constant.
+
+The other upshot is that it might be worth thinking about how we might measure some of these other aspects of the nutritional cost of fighting an infection.
+I know we had discussed measurement proxies for host nutritional state and that you could measure many different cell types.
+Does that include some of these acute phase responses?
+It might also be worthwhile to more closely monitor feeding during the initial phase right after infection to catch any transient anorexia and/or fever.
+
+
+
 \bibliographystyle{ecology.bst}
 \bibliography{Biblio.bib}
 
